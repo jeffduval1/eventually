@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moteur de recherche de règles</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Gestion des règles</h1>
+
+    <select id="tagFilter" onchange="filtrerParTag()">
+        <option value="">-- Filtrer par tag --</option>
+    </select>
+
+    <h2>Création d'une nouvelle règle</h2>
+    <div class="form-container">
+        <input type="text" id="titre" placeholder="Titre de la règle">
+        <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+        <textarea id="contenu" placeholder="Description de la règle"></textarea>
+        <button onclick="ajouterCarte()">Ajouter</button>
+    </div>
+
+    <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
+    <div id="cartes-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
