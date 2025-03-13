@@ -19,8 +19,8 @@ request.onerror = function() {
 };
 
 // ➕ Ajouter OU Modifier une règle
-function ajouterOuModifierCarte() {
-    let id = document.getElementById("carte-id").value;
+// ➕ Ajouter une règle
+function ajouterCarte() {
     let titre = document.getElementById("titre").value;
     let tags = document.getElementById("tags").value.toLowerCase().split(',').map(tag => tag.trim());
     let contenu = document.getElementById("contenu").value;
@@ -35,18 +35,13 @@ function ajouterOuModifierCarte() {
 
     let nouvelleRegle = { titre, tags, contenu };
 
-    if (id) { 
-        nouvelleRegle.id = Number(id); // On garde l'ID existant
-        store.put(nouvelleRegle); // Mise à jour
-    } else {
-        store.add(nouvelleRegle); // Ajout d'une nouvelle carte
-    }
-
-    transaction.oncomplete = function() {
+    let request = store.add(nouvelleRegle);
+    request.onsuccess = function() {
         afficherCartes();
-        resetForm();
+        resetForm(); // S'assure que le formulaire est bien réinitialisé après l'ajout
     };
 }
+
 
 // 📖 Afficher toutes les règles
 function afficherCartes() {
@@ -93,11 +88,30 @@ function modifierCarte(id) {
         document.getElementById("contenu").value = carte.contenu;
         document.getElementById("carte-id").value = carte.id; // Stocke l'ID pour la modification
 
-        document.getElementById("ajouter-modifier").textContent = "Modifier";
-        document.getElementById("ajouter-modifier").onclick = ajouterOuModifierCarte;
+        document.getElementById("ajouter-modifier").style.display = "none";
+        document.getElementById("enregistrer-modification").style.display = "inline-block";
     };
 }
+function enregistrerModification() {
+    let id = Number(document.getElementById("carte-id").value);
+    let titre = document.getElementById("titre").value;
+    let tags = document.getElementById("tags").value.toLowerCase().split(',').map(tag => tag.trim());
+    let contenu = document.getElementById("contenu").value;
 
+    if (!titre || !contenu) {
+        alert("Veuillez remplir le titre et le contenu !");
+        return;
+    }
+
+    let transaction = db.transaction("regles", "readwrite");
+    let store = transaction.objectStore("regles");
+
+    let request = store.put({ id, titre, tags, contenu });
+    request.onsuccess = function() {
+        afficherCartes();
+        resetForm();
+    };
+}
 // ❌ Supprimer une règle
 function supprimerCarte(id) {
     let transaction = db.transaction("regles", "readwrite");
@@ -115,7 +129,9 @@ function resetForm() {
     document.getElementById("titre").value = "";
     document.getElementById("tags").value = "";
     document.getElementById("contenu").value = "";
-    document.getElementById("ajouter-modifier").textContent = "Ajouter"; // Remet le bouton à "Ajouter"
+   // Réafficher "Ajouter" et cacher "Enregistrer modifications"
+   document.getElementById("ajouter-modifier").style.display = "inline-block";
+   document.getElementById("enregistrer-modification").style.display = "none";
 }
 
 // 📌 Mettre à jour la liste des tags
