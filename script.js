@@ -18,8 +18,9 @@ request.onerror = function() {
     console.error("Erreur d'accès à IndexedDB !");
 };
 
-// ➕ Ajouter une règle
-function ajouterCarte() {
+// ➕ Ajouter OU Modifier une règle
+function ajouterOuModifierCarte() {
+    let id = document.getElementById("carte-id").value;
     let titre = document.getElementById("titre").value;
     let tags = document.getElementById("tags").value.toLowerCase().split(',').map(tag => tag.trim());
     let contenu = document.getElementById("contenu").value;
@@ -34,14 +35,17 @@ function ajouterCarte() {
 
     let nouvelleRegle = { titre, tags, contenu };
 
-    let request = store.add(nouvelleRegle);
-    request.onsuccess = function() {
-        afficherCartes();
-    };
+    if (id) { 
+        nouvelleRegle.id = Number(id); // On garde l'ID existant
+        store.put(nouvelleRegle); // Mise à jour
+    } else {
+        store.add(nouvelleRegle); // Ajout d'une nouvelle carte
+    }
 
-    document.getElementById("titre").value = "";
-    document.getElementById("tags").value = "";
-    document.getElementById("contenu").value = "";
+    transaction.oncomplete = function() {
+        afficherCartes();
+        resetForm();
+    };
 }
 
 // 📖 Afficher toutes les règles
@@ -64,6 +68,7 @@ function afficherCartes() {
                 <h3>${carte.titre}</h3>
                 <p>${carte.contenu}</p>
                 <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+                <button onclick="modifierCarte(${carte.id})">Modifier</button>
                 <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
             `;
             container.appendChild(div);
@@ -75,48 +80,21 @@ function afficherCartes() {
     };
 }
 
-// 🔎 Filtrer les cartes par tag
-function filtrerParTag() {
-    let tagChoisi = document.getElementById("tagFilter").value.toLowerCase();
-    let transaction = db.transaction("regles", "readonly");
-    let store = transaction.objectStore("regles");
-    let index = store.index("tags");
-
-    let request = index.getAll(tagChoisi);
-    request.onsuccess = function() {
-        afficherCartesFiltres(request.result);
-    };
-}
-
-function afficherCartesFiltres(cartes) {
-    let container = document.getElementById("cartes-container");
-    container.innerHTML = "";
-
-    cartes.forEach((carte) => {
-        let div = document.createElement("div");
-        div.classList.add("carte");
-        div.innerHTML = `
-            <h3>${carte.titre}</h3>
-            <p>${carte.contenu}</p>
-            <p class="tags">Tags : ${carte.tags.join(", ")}</p>
-            <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
-        `;
-        container.appendChild(div);
-    });
-}
-
-// 🔍 Filtrer en tapant un tag
-function filtrerCartes() {
-    let recherche = document.getElementById("search").value.toLowerCase();
+// ✏️ Modifier une règle
+function modifierCarte(id) {
     let transaction = db.transaction("regles", "readonly");
     let store = transaction.objectStore("regles");
 
-    let request = store.getAll();
+    let request = store.get(id);
     request.onsuccess = function() {
-        let cartes = request.result.filter(carte => 
-            carte.tags.some(tag => tag.includes(recherche))
-        );
-        afficherCartesFiltres(cartes);
+        let carte = request.result;
+        document.getElementById("titre").value = carte.titre;
+        document.getElementById("tags").value = carte.tags.join(", ");
+        document.getElementById("contenu").value = carte.contenu;
+        document.getElementById("carte-id").value = carte.id; // Stocke l'ID pour la modification
+
+        document.getElementById("ajouter-modifier").textContent = "Modifier";
+        document.getElementById("ajouter-modifier").onclick = ajouterOuModifierCarte;
     };
 }
 
@@ -129,6 +107,15 @@ function supprimerCarte(id) {
     request.onsuccess = function() {
         afficherCartes();
     };
+}
+
+// 📌 Réinitialiser le formulaire après ajout/modification
+function resetForm() {
+    document.getElementById("carte-id").value = ""; // Réinitialise l'ID
+    document.getElementById("titre").value = "";
+    document.getElementById("tags").value = "";
+    document.getElementById("contenu").value = "";
+    document.getElementById("ajouter-modifier").textContent = "Ajouter"; // Remet le bouton à "Ajouter"
 }
 
 // 📌 Mettre à jour la liste des tags
