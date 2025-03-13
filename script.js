@@ -74,7 +74,36 @@ function afficherCartes() {
         mettreAJourTags([...tagsUniques]);
     };
 }
+// 📌 Afficher les cartes filtrées
+function afficherCartesFiltres(cartes) {
+    let container = document.getElementById("cartes-container");
+    container.innerHTML = "";
 
+    cartes.forEach((carte) => {
+        let div = document.createElement("div");
+        div.classList.add("carte");
+        div.innerHTML = `
+            <h3>${carte.titre}</h3>
+            <p>${carte.contenu}</p>
+            <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+            <button onclick="modifierCarte(${carte.id})">Modifier</button>
+            <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
+        `;
+        container.appendChild(div);
+    });
+}
+// 🔎 Filtrer les cartes par tag sélectionné
+function filtrerParTag() {
+    let tagChoisi = document.getElementById("tagFilter").value.toLowerCase();
+    let transaction = db.transaction("regles", "readonly");
+    let store = transaction.objectStore("regles");
+
+    let request = store.getAll();
+    request.onsuccess = function() {
+        let cartes = request.result.filter(carte => carte.tags.includes(tagChoisi));
+        afficherCartesFiltres(cartes);
+    };
+}
 // ✏️ Modifier une règle
 function modifierCarte(id) {
     let transaction = db.transaction("regles", "readonly");
