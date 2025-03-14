@@ -32,7 +32,9 @@ function ajouterCarte() {
     let transaction = db.transaction("regles", "readwrite");
     let store = transaction.objectStore("regles");
 
-    let nouvelleRegle = { titre, tags, contenu };
+    let dateCreation = new Date().toISOString(); // 🔹 Stocke la date en format ISO
+
+    let nouvelleRegle = { titre, tags, contenu, dateCreation };
 
     let request = store.add(nouvelleRegle);
     request.onsuccess = function() {
@@ -58,10 +60,15 @@ function afficherCartes() {
         let tagsUniques = new Set();
 
         cartes.forEach((carte) => {
+            let dateAffichee = carte.dateCreation ? new Date(carte.dateCreation).toLocaleDateString() : "Date inconnue";
+
             let div = document.createElement("div");
             div.classList.add("carte");
             div.innerHTML = `
-                <h3>${carte.titre}</h3>
+                <div style="display: flex; justify-content: space-between;">
+                    <h3>${carte.titre}</h3>
+                    <span style="font-size: 12px; color: gray;">${dateAffichee}</span>
+                </div>
                 <p>${carte.contenu}</p>
                 <p class="tags">Tags : ${carte.tags.join(", ")}</p>
                 <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
@@ -74,6 +81,7 @@ function afficherCartes() {
         mettreAJourTags([...tagsUniques]);
     };
 }
+
 
 // 🔎 Filtrer les cartes par tag
 function filtrerParTag() {
