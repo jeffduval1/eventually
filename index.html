@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Gestion des règles</h1>
+    <h1>Mémo par tags</h1>
 
     <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Sélectionner des tags ▼</button>
@@ -22,13 +22,16 @@
  
     <div id="etiquettes-container" style="margin-top: 10px;"></div>
     
-    <h2>Création d'une nouvelle règle</h2>
-    <div class="form-container">
-        <input type="text" id="titre" placeholder="Titre de la règle">
-        <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
-        <textarea id="contenu" placeholder="Description de la règle"></textarea>
-        <button onclick="ajouterCarte()">Ajouter</button>
-    </div>
+<!-- Bouton pour afficher le formulaire -->
+    <button id="toggleFormBtn" onclick="toggleForm()">Créer une nouvelle carte</button>
+    <!-- Formulaire d'ajout de carte (caché par défaut) -->
+<div id="ajoutCarteContainer" style="display: none;">
+    <input type="text" id="titre" placeholder="Titre">
+    <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+    <textarea id="contenu" placeholder="Contenu"></textarea>
+    <button onclick="ajouterCarte()">Ajouter la carte</button>
+</div>
+
 
     <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
     <div id="cartes-container"></div>

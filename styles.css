@@ -5,9 +5,7 @@ body {
     text-align: center;
 }
 
-.form-container {
-    margin-bottom: 20px;
-}
+
 
 select {
     display: block;
@@ -113,4 +111,21 @@ button:hover {
 
 .show {
     display: block;
+}
+#toggleFormBtn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#ajoutCarteContainer {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }

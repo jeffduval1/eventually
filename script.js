@@ -46,12 +46,18 @@ function ajouterCarte() {
     let request = store.add(nouvelleRegle);
     request.onsuccess = function() {
         afficherCartes();
-    };
 
-    document.getElementById("titre").value = "";
-    document.getElementById("tags").value = "";
-    document.getElementById("contenu").value = "";
+        // 🔹 Cacher le formulaire et réafficher le bouton "Créer une nouvelle carte"
+        document.getElementById("ajoutCarteContainer").style.display = "none";
+        document.getElementById("toggleFormBtn").style.display = "block";
+
+        // 🔹 Réinitialiser les champs
+        document.getElementById("titre").value = "";
+        document.getElementById("tags").value = "";
+        document.getElementById("contenu").value = "";
+    };
 }
+
 
 
 
@@ -273,6 +279,15 @@ function retirerEtiquette(tag) {
         if (dropdown && !dropdown.contains(event.target) && !button.contains(event.target)) {
             dropdown.classList.remove("show");
             document.removeEventListener("click", closeDropdownOnClickOutside);
+        }
+    }
+    function toggleForm() {
+        let formContainer = document.getElementById("ajoutCarteContainer");
+        let toggleBtn = document.getElementById("toggleFormBtn");
+    
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+            toggleBtn.style.display = "none"; // Cacher le bouton après ouverture
         }
     }
     
