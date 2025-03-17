@@ -9,10 +9,19 @@
 <body>
     <h1>Gestion des règles</h1>
 
-    <select id="tagFilter" onchange="filtrerParTag()">
-        <option value="">-- Filtrer par tag --</option>
-    </select>
-
+    <div class="dropdown">
+        <button class="dropdown-btn" onclick="toggleDropdown()">Sélectionner des tags ▼</button>
+        <div id="tagDropdown" class="dropdown-content">
+            <!-- Les tags seront insérés ici -->
+        </div>
+    </div>
+    <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
+        Réinitialiser le filtre
+    </button>
+    
+ 
+    <div id="etiquettes-container" style="margin-top: 10px;"></div>
+    
     <h2>Création d'une nouvelle règle</h2>
     <div class="form-container">
         <input type="text" id="titre" placeholder="Titre de la règle">
