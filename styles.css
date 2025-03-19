@@ -129,3 +129,36 @@ button:hover {
     border-radius: 5px;
     background-color: #f9f9f9;
 }
+/* Corbeille en plein écran */
+.corbeille-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Bouton de fermeture */
+.close-btn {
+    position: absolute;
+    top: 10px; /* Ajuste la position */
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 28px; /* Augmenter la taille */
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    z-index: 1001; /* Assure qu'il est toujours au-dessus */
+}
+.close-btn:hover {
+    color: red;
+}

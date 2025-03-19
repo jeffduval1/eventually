@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Conteneur de la corbeille en plein écran (caché par défaut) -->
+<div id="corbeille-page" class="corbeille-fullscreen" style="display: none;">
+    <button class="close-btn" onclick="fermerCorbeille()">✖</button>
+    <h2>Éléments supprimés</h2>
+    <button onclick="viderCorbeille()">Vider la corbeille</button>
+    <div id="cartes-corbeille"></div>
+</div>
     <h1>Mémo par tags</h1>
     <input type="hidden" id="carteId">
 

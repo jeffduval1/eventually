@@ -441,26 +441,67 @@ function afficherCorbeille() {
     request.onsuccess = function() {
         let cartes = request.result;
 
-        // 🔽 Tri des cartes supprimées du plus récent au plus ancien
+        // 🔽 Tri des cartes du plus récent au plus ancien
         cartes.sort((a, b) => new Date(b.dateSuppression) - new Date(a.dateSuppression));
 
-        let container = document.getElementById("cartes-container");
-        container.innerHTML = "<h2>Éléments supprimés</h2>";
+        let container = document.getElementById("cartes-corbeille");
+        container.innerHTML = ""; // Nettoyer l'affichage précédent
 
-        cartes.forEach((carte) => {
-            let dateAffichee = carte.dateSuppression
-                ? new Date(carte.dateSuppression).toLocaleDateString()
-                : "Date inconnue";
+        if (cartes.length === 0) {
+            container.innerHTML = "<p>Aucune carte supprimée.</p>";
+        } else {
+            cartes.forEach((carte) => {
+                let dateAffichee = carte.dateSuppression
+                    ? new Date(carte.dateSuppression).toLocaleDateString()
+                    : "Date inconnue";
 
-            let div = document.createElement("div");
-            div.classList.add("carte");
-            div.innerHTML = `
-                <h3>${carte.titre}</h3>
-                <span style="font-size: 12px; color: gray;">Supprimé le : ${dateAffichee}</span>
-                <p>${carte.contenu}</p>
-                <p class="tags">Tags : ${carte.tags.join(", ")}</p>
-            `;
-            container.appendChild(div);
-        });
+                let div = document.createElement("div");
+                div.classList.add("carte");
+                div.innerHTML = `
+                    <h3>${carte.titre}</h3>
+                    <span style="font-size: 12px; color: gray;">Supprimé le : ${dateAffichee}</span>
+                    <p>${carte.contenu}</p>
+                    <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+                    <button onclick="restaurerCarte(${carte.id})">Restaurer</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // 🌟 Afficher la page en plein écran
+        document.getElementById("corbeille-page").style.display = "flex";
     };
+}
+function restaurerCarte(id) {
+    let transaction = db.transaction(["regles", "corbeille"], "readwrite");
+    let store = transaction.objectStore("regles");
+    let trashStore = transaction.objectStore("corbeille");
+
+    let request = trashStore.get(id);
+    request.onsuccess = function() {
+        let carte = request.result;
+        if (carte) {
+            delete carte.dateSuppression; // 🔹 Retirer la date de suppression
+            store.add(carte); // Ajouter à la base principale
+        }
+
+        trashStore.delete(id); // Supprimer de la corbeille
+        afficherCorbeille(); // Mettre à jour l'affichage de la corbeille
+        afficherCartes(); // Mettre à jour les cartes actives
+    };
+}
+function viderCorbeille() {
+    let confirmation = confirm("Voulez-vous vraiment supprimer définitivement toutes les cartes ?");
+    if (!confirmation) return;
+
+    let transaction = db.transaction("corbeille", "readwrite");
+    let store = transaction.objectStore("corbeille");
+
+    let request = store.clear(); // Supprime tout
+    request.onsuccess = function() {
+        afficherCorbeille(); // Met à jour l'affichage
+    };
+}
+function fermerCorbeille() {
+    document.getElementById("corbeille-page").style.display = "none";
 }
