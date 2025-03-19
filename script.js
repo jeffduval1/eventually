@@ -1,14 +1,23 @@
 let db;
 
 // 🚀 Ouvrir ou créer la base IndexedDB
-const request = indexedDB.open("MoteurDeRecherche", 1);
+const request = indexedDB.open("MoteurDeRecherche", 2); // 🔹 Change la version de 1 à 2
 let modeTri = "date-desc"; // Mode de tri par défaut
 
 
 request.onupgradeneeded = function(event) {
     db = event.target.result;
-    let store = db.createObjectStore("regles", { keyPath: "id", autoIncrement: true });
-    store.createIndex("tags", "tags", { multiEntry: true });
+    
+    // 📌 Vérifier si l’objectStore "regles" existe déjà
+    if (!db.objectStoreNames.contains("regles")) {
+        let store = db.createObjectStore("regles", { keyPath: "id", autoIncrement: true });
+        store.createIndex("tags", "tags", { multiEntry: true });
+    }
+
+    // 📌 Nouvelle objectStore pour la corbeille
+    if (!db.objectStoreNames.contains("corbeille")) {
+        let trashStore = db.createObjectStore("corbeille", { keyPath: "id", autoIncrement: true });
+    }
 };
 
 request.onsuccess = function(event) {
@@ -258,48 +267,21 @@ function annulerModification() {
 
 // ❌ Supprimer une règle
 function supprimerCarte(id) {
-    let transaction = db.transaction("regles", "readwrite");
+    let transaction = db.transaction(["regles", "corbeille"], "readwrite");
     let store = transaction.objectStore("regles");
+    let trashStore = transaction.objectStore("corbeille");
 
-    let request = store.delete(id);
+    let request = store.get(id);
     request.onsuccess = function() {
-        afficherCartes();
+        let carte = request.result;
+        if (carte) {
+            carte.dateSuppression = new Date().toISOString(); // 🔹 Ajoute la date de suppression
+            trashStore.add(carte); // Déplace dans la corbeille
+        }
+
+        store.delete(id); // Supprime de la base active
+        afficherCartes(); // Met à jour l'affichage
     };
-}
-
-// 📌 Mettre à jour la liste des tags
-function mettreAJourTags(tags) {
-    let container = document.getElementById("tagDropdown");
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    tags.forEach(tag => {
-        let label = document.createElement("label");
-
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.value = tag;
-        checkbox.onchange = mettreAJourEtiquettes;
-
-        label.appendChild(checkbox);
-        label.append(` ${tag}`);
-        container.appendChild(label);
-    });
-}
-
-function toggleDropdown() {
-    let dropdown = document.getElementById("tagDropdown");
-    if (!dropdown) return;
-
-    dropdown.classList.toggle("show");
-
-    // Si le menu est ouvert, on ajoute un écouteur d'événements pour le fermer en cliquant ailleurs
-    if (dropdown.classList.contains("show")) {
-        document.addEventListener("click", closeDropdownOnClickOutside);
-    } else {
-        document.removeEventListener("click", closeDropdownOnClickOutside);
-    }
 }
 
 
@@ -450,4 +432,35 @@ function changerTri() {
     let select = document.getElementById("triSelect");
     modeTri = select.value; // Récupère la valeur sélectionnée
     afficherCartes(); // Recharge les cartes avec le nouvel ordre
+}
+function afficherCorbeille() {
+    let transaction = db.transaction("corbeille", "readonly");
+    let store = transaction.objectStore("corbeille");
+
+    let request = store.getAll();
+    request.onsuccess = function() {
+        let cartes = request.result;
+
+        // 🔽 Tri des cartes supprimées du plus récent au plus ancien
+        cartes.sort((a, b) => new Date(b.dateSuppression) - new Date(a.dateSuppression));
+
+        let container = document.getElementById("cartes-container");
+        container.innerHTML = "<h2>Éléments supprimés</h2>";
+
+        cartes.forEach((carte) => {
+            let dateAffichee = carte.dateSuppression
+                ? new Date(carte.dateSuppression).toLocaleDateString()
+                : "Date inconnue";
+
+            let div = document.createElement("div");
+            div.classList.add("carte");
+            div.innerHTML = `
+                <h3>${carte.titre}</h3>
+                <span style="font-size: 12px; color: gray;">Supprimé le : ${dateAffichee}</span>
+                <p>${carte.contenu}</p>
+                <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+            `;
+            container.appendChild(div);
+        });
+    };
 }
