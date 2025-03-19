@@ -3,7 +3,16 @@ let db;
 // 🚀 Ouvrir ou créer la base IndexedDB
 const request = indexedDB.open("MoteurDeRecherche", 2); // 🔹 Change la version de 1 à 2
 let modeTri = "date-desc"; // Mode de tri par défaut
-
+document.addEventListener("DOMContentLoaded", function() {
+    let tagFilter = document.getElementById("tagFilter");
+    if (tagFilter) {
+        tagFilter.addEventListener("change", function() {
+            filtrerParTag();
+        });
+    } else {
+        console.error("🔴 Erreur : L'élément 'tagFilter' est introuvable !");
+    }
+});
 
 request.onupgradeneeded = function(event) {
     db = event.target.result;
@@ -134,16 +143,17 @@ function afficherCartes() {
 }
 
 
+
 // 🔎 Filtrer les cartes par tag
 function filtrerParTag() {
     let tagChoisi = document.getElementById("tagFilter").value.toLowerCase();
     let transaction = db.transaction("regles", "readonly");
     let store = transaction.objectStore("regles");
-    let index = store.index("tags");
 
-    let request = index.getAll(tagChoisi);
+    let request = store.getAll();
     request.onsuccess = function() {
-        afficherCartesFiltres(request.result);
+        let cartes = request.result.filter(carte => carte.tags.includes(tagChoisi));
+        afficherCartesFiltres(cartes);
     };
 }
 
@@ -331,7 +341,7 @@ function filtrerParTags() {
     let request = store.getAll();
     request.onsuccess = function() {
         let cartes = request.result.filter(carte =>
-            tagsFiltres.length === 0 || carte.tags.some(tag => tagsFiltres.includes(tag))
+            tagsFiltres.length === 0 || tagsFiltres.every(tag => carte.tags.includes(tag))
         );
 
         afficherCartesFiltres(cartes);
@@ -504,4 +514,39 @@ function viderCorbeille() {
 }
 function fermerCorbeille() {
     document.getElementById("corbeille-page").style.display = "none";
+}
+function mettreAJourTags(tags) {
+    console.log("Tags mis à jour :", tags); // 🔹 Debugging
+    let select = document.getElementById("tagFilter");
+    select.innerHTML = ""; // 🔹 Nettoie la liste avant de la recharger
+
+    // Ajoute une option par défaut
+    let optionDefaut = document.createElement("option");
+    optionDefaut.value = "";
+    optionDefaut.textContent = "Sélectionner un tag";
+    select.appendChild(optionDefaut);
+
+    // Ajoute chaque tag unique
+    tags.forEach(tag => {
+        let option = document.createElement("option");
+        option.value = tag;
+        option.textContent = tag;
+        select.appendChild(option);
+    });
+}
+function toggleDropdown() {
+    let dropdown = document.getElementById("tagDropdown");
+
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+
+        if (dropdown.classList.contains("show")) {
+            // Fermer le menu si on clique en dehors
+            document.addEventListener("click", closeDropdownOnClickOutside);
+        } else {
+            document.removeEventListener("click", closeDropdownOnClickOutside);
+        }
+    } else {
+        console.error("🔴 Erreur : L'élément 'tagDropdown' est introuvable !");
+    }
 }

@@ -22,12 +22,12 @@
     <button onclick="importerCartes()">Importer des cartes</button>
     <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
     
-    <div class="dropdown">
+    <!-- <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Sélectionner des tags ▼</button>
         <div id="tagDropdown" class="dropdown-content">
             <!-- Les tags seront insérés ici -->
         </div>
-    </div>
+    </div> -->
     <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
         Réinitialiser le filtre
     </button>
@@ -52,6 +52,10 @@
     <option value="titre-asc">Titre (A → Z)</option>
     <option value="titre-desc">Titre (Z → A)</option>
 </select>
+<select id="tagFilter">
+    <option value="">Sélectionner un tag</option>
+</select>
+
 <button onclick="afficherCorbeille()">Éléments supprimés</button>
 
 
