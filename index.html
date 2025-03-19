@@ -8,7 +8,13 @@
 </head>
 <body>
     <h1>Mémo par tags</h1>
+    <input type="hidden" id="carteId">
 
+
+    <button onclick="exporterCartes()">Exporter les cartes</button>
+    <button onclick="importerCartes()">Importer des cartes</button>
+    <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
+    
     <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Sélectionner des tags ▼</button>
         <div id="tagDropdown" class="dropdown-content">
@@ -29,8 +35,17 @@
     <input type="text" id="titre" placeholder="Titre">
     <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
     <textarea id="contenu" placeholder="Contenu"></textarea>
-    <button onclick="ajouterCarte()">Ajouter la carte</button>
+    <button id="ajoutCarteBtn" onclick="ajouterCarte()">Ajouter</button>
+    <button id="annulerModifBtn" onclick="annulerModification()" style="display: none;">Annuler</button>
 </div>
+<label for="triSelect">Trier par :</label>
+<select id="triSelect" onchange="changerTri()">
+    <option value="date-desc">Du plus récent au plus ancien</option>
+    <option value="date-asc">Du plus ancien au plus récent</option>
+    <option value="titre-asc">Titre (A → Z)</option>
+    <option value="titre-desc">Titre (Z → A)</option>
+</select>
+
 
 
     <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">

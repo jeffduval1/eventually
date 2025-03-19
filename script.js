@@ -2,6 +2,8 @@ let db;
 
 // 🚀 Ouvrir ou créer la base IndexedDB
 const request = indexedDB.open("MoteurDeRecherche", 1);
+let modeTri = "date-desc"; // Mode de tri par défaut
+
 
 request.onupgradeneeded = function(event) {
     db = event.target.result;
@@ -69,13 +71,37 @@ function afficherCartes() {
     let request = store.getAll();
     request.onsuccess = function() {
         let cartes = request.result;
+
+        // 🎯 Appliquer le tri selon le mode choisi
+        cartes.sort((a, b) => {
+            let dateA = new Date(a.dateCreation).getTime();
+            let dateB = new Date(b.dateCreation).getTime();
+            let titreA = a.titre.toLowerCase();
+            let titreB = b.titre.toLowerCase();
+
+            switch (modeTri) {
+                case "date-desc":
+                    return dateB - dateA; // Plus récent en premier
+                case "date-asc":
+                    return dateA - dateB; // Plus ancien en premier
+                case "titre-asc":
+                    return titreA.localeCompare(titreB); // A → Z
+                case "titre-desc":
+                    return titreB.localeCompare(titreA); // Z → A
+                default:
+                    return dateB - dateA; // Par défaut, du plus récent au plus ancien
+            }
+        });
+
         let container = document.getElementById("cartes-container");
         container.innerHTML = "";
 
         let tagsUniques = new Set();
 
         cartes.forEach((carte) => {
-            let dateAffichee = carte.dateCreation ? new Date(carte.dateCreation).toLocaleDateString() : "Date inconnue";
+            let dateAffichee = carte.dateCreation 
+                ? new Date(carte.dateCreation).toLocaleDateString() 
+                : "Date inconnue";
 
             let div = document.createElement("div");
             div.classList.add("carte");
@@ -86,6 +112,7 @@ function afficherCartes() {
                 </div>
                 <p>${carte.contenu}</p>
                 <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+                <button onclick="modifierCarte(${carte.id})">Modifier</button>
                 <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
             `;
             container.appendChild(div);
@@ -96,6 +123,7 @@ function afficherCartes() {
         mettreAJourTags([...tagsUniques]);
     };
 }
+
 
 // 🔎 Filtrer les cartes par tag
 function filtrerParTag() {
@@ -115,12 +143,20 @@ function afficherCartesFiltres(cartes) {
     container.innerHTML = "";
 
     cartes.forEach((carte) => {
+        let dateAffichee = carte.dateCreation 
+            ? new Date(carte.dateCreation).toLocaleDateString() 
+            : "Date inconnue"; // ✅ Définition correcte
+
         let div = document.createElement("div");
         div.classList.add("carte");
         div.innerHTML = `
-            <h3>${carte.titre}</h3>
+            <div style="display: flex; justify-content: space-between;">
+                <h3>${carte.titre}</h3>
+                <span style="font-size: 12px; color: gray;">${dateAffichee}</span>
+            </div>
             <p>${carte.contenu}</p>
             <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+            <button onclick="modifierCarte(${carte.id})">Modifier</button>
             <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
         `;
         container.appendChild(div);
@@ -140,6 +176,84 @@ function filtrerCartes() {
         );
         afficherCartesFiltres(cartes);
     };
+}
+function modifierCarte(id) {
+    let transaction = db.transaction("regles", "readonly");
+    let store = transaction.objectStore("regles");
+
+    let request = store.get(id);
+    request.onsuccess = function() {
+        let carte = request.result;
+
+        // Remplir le formulaire avec les valeurs actuelles
+        document.getElementById("titre").value = carte.titre;
+        document.getElementById("tags").value = carte.tags.join(", ");
+        document.getElementById("contenu").value = carte.contenu;
+
+        // Stocker l'ID pour la mise à jour
+        document.getElementById("carteId").value = carte.id;
+
+        // Afficher le formulaire
+        document.getElementById("ajoutCarteContainer").style.display = "block";
+        document.getElementById("toggleFormBtn").style.display = "none";
+
+        // Modifier le bouton d'ajout pour qu'il mette à jour au lieu d'ajouter
+        let bouton = document.getElementById("ajoutCarteBtn");
+        bouton.textContent = "Enregistrer les informations";
+        bouton.onclick = enregistrerModification;
+
+        // Afficher le bouton "Annuler"
+        document.getElementById("annulerModifBtn").style.display = "inline-block";
+    };
+}
+function enregistrerModification() {
+    let id = parseInt(document.getElementById("carteId").value);
+    let titre = document.getElementById("titre").value;
+    let tagsInput = document.getElementById("tags").value;
+    let contenu = document.getElementById("contenu").value;
+
+    if (!titre || !contenu) {
+        alert("Veuillez remplir le titre et le contenu !");
+        return;
+    }
+
+    let tags = tagsInput ? tagsInput.toLowerCase().split(',').map(tag => tag.trim()) : [];
+
+    let transaction = db.transaction("regles", "readwrite");
+    let store = transaction.objectStore("regles");
+
+    let request = store.get(id);
+    request.onsuccess = function() {
+        let carte = request.result;
+        carte.titre = titre;
+        carte.tags = tags;
+        carte.contenu = contenu;
+
+        let updateRequest = store.put(carte);
+        updateRequest.onsuccess = function() {
+            afficherCartes();
+            annulerModification(); // Réinitialiser le formulaire après modification
+        };
+    };
+}
+function annulerModification() {
+    // Réinitialiser les champs du formulaire
+    document.getElementById("titre").value = "";
+    document.getElementById("tags").value = "";
+    document.getElementById("contenu").value = "";
+    document.getElementById("carteId").value = "";
+
+    // Remettre le bouton à "Ajouter"
+    let bouton = document.getElementById("ajoutCarteBtn");
+    bouton.textContent = "Ajouter";
+    bouton.onclick = ajouterCarte;
+
+    // Cacher le formulaire et réafficher le bouton principal
+    document.getElementById("ajoutCarteContainer").style.display = "none";
+    document.getElementById("toggleFormBtn").style.display = "block";
+
+    // Cacher le bouton "Annuler"
+    document.getElementById("annulerModifBtn").style.display = "none";
 }
 
 // ❌ Supprimer une règle
@@ -290,4 +404,50 @@ function retirerEtiquette(tag) {
             toggleBtn.style.display = "none"; // Cacher le bouton après ouverture
         }
     }
-    
+    // 🚀 Exporter les cartes en JSON
+function exporterCartes() {
+    let transaction = db.transaction("regles", "readonly");
+    let store = transaction.objectStore("regles");
+
+    let request = store.getAll();
+    request.onsuccess = function() {
+        let cartes = request.result;
+        let blob = new Blob([JSON.stringify(cartes, null, 2)], { type: "application/json" });
+
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "cartes_backup.json";
+        a.click();
+    };
+}
+
+// 🚀 Importer des cartes depuis un fichier JSON
+function importerCartes() {
+    document.getElementById("importFile").click();
+}
+
+// 🚀 Charger un fichier et ajouter les cartes dans IndexedDB
+function chargerFichierImport() {
+    let file = document.getElementById("importFile").files[0];
+    if (!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(event) {
+        let cartes = JSON.parse(event.target.result);
+        
+        let transaction = db.transaction("regles", "readwrite");
+        let store = transaction.objectStore("regles");
+
+        cartes.forEach(carte => {
+            store.put(carte);
+        });
+
+        afficherCartes(); // Met à jour l'affichage après l'import
+    };
+    reader.readAsText(file);
+}
+function changerTri() {
+    let select = document.getElementById("triSelect");
+    modeTri = select.value; // Récupère la valeur sélectionnée
+    afficherCartes(); // Recharge les cartes avec le nouvel ordre
+}
