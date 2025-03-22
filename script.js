@@ -44,6 +44,48 @@ let modeTri = "date-desc"; // Mode de tri par défaut
 
 
 document.addEventListener("DOMContentLoaded", function() {
+    function chargerMenuCategories() {
+        const menu = document.getElementById("listeCategories");
+        const affichage = document.getElementById("categorieSelectionnee");
+        const input = document.getElementById("categorieChoisie");
+    
+        // Nettoyer le menu
+        menu.innerHTML = "";
+    
+        let transaction = db.transaction("categories", "readonly");
+        let store = transaction.objectStore("categories");
+        let request = store.getAll();
+    
+        request.onsuccess = function () {
+            const categories = request.result;
+    
+            categories.sort((a, b) => a.nom.localeCompare(b.nom));
+            categories.forEach(cat => {
+                let div = document.createElement("div");
+                div.textContent = cat.nom;
+                div.style.backgroundColor = cat.couleur;
+                div.style.color = getTextColor(cat.couleur);
+    
+                div.addEventListener("click", () => {
+                    affichage.textContent = cat.nom;
+                    affichage.style.backgroundColor = cat.couleur;
+                    affichage.style.color = getTextColor(cat.couleur);
+                    input.value = cat.nom;
+                    input.dataset.couleur = cat.couleur;
+                    menu.style.display = "none";
+                });
+    
+                menu.appendChild(div);
+            });
+        };
+    }
+    
+    // Cliquer sur le champ ouvre/ferme le menu
+    document.getElementById("categorieSelectionnee").addEventListener("click", () => {
+        const menu = document.getElementById("listeCategories");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    });
+    
      // 🔹 Ouverture de la modale
   document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
     genererOptionsCouleursRestantes(); // 🔹 Mise à jour du menu déroulant
@@ -64,14 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
     
 
-    document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
-        const modal = document.getElementById("modalCategorie");
-        if (modal) modal.style.display = "block";
-    });
-    document.getElementById("closeModal").addEventListener("click", () => {
-        const modal = document.getElementById("modalCategorie");
-        if (modal) modal.style.display = "none";
-    });
+    
     window.addEventListener("click", function(event) {
         const modal = document.getElementById("modalCategorie");
         if (event.target === modal) {
@@ -96,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
    
     
-    document.addEventListener("DOMContentLoaded", genererOptionsCouleurs);
+
     let tagFilter = document.getElementById("tagFilter");
     if (tagFilter) {
         tagFilter.addEventListener("change", function() {
@@ -129,7 +164,9 @@ request.onupgradeneeded = function(event) {
 
 request.onsuccess = function(event) {
     db = event.target.result;
-    chargerCategoriesExistantes();
+    
+    
+    chargerCategoriesExistantes(); // 🔹 Ajout de l’appel manquant !
     afficherCartes(); // Charger les règles au démarrage
     genererOptionsCouleursRestantes();
 };
@@ -156,46 +193,57 @@ function ajouterCarte() {
 
     let tags = tagsInput ? tagsInput.toLowerCase().split(',').map(tag => tag.trim()) : [];
 
-    let transaction = db.transaction("regles", "readwrite");
+    // 🔄 Récupération de la catégorie depuis le champ caché
+    const inputCategorie = document.getElementById("categorieChoisie");
+    if (!inputCategorie) {
+        console.warn("⚠️ Le champ caché de catégorie est introuvable.");
+        return;
+    }
+
+    let categorie = inputCategorie.value;
+    let couleurCategorie = inputCategorie.dataset.couleur || "#ccc";
+    let dateCreation = new Date().toISOString();
+
+    let transaction = db.transaction(["regles", "categories"], "readwrite");
     let store = transaction.objectStore("regles");
+    let catStore = transaction.objectStore("categories");
 
-    let dateCreation = new Date().toISOString(); // 🔹 Stocke la date en format ISO
+    let nouvelleRegle = {
+        titre,
+        tags,
+        contenu,
+        dateCreation,
+        categorie,
+        couleurCategorie
+    };
 
- 
-    let select = document.getElementById("categorieSelect");
-let categorie = select.value;
-let couleurCategorie = select.selectedOptions[0]?.dataset.couleur || "#ccc";
-    
     // Vérifie si la catégorie existe déjà
-    let catTransaction = db.transaction("categories", "readwrite");
-    let catStore = catTransaction.objectStore("categories");
     let getCategorie = catStore.get(categorie);
-    
-    getCategorie.onsuccess = function() {
+    getCategorie.onsuccess = function () {
         if (!getCategorie.result && categorie) {
-            // Catégorie nouvelle → on l'enregistre
             let nouvelleCategorie = { nom: categorie, couleur: couleurCategorie };
             catStore.add(nouvelleCategorie);
         }
     };
-    
-    // Ajoute la carte avec la catégorie
-    let nouvelleRegle = { titre, tags, contenu, dateCreation, categorie, couleurCategorie };
+
     let request = store.add(nouvelleRegle);
-    request.onsuccess = function() {
+    request.onsuccess = function () {
         afficherCartes();
 
-        // 🔹 Cacher le formulaire et réafficher le bouton "Créer une nouvelle carte"
-        document.getElementById("ajoutCarteContainer").style.display = "none";
-        document.getElementById("toggleFormBtn").style.display = "block";
-
-        // 🔹 Réinitialiser les champs
+        // Réinitialiser les champs
         document.getElementById("titre").value = "";
         document.getElementById("tags").value = "";
         document.getElementById("contenu").value = "";
+
+        document.getElementById("categorieSelectionnee").textContent = "-- Choisir une catégorie --";
+        document.getElementById("categorieSelectionnee").style = "";
+        inputCategorie.value = "";
+        inputCategorie.dataset.couleur = "";
+
+        document.getElementById("ajoutCarteContainer").style.display = "none";
+        document.getElementById("toggleFormBtn").style.display = "block";
     };
 }
-
 
 
 
@@ -726,25 +774,37 @@ function chargerCategoriesExistantes() {
     let store = transaction.objectStore("categories");
     let request = store.getAll();
 
-    request.onsuccess = function() {
+    request.onsuccess = function () {
         let categories = request.result;
-        let select = document.getElementById("categorieSelect");
+        const inputCategorie = document.getElementById("categorieChoisie");
         select.innerHTML = "";
 
         let defaut = document.createElement("option");
         defaut.value = "";
         defaut.textContent = "-- Choisir une catégorie --";
+        defaut.style.backgroundColor = "white";
+        defaut.style.color = "black";
         select.appendChild(defaut);
-
+        categories.sort((a, b) => a.nom.localeCompare(b.nom));
         categories.forEach(cat => {
             let option = document.createElement("option");
             option.value = cat.nom;
             option.textContent = cat.nom;
             option.dataset.couleur = cat.couleur;
+            option.style.backgroundColor = cat.couleur;
+            option.style.color = getTextColor(cat.couleur);
             select.appendChild(option);
 
-            // Retirer cette couleur des couleurs disponibles
+            // Supprimer la couleur de la liste des couleurs disponibles
             couleursDisponibles = couleursDisponibles.filter(c => c !== cat.couleur);
+        });
+
+        // Appliquer immédiatement la couleur au menu s’il y a une sélection
+        select.addEventListener("change", function () {
+            const selected = this.selectedOptions[0];
+            const couleur = selected.dataset.couleur || "#fff";
+            this.style.backgroundColor = couleur;
+            this.style.color = getTextColor(couleur);
         });
     };
 }
@@ -820,8 +880,17 @@ function getNomCouleur(hex) {
 }
 
 function creerNouvelleCategorie() {
-    const nom = document.getElementById("nouvelleCategorieNom").value.trim();
-    const couleur = document.getElementById("nouvelleCouleur").value;
+    const nomInput = document.getElementById("nouvelleCategorieNom");
+    const couleurSelect = document.getElementById("nouvelleCouleur");
+    const modal = document.getElementById("modalCategorie");
+
+    if (!nomInput || !couleurSelect || !modal) {
+        console.error("❌ Un ou plusieurs éléments du DOM sont introuvables.");
+        return;
+    }
+
+    const nom = nomInput.value.trim();
+    const couleur = couleurSelect.value;
 
     if (!nom || !couleur) {
         alert("Veuillez nommer la catégorie et choisir une couleur.");
@@ -833,25 +902,68 @@ function creerNouvelleCategorie() {
 
     let request = store.add({ nom, couleur });
 
-    request.onsuccess = function() {
-        // Mettre à jour la liste
+    request.onsuccess = function () {
         couleursDisponibles = couleursDisponibles.filter(c => c !== couleur);
-        chargerCategoriesExistantes();
         genererOptionsCouleursRestantes();
+        chargerMenuCategories(); // 🔁 Recharge le menu personnalisé
 
-        // Sélectionner la nouvelle catégorie
-        const select = document.getElementById("categorieSelect");
-        setTimeout(() => {
-            select.value = nom;
-        }, 100); // délai pour laisser le temps à la liste de se recharger
+        // Appliquer la catégorie sélectionnée visuellement
+        document.getElementById("categorieSelectionnee").textContent = nom;
+        document.getElementById("categorieSelectionnee").style.backgroundColor = couleur;
+        document.getElementById("categorieSelectionnee").style.color = getTextColor(couleur);
 
-        // Réinitialiser le formulaire
-        document.getElementById("formNouvelleCategorie").style.display = "none";
-        document.getElementById("nouvelleCategorieNom").value = "";
-        document.getElementById("nouvelleCouleur").value = "";
+        // Stocker dans le champ caché
+        const inputCat = document.getElementById("categorieChoisie");
+        inputCat.value = nom;
+        inputCat.dataset.couleur = couleur;
+
+        modal.style.display = "none";
+        nomInput.value = "";
+        couleurSelect.value = "";
     };
 
-    request.onerror = function() {
+    request.onerror = function () {
         alert("Cette catégorie existe déjà.");
+    };
+}
+function chargerMenuCategories() {
+    const menu = document.getElementById("listeCategories");
+    const affichage = document.getElementById("categorieSelectionnee");
+    const input = document.getElementById("categorieChoisie");
+
+    if (!menu || !affichage || !input) {
+        console.warn("⚠️ Eléments du menu de catégorie manquants.");
+        return;
+    }
+
+    menu.innerHTML = "";
+
+    let transaction = db.transaction("categories", "readonly");
+    let store = transaction.objectStore("categories");
+    let request = store.getAll();
+
+    request.onsuccess = function () {
+        const categories = request.result;
+        categories.sort((a, b) => a.nom.localeCompare(b.nom));
+
+        categories.forEach(cat => {
+            let div = document.createElement("div");
+            div.textContent = cat.nom;
+            div.style.backgroundColor = cat.couleur;
+            div.style.color = getTextColor(cat.couleur);
+            div.style.padding = "6px";
+            div.style.cursor = "pointer";
+
+            div.addEventListener("click", () => {
+                affichage.textContent = cat.nom;
+                affichage.style.backgroundColor = cat.couleur;
+                affichage.style.color = getTextColor(cat.couleur);
+                input.value = cat.nom;
+                input.dataset.couleur = cat.couleur;
+                menu.style.display = "none";
+            });
+
+            menu.appendChild(div);
+        });
     };
 }

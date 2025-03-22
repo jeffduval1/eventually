@@ -47,7 +47,12 @@
 
 <!-- Choix d'une catégorie existante -->
 <label for="selectCategorie">Catégorie :</label>
-<select id="selectCategorie">
+<!-- Conteneur pour le menu personnalisé -->
+<div id="menuCategorie" class="menu-categorie">
+    <div id="categorieSelectionnee" class="categorie-selection">-- Choisir une catégorie --</div>
+    <div id="listeCategories" class="liste-categories" style="display: none;"></div>
+  </div>
+  <input type="hidden" id="categorieChoisie">
   <option value="">Sélectionner une catégorie</option>
   <!-- Remplie dynamiquement -->
 </select>

@@ -190,4 +190,35 @@ button:hover {
   /* Animation d'apparition */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .menu-categorie {
+    position: relative;
+    width: 250px;
+  }
   
+  .categorie-selection {
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .liste-categories {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .liste-categories div {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .liste-categories div:hover {
+    opacity: 0.9;
+  }
