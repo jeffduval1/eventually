@@ -1,9 +1,33 @@
 let db;
-
+const couleursDisponibles = [
+    "#E53935", "#D32F2F", "#FB8C00", "#FDD835", "#FBC02D", "#C0CA33",
+    "#43A047", "#2E7D32", "#00ACC1", "#00897B", "#29B6F6", "#1E88E5",
+    "#1565C0", "#3949AB", "#5C6BC0", "#AB47BC", "#7B1FA2", "#D81B60",
+    "#F06292", "#FF7043", "#A1887F", "#546E7A", "#B0BEC5", "#263238",
+    "#FFE082", "#AED581", "#4FC3F7", "#B39DDB", "#8D6E63", "#FFD54F"
+];
 // 🚀 Ouvrir ou créer la base IndexedDB
-const request = indexedDB.open("MoteurDeRecherche", 2); // 🔹 Change la version de 1 à 2
+const request = indexedDB.open("MoteurDeRecherche", 3); // 🔹 Change la version de 1 à 2
 let modeTri = "date-desc"; // Mode de tri par défaut
 document.addEventListener("DOMContentLoaded", function() {
+
+    function genererOptionsCouleurs() {
+        const select = document.getElementById("couleurCategorie");
+        select.innerHTML = "";
+    
+        couleursDisponibles.forEach(couleur => {
+            const option = document.createElement("option");
+            option.value = couleur;
+            option.textContent = couleur;
+            option.style.backgroundColor = couleur;
+            option.style.color = getTextColor(couleur);
+            select.appendChild(option);
+        });
+    }
+    
+   
+    
+    document.addEventListener("DOMContentLoaded", genererOptionsCouleurs);
     let tagFilter = document.getElementById("tagFilter");
     if (tagFilter) {
         tagFilter.addEventListener("change", function() {
@@ -13,21 +37,32 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("🔴 Erreur : L'élément 'tagFilter' est introuvable !");
     }
 });
-
+function getTextColor(hexColor) {
+    const r = parseInt(hexColor.substr(1,2), 16);
+    const g = parseInt(hexColor.substr(3,2), 16);
+    const b = parseInt(hexColor.substr(5,2), 16);
+    const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return luminance > 0.6 ? "black" : "white";
+}
 request.onupgradeneeded = function(event) {
     db = event.target.result;
-    
-    // 📌 Vérifier si l’objectStore "regles" existe déjà
+
     if (!db.objectStoreNames.contains("regles")) {
         let store = db.createObjectStore("regles", { keyPath: "id", autoIncrement: true });
         store.createIndex("tags", "tags", { multiEntry: true });
     }
 
-    // 📌 Nouvelle objectStore pour la corbeille
     if (!db.objectStoreNames.contains("corbeille")) {
-        let trashStore = db.createObjectStore("corbeille", { keyPath: "id", autoIncrement: true });
+        db.createObjectStore("corbeille", { keyPath: "id", autoIncrement: true });
+    }
+
+    // 🔹 Le bloc qu’il faut vérifier
+    if (!db.objectStoreNames.contains("categories")) {
+        let catStore = db.createObjectStore("categories", { keyPath: "nom" });
+        catStore.createIndex("nom", "nom", { unique: true });
     }
 };
+
 
 request.onsuccess = function(event) {
     db = event.target.result;
@@ -61,8 +96,25 @@ function ajouterCarte() {
 
     let dateCreation = new Date().toISOString(); // 🔹 Stocke la date en format ISO
 
-    let nouvelleRegle = { titre, tags, contenu, dateCreation };
-
+ 
+    let categorie = document.getElementById("categorie").value.trim();
+    let couleurCategorie = document.getElementById("couleurCategorie").value;
+    
+    // Vérifie si la catégorie existe déjà
+    let catTransaction = db.transaction("categories", "readwrite");
+    let catStore = catTransaction.objectStore("categories");
+    let getCategorie = catStore.get(categorie);
+    
+    getCategorie.onsuccess = function() {
+        if (!getCategorie.result && categorie) {
+            // Catégorie nouvelle → on l'enregistre
+            let nouvelleCategorie = { nom: categorie, couleur: couleurCategorie };
+            catStore.add(nouvelleCategorie);
+        }
+    };
+    
+    // Ajoute la carte avec la catégorie
+    let nouvelleRegle = { titre, tags, contenu, dateCreation, categorie, couleurCategorie };
     let request = store.add(nouvelleRegle);
     request.onsuccess = function() {
         afficherCartes();
@@ -123,19 +175,34 @@ function afficherCartes() {
 
             let div = document.createElement("div");
             div.classList.add("carte");
-            div.innerHTML = `
-                <div style="display: flex; justify-content: space-between;">
-                    <h3>${carte.titre}</h3>
-                    <span style="font-size: 12px; color: gray;">${dateAffichee}</span>
-                </div>
-                <p>${carte.contenu}</p>
-                <p class="tags">Tags : ${carte.tags.join(", ")}</p>
-                <button onclick="modifierCarte(${carte.id})">Modifier</button>
-                <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
-            `;
+            div.setAttribute("data-id", carte.id);
+            div.innerHTML = `            
+    <div style="display: flex; justify-content: space-between;">
+        <h3>${carte.titre}</h3>
+        <span style="font-size: 12px; color: gray;">${dateAffichee}</span>
+    </div>
+    <div class="badge-categorie" 
+         style="background-color:${carte.couleurCategorie || "#ccc"}; 
+                color:${getTextColor(carte.couleurCategorie || "#ccc")};
+                padding: 4px 8px;
+                border-radius: 4px;
+                display: inline-block;
+                margin: 4px 0;">
+        ${carte.categorie || 'Sans catégorie'}
+    </div>
+    <p>${carte.contenu}</p>
+    <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+    <button onclick="modifierCarte(${carte.id})">Modifier</button>
+    <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
+`;
+
             container.appendChild(div);
 
             carte.tags.forEach(tag => tagsUniques.add(tag));
+            div.style.borderLeft = `8px solid ${carte.couleurCategorie || '#ccc'}`;
+           
+   
+
         });
 
         mettreAJourTags([...tagsUniques]);
@@ -203,26 +270,22 @@ function modifierCarte(id) {
     let request = store.get(id);
     request.onsuccess = function() {
         let carte = request.result;
+        let carteDiv = document.querySelector(`.carte[data-id="${id}"]`);
 
-        // Remplir le formulaire avec les valeurs actuelles
-        document.getElementById("titre").value = carte.titre;
-        document.getElementById("tags").value = carte.tags.join(", ");
-        document.getElementById("contenu").value = carte.contenu;
-
-        // Stocker l'ID pour la mise à jour
-        document.getElementById("carteId").value = carte.id;
-
-        // Afficher le formulaire
-        document.getElementById("ajoutCarteContainer").style.display = "block";
-        document.getElementById("toggleFormBtn").style.display = "none";
-
-        // Modifier le bouton d'ajout pour qu'il mette à jour au lieu d'ajouter
-        let bouton = document.getElementById("ajoutCarteBtn");
-        bouton.textContent = "Enregistrer les informations";
-        bouton.onclick = enregistrerModification;
-
-        // Afficher le bouton "Annuler"
-        document.getElementById("annulerModifBtn").style.display = "inline-block";
+        // Crée un petit formulaire inline
+        carteDiv.innerHTML = `
+            <input type="text" id="edit-titre-${id}" value="${carte.titre}">
+            <input type="text" id="edit-tags-${id}" value="${carte.tags.join(", ")}">
+            <input type="text" id="edit-categorie-${id}" value="${carte.categorie || ""}">
+            <select id="edit-couleur-${id}">
+                ${couleursDisponibles.map(c => 
+                    `<option value="${c}" ${carte.couleurCategorie === c ? "selected" : ""} style="background:${c};color:${getTextColor(c)}">${c}</option>`
+                ).join("")}
+            </select>
+            <textarea id="edit-contenu-${id}">${carte.contenu}</textarea>
+            <button onclick="enregistrerModificationInline(${id})">Enregistrer</button>
+            <button onclick="afficherCartes()">Annuler</button>
+        `;
     };
 }
 function enregistrerModification() {
@@ -549,4 +612,46 @@ function toggleDropdown() {
     } else {
         console.error("🔴 Erreur : L'élément 'tagDropdown' est introuvable !");
     }
+}
+function enregistrerModificationInline(id) {
+    let titre = document.getElementById(`edit-titre-${id}`).value;
+    let tagsInput = document.getElementById(`edit-tags-${id}`).value;
+    let categorie = document.getElementById(`edit-categorie-${id}`).value;
+    let couleurCategorie = document.getElementById(`edit-couleur-${id}`).value;
+    let contenu = document.getElementById(`edit-contenu-${id}`).value;
+
+    if (!titre || !contenu) {
+        alert("Veuillez remplir le titre et le contenu !");
+        return;
+    }
+
+    let tags = tagsInput ? tagsInput.toLowerCase().split(',').map(t => t.trim()) : [];
+
+    let transaction = db.transaction(["regles", "categories"], "readwrite");
+    let store = transaction.objectStore("regles");
+    let catStore = transaction.objectStore("categories");
+
+    let request = store.get(id);
+    request.onsuccess = function() {
+        let carte = request.result;
+        carte.titre = titre;
+        carte.tags = tags;
+        carte.contenu = contenu;
+        carte.categorie = categorie;
+        carte.couleurCategorie = couleurCategorie;
+
+        // Enregistre la catégorie si elle est nouvelle
+        if (categorie) {
+            let catRequest = catStore.get(categorie);
+            catRequest.onsuccess = function() {
+                if (!catRequest.result) {
+                    catStore.add({ nom: categorie, couleur: couleurCategorie });
+                }
+            };
+        }
+
+        store.put(carte).onsuccess = function() {
+            afficherCartes(); // Recharge après modification
+        };
+    };
 }
