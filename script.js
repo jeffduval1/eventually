@@ -81,10 +81,34 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // Cliquer sur le champ ouvre/ferme le menu
-    document.getElementById("categorieSelectionnee").addEventListener("click", () => {
+    document.getElementById("categorieSelectionnee").addEventListener("click", (e) => {
+        e.stopPropagation(); // Empêche que le clic ferme immédiatement le menu
         const menu = document.getElementById("listeCategories");
-        menu.style.display = menu.style.display === "block" ? "none" : "block";
+        const isVisible = menu.style.display === "block";
+    
+        // Ferme tous les autres menus ouverts, par sécurité
+        document.querySelectorAll(".liste-categories").forEach(m => m.style.display = "none");
+    
+        if (!isVisible) {
+            menu.style.display = "block";
+    
+            // 👂 Ajoute un écouteur une seule fois pour gérer la fermeture
+            setTimeout(() => {
+                document.addEventListener("click", closeCategoryMenuOnClickOutside, { once: true });
+            }, 0);
+        } else {
+            menu.style.display = "none";
+        }
     });
+
+    function closeCategoryMenuOnClickOutside(event) {
+        const menu = document.getElementById("listeCategories");
+        const bouton = document.getElementById("categorieSelectionnee");
+    
+        if (!menu.contains(event.target) && !bouton.contains(event.target)) {
+            menu.style.display = "none";
+        }
+    }
     
      // 🔹 Ouverture de la modale
   document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
@@ -564,15 +588,8 @@ function retirerEtiquette(tag) {
             document.removeEventListener("click", closeDropdownOnClickOutside);
         }
     }
-    function toggleForm() {
-        let formContainer = document.getElementById("ajoutCarteContainer");
-        let toggleBtn = document.getElementById("toggleFormBtn");
     
-        if (formContainer.style.display === "none") {
-            formContainer.style.display = "block";
-            toggleBtn.style.display = "none"; // Cacher le bouton après ouverture
-        }
-    }
+    
     // 🚀 Exporter les cartes en JSON
 function exporterCartes() {
     let transaction = db.transaction("regles", "readonly");
@@ -966,4 +983,16 @@ function chargerMenuCategories() {
             menu.appendChild(div);
         });
     };
+}
+window.toggleForm = function toggleForm() {
+    let formContainer = document.getElementById("ajoutCarteContainer");
+    let toggleBtn = document.getElementById("toggleFormBtn");
+
+    if (formContainer.style.display === "none") {
+        formContainer.style.display = "block";
+        toggleBtn.style.display = "none"; // Cacher le bouton après ouverture
+
+        // ✅ Charger les catégories dans le menu personnalisé
+        chargerMenuCategories();
+    }
 }
