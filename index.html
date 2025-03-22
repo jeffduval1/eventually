@@ -43,13 +43,35 @@
 <div id="ajoutCarteContainer" style="display: none;">
     <input type="text" id="titre" placeholder="Titre">
     <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
-    <label for="categorie">Catégorie :</label>
-<input type="text" id="categorie" placeholder="Nouvelle ou existante">
 
-<label for="couleurCategorie">Couleur de la catégorie :</label>
-<select id="couleurCategorie">
-  <!-- Les options seront générées dynamiquement via JS -->
+
+<!-- Choix d'une catégorie existante -->
+<label for="selectCategorie">Catégorie :</label>
+<select id="selectCategorie">
+  <option value="">Sélectionner une catégorie</option>
+  <!-- Remplie dynamiquement -->
 </select>
+
+<!-- Bouton pour afficher le formulaire de création -->
+<button id="btnAfficherFormCategorie">Créer une catégorie</button>
+
+<!-- 🌟 Fenêtre modale de création de catégorie -->
+<div id="modalCategorie" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h3>Créer une nouvelle catégorie</h3>
+  
+      <label for="nouvelleCategorieNom">Nom :</label>
+      <input type="text" id="nouvelleCategorieNom" placeholder="Nom de la catégorie">
+  
+      <label for="nouvelleCouleur">Choisir une couleur :</label>
+      <select id="nouvelleCouleur">
+        <!-- Couleurs générées dynamiquement -->
+      </select>
+  
+      <button id="btnCreerCategorie">Ajouter la catégorie</button>
+    </div>
+  </div>
     <textarea id="contenu" placeholder="Contenu"></textarea>
     <button id="ajoutCarteBtn" onclick="ajouterCarte()">Ajouter</button>
     <button id="annulerModifBtn" onclick="annulerModification()" style="display: none;">Annuler</button>

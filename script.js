@@ -1,16 +1,85 @@
 let db;
-const couleursDisponibles = [
+let couleursDisponibles = [
     "#E53935", "#D32F2F", "#FB8C00", "#FDD835", "#FBC02D", "#C0CA33",
     "#43A047", "#2E7D32", "#00ACC1", "#00897B", "#29B6F6", "#1E88E5",
     "#1565C0", "#3949AB", "#5C6BC0", "#AB47BC", "#7B1FA2", "#D81B60",
     "#F06292", "#FF7043", "#A1887F", "#546E7A", "#B0BEC5", "#263238",
     "#FFE082", "#AED581", "#4FC3F7", "#B39DDB", "#8D6E63", "#FFD54F"
 ];
+const nomCouleurs = {
+    "#E53935": "Rouge vif",
+    "#D32F2F": "Rouge foncé",
+    "#FB8C00": "Orange",
+    "#FDD835": "Jaune citron",
+    "#FBC02D": "Jaune doré",
+    "#C0CA33": "Vert lime",
+    "#43A047": "Vert",
+    "#2E7D32": "Vert foncé",
+    "#00ACC1": "Bleu sarcelle",
+    "#00897B": "Bleu-vert foncé",
+    "#29B6F6": "Bleu clair",
+    "#1E88E5": "Bleu moyen",
+    "#1565C0": "Bleu foncé",
+    "#3949AB": "Indigo",
+    "#5C6BC0": "Indigo clair",
+    "#AB47BC": "Violet",
+    "#7B1FA2": "Violet foncé",
+    "#D81B60": "Rose framboise",
+    "#F06292": "Rose clair",
+    "#FF7043": "Orange saumon",
+    "#A1887F": "Brun taupe",
+    "#546E7A": "Bleu gris",
+    "#B0BEC5": "Gris clair",
+    "#263238": "Gris anthracite",
+    "#FFE082": "Jaune pastel",
+    "#AED581": "Vert pastel",
+    "#4FC3F7": "Bleu pastel",
+    "#B39DDB": "Lavande",
+    "#8D6E63": "Brun chaud",
+    "#FFD54F": "Jaune miel"
+};
 // 🚀 Ouvrir ou créer la base IndexedDB
 const request = indexedDB.open("MoteurDeRecherche", 3); // 🔹 Change la version de 1 à 2
 let modeTri = "date-desc"; // Mode de tri par défaut
-document.addEventListener("DOMContentLoaded", function() {
 
+
+document.addEventListener("DOMContentLoaded", function() {
+     // 🔹 Ouverture de la modale
+  document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
+    genererOptionsCouleursRestantes(); // 🔹 Mise à jour du menu déroulant
+    document.getElementById("modalCategorie").style.display = "block";
+  });
+
+  // 🔹 Fermeture via le bouton croix
+  document.getElementById("closeModal").addEventListener("click", () => {
+    document.getElementById("modalCategorie").style.display = "none";
+  });
+
+  // 🔹 Fermeture en cliquant à l'extérieur du contenu
+  window.addEventListener("click", function(event) {
+    const modal = document.getElementById("modalCategorie");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+    
+
+    document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
+        const modal = document.getElementById("modalCategorie");
+        if (modal) modal.style.display = "block";
+    });
+    document.getElementById("closeModal").addEventListener("click", () => {
+        const modal = document.getElementById("modalCategorie");
+        if (modal) modal.style.display = "none";
+    });
+    window.addEventListener("click", function(event) {
+        const modal = document.getElementById("modalCategorie");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    document.getElementById("btnCreerCategorie").addEventListener("click", creerNouvelleCategorie);
     function genererOptionsCouleurs() {
         const select = document.getElementById("couleurCategorie");
         select.innerHTML = "";
@@ -37,13 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("🔴 Erreur : L'élément 'tagFilter' est introuvable !");
     }
 });
-function getTextColor(hexColor) {
-    const r = parseInt(hexColor.substr(1,2), 16);
-    const g = parseInt(hexColor.substr(3,2), 16);
-    const b = parseInt(hexColor.substr(5,2), 16);
-    const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
-    return luminance > 0.6 ? "black" : "white";
-}
+
 request.onupgradeneeded = function(event) {
     db = event.target.result;
 
@@ -66,7 +129,9 @@ request.onupgradeneeded = function(event) {
 
 request.onsuccess = function(event) {
     db = event.target.result;
+    chargerCategoriesExistantes();
     afficherCartes(); // Charger les règles au démarrage
+    genererOptionsCouleursRestantes();
 };
 
 request.onerror = function() {
@@ -97,8 +162,9 @@ function ajouterCarte() {
     let dateCreation = new Date().toISOString(); // 🔹 Stocke la date en format ISO
 
  
-    let categorie = document.getElementById("categorie").value.trim();
-    let couleurCategorie = document.getElementById("couleurCategorie").value;
+    let select = document.getElementById("categorieSelect");
+let categorie = select.value;
+let couleurCategorie = select.selectedOptions[0]?.dataset.couleur || "#ccc";
     
     // Vérifie si la catégorie existe déjà
     let catTransaction = db.transaction("categories", "readwrite");
@@ -653,5 +719,139 @@ function enregistrerModificationInline(id) {
         store.put(carte).onsuccess = function() {
             afficherCartes(); // Recharge après modification
         };
+    };
+}
+function chargerCategoriesExistantes() {
+    let transaction = db.transaction("categories", "readonly");
+    let store = transaction.objectStore("categories");
+    let request = store.getAll();
+
+    request.onsuccess = function() {
+        let categories = request.result;
+        let select = document.getElementById("categorieSelect");
+        select.innerHTML = "";
+
+        let defaut = document.createElement("option");
+        defaut.value = "";
+        defaut.textContent = "-- Choisir une catégorie --";
+        select.appendChild(defaut);
+
+        categories.forEach(cat => {
+            let option = document.createElement("option");
+            option.value = cat.nom;
+            option.textContent = cat.nom;
+            option.dataset.couleur = cat.couleur;
+            select.appendChild(option);
+
+            // Retirer cette couleur des couleurs disponibles
+            couleursDisponibles = couleursDisponibles.filter(c => c !== cat.couleur);
+        });
+    };
+}
+function genererOptionsCouleursRestantes() {
+    const select = document.getElementById("nouvelleCouleur");
+    select.innerHTML = "";
+
+    couleursDisponibles.forEach(couleur => {
+        const option = document.createElement("option");
+        option.value = couleur;
+        option.textContent = getNomCouleur(couleur); // 🔹 Affiche un nom lisible
+        option.style.backgroundColor = couleur;
+        option.style.color = getTextColor(couleur);
+        select.appendChild(option);
+    });
+
+    // 🔄 Mettre à jour le style du <select> quand une option est choisie
+    select.addEventListener("change", function () {
+        const couleur = this.value;
+        this.style.backgroundColor = couleur;
+        this.style.color = getTextColor(couleur);
+    });
+
+    // 🖌️ Appliquer la couleur de la première option sélectionnée
+    if (select.value) {
+        select.style.backgroundColor = select.value;
+        select.style.color = getTextColor(select.value);
+    }
+}
+
+
+function getTextColor(hexColor) {
+    const r = parseInt(hexColor.substr(1,2), 16);
+    const g = parseInt(hexColor.substr(3,2), 16);
+    const b = parseInt(hexColor.substr(5,2), 16);
+    const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return luminance > 0.6 ? "black" : "white";
+}
+function getNomCouleur(hex) {
+    const noms = {
+        "#E53935": "Rouge vif",
+        "#D32F2F": "Rouge foncé",
+        "#FB8C00": "Orange",
+        "#FDD835": "Jaune vif",
+        "#FBC02D": "Jaune doré",
+        "#C0CA33": "Vert citron",
+        "#43A047": "Vert",
+        "#2E7D32": "Vert foncé",
+        "#00ACC1": "Turquoise",
+        "#00897B": "Vert-bleu",
+        "#29B6F6": "Bleu ciel",
+        "#1E88E5": "Bleu",
+        "#1565C0": "Bleu foncé",
+        "#3949AB": "Indigo",
+        "#5C6BC0": "Lavande",
+        "#AB47BC": "Violet",
+        "#7B1FA2": "Violet profond",
+        "#D81B60": "Rose fuchsia",
+        "#F06292": "Rose clair",
+        "#FF7043": "Orange saumon",
+        "#A1887F": "Brun doux",
+        "#546E7A": "Gris-bleu",
+        "#B0BEC5": "Gris clair",
+        "#263238": "Gris très foncé",
+        "#FFE082": "Jaune pâle",
+        "#AED581": "Vert doux",
+        "#4FC3F7": "Bleu clair",
+        "#B39DDB": "Mauve doux",
+        "#8D6E63": "Brun",
+        "#FFD54F": "Jaune soleil"
+    };
+    return noms[hex] || hex;
+}
+
+function creerNouvelleCategorie() {
+    const nom = document.getElementById("nouvelleCategorieNom").value.trim();
+    const couleur = document.getElementById("nouvelleCouleur").value;
+
+    if (!nom || !couleur) {
+        alert("Veuillez nommer la catégorie et choisir une couleur.");
+        return;
+    }
+
+    let transaction = db.transaction("categories", "readwrite");
+    let store = transaction.objectStore("categories");
+
+    let request = store.add({ nom, couleur });
+
+    request.onsuccess = function() {
+        // Mettre à jour la liste
+        couleursDisponibles = couleursDisponibles.filter(c => c !== couleur);
+        chargerCategoriesExistantes();
+        genererOptionsCouleursRestantes();
+
+        // Sélectionner la nouvelle catégorie
+        const select = document.getElementById("categorieSelect");
+        setTimeout(() => {
+            select.value = nom;
+        }, 100); // délai pour laisser le temps à la liste de se recharger
+
+        // Réinitialiser le formulaire
+        document.getElementById("formNouvelleCategorie").style.display = "none";
+        document.getElementById("nouvelleCategorieNom").value = "";
+        document.getElementById("nouvelleCouleur").value = "";
+    };
+
+    request.onerror = function() {
+        alert("Cette catégorie existe déjà.");
     };
 }

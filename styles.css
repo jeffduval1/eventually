@@ -162,3 +162,32 @@ button:hover {
 .close-btn:hover {
     color: red;
 }
+/* Fond semi-transparent plein écran */
+.modal {
+    display: none; /* Masquée par défaut */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond noir transparent */
+  }
+  
+  /* Contenu centré dans la modale */
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto; /* Centré verticalement */
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  /* Animation d'apparition */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+  
