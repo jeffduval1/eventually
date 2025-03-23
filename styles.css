@@ -40,14 +40,13 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
-.import_export{
-
-}
 
 button:hover {
     background-color: #218838;
 }
-
+.import_export{
+    
+}
 .carte {
     border: 1px solid #ddd;
     padding: 10px;

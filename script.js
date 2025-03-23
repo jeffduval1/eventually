@@ -457,16 +457,19 @@ function enregistrerModification() {
     };
 }
 function annulerModification() {
-    // Réinitialiser les champs du formulaire
+    // Réinitialiser les champs
     document.getElementById("titre").value = "";
     document.getElementById("tags").value = "";
     document.getElementById("contenu").value = "";
     document.getElementById("carteId").value = "";
 
-    // Remettre le bouton à "Ajouter"
-    let bouton = document.getElementById("ajoutCarteBtn");
-    bouton.textContent = "Ajouter";
-    bouton.onclick = ajouterCarte;
+    // Réinitialiser le menu de catégorie
+    const affichage = document.getElementById("categorieSelectionnee");
+    const inputCat = document.getElementById("categorieChoisie");
+    affichage.textContent = "-- Choisir une catégorie --";
+    affichage.style = "";
+    inputCat.value = "";
+    inputCat.dataset.couleur = "";
 
     // Cacher le formulaire et réafficher le bouton principal
     document.getElementById("ajoutCarteContainer").style.display = "none";
@@ -987,12 +990,14 @@ function chargerMenuCategories() {
 window.toggleForm = function toggleForm() {
     let formContainer = document.getElementById("ajoutCarteContainer");
     let toggleBtn = document.getElementById("toggleFormBtn");
+    let annulerBtn = document.getElementById("annulerModifBtn");
 
     if (formContainer.style.display === "none") {
         formContainer.style.display = "block";
-        toggleBtn.style.display = "none"; // Cacher le bouton après ouverture
+        toggleBtn.style.display = "none";
+        annulerBtn.style.display = "inline-block"; // ✅ on l'affiche
 
-        // ✅ Charger les catégories dans le menu personnalisé
+        // Charger les catégories dans le menu personnalisé
         chargerMenuCategories();
     }
 }
