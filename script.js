@@ -1001,3 +1001,26 @@ window.toggleForm = function toggleForm() {
         chargerMenuCategories();
     }
 }
+
+
+function activerMode(mode) {
+    const btnCategories = document.getElementById("btnModeCategories");
+    const btnCartes = document.getElementById("btnModeCartes");
+
+    if (mode === "categories") {
+        btnCategories.classList.add("active");
+        btnCartes.classList.remove("active");
+        // TODO: Afficher vue par catégories
+    } else {
+        btnCartes.classList.add("active");
+        btnCategories.classList.remove("active");
+        // TODO: Afficher vue par cartes
+    }
+}
+document.getElementById("btnModeCategories").addEventListener("click", function() {
+    activerMode("categories");
+});
+
+document.getElementById("btnModeCartes").addEventListener("click", function() {
+    activerMode("cartes");
+});

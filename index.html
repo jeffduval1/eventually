@@ -23,10 +23,7 @@
     <button onclick="importerCartes()">Importer des cartes</button>
     <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
 </div>
-    <!-- <div class="dropdown">
-        <button class="dropdown-btn" onclick="toggleDropdown()">Sélectionner des tags ▼</button>
-        <div id="tagDropdown" class="dropdown-content">
-            <!-- Les tags seront insérés ici -->
+
         </div>
     </div> 
     <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
@@ -40,6 +37,11 @@
     <button id="toggleFormBtn" onclick="toggleForm()">Créer une nouvelle carte</button>
     <!-- Formulaire d'ajout de carte (caché par défaut) -->
 
+    <div class="mode-toggle">
+        <button id="btnModeCategories" class="toggle-btn active">Par catégories</button>
+        <button id="btnModeCartes" class="toggle-btn">Par cartes</button>
+      </div>
+      
 <div id="ajoutCarteContainer" style="display: none;">
     <input type="text" id="titre" placeholder="Titre">
     <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
