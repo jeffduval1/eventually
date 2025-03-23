@@ -272,3 +272,24 @@ button:hover {
   .liste-categories div:hover {
     opacity: 0.9;
   }
+  #vue-par-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  
+  .carte-categorie {
+    padding: 16px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+  .carte-categorie:hover {
+    transform: scale(1.05);
+  }
+  

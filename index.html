@@ -8,45 +8,50 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- Conteneur de la corbeille en plein écran (caché par défaut) -->
+
+    <!-- CONTENEUR DE LA CORBEILLE en plein écran (caché par défaut) -->
 <div id="corbeille-page" class="corbeille-fullscreen" style="display: none;">
     <button class="close-btn" onclick="fermerCorbeille()">✖</button>
     <h2>Éléments supprimés</h2>
     <button onclick="viderCorbeille()">Vider la corbeille</button>
     <div id="cartes-corbeille"></div>
 </div>
+
+<!--LOGO H1-->
     <h1>GOOSE Tags</h1>
     <input type="hidden" id="carteId">
 
+<!--BOUTONS D'IMPORT ET D'EXPORT DES DONNÉES-->
 <div class="import_export">
     <button onclick="exporterCartes()">Exporter les cartes</button>
     <button onclick="importerCartes()">Importer des cartes</button>
     <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
 </div>
-
         </div>
     </div> 
+<!--RÉINITIALISER LES FILTRES-->
     <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
         Réinitialiser le filtre
     </button>
     
- 
+ <!--CONTENEUR D'ÉTIQUETTES-->
     <div id="etiquettes-container" style="margin-top: 10px;"></div>
     
-<!-- Bouton pour afficher le formulaire -->
+<!-- BOUTON DE CRÉATION DE CARTES -->
     <button id="toggleFormBtn" onclick="toggleForm()">Créer une nouvelle carte</button>
-    <!-- Formulaire d'ajout de carte (caché par défaut) -->
 
+
+<!--TOGGLE VISUALISATION PAR CATÉGORIES OU PAR CARTES-->
     <div class="mode-toggle">
         <button id="btnModeCategories" class="toggle-btn active">Par catégories</button>
         <button id="btnModeCartes" class="toggle-btn">Par cartes</button>
       </div>
-      
+<!--CONTENEUR DE CATÉGORIES-->      
+      <div id="vue-par-categories" style="display: none;"></div>
+<!--CONTENEUR D'AJOUT DE CARTES-->
 <div id="ajoutCarteContainer" style="display: none;">
     <input type="text" id="titre" placeholder="Titre">
     <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
-
-
 <!-- Choix d'une catégorie existante -->
 <label for="selectCategorie">Catégories existantes :</label>
 <!-- Conteneur pour le menu personnalisé -->
@@ -58,11 +63,10 @@
   <!-- <option value="">Sélectionner une catégorie</option> -->
   <!-- Remplie dynamiquement -->
 </select>
-
 <!-- Bouton pour afficher le formulaire de création -->
 <button id="btnAfficherFormCategorie">Créer une catégorie</button>
 
-<!-- 🌟 Fenêtre modale de création de catégorie -->
+<!-- 🌟 FENÊTRE MODALE de création de catégorie -->
 <div id="modalCategorie" class="modal" style="display: none;">
     <div class="modal-content">
       <span class="close" id="closeModal">&times;</span>
@@ -101,6 +105,7 @@
 
 
     <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
+    <button id="btnRetourCategories" style="display: none;" onclick="afficherVueParCategories()">← Retour aux catégories</button>
     <div id="cartes-container"></div>
 
 </body>

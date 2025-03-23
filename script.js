@@ -44,6 +44,7 @@ let modeTri = "date-desc"; // Mode de tri par défaut
 
 
 document.addEventListener("DOMContentLoaded", function() {
+
     function chargerMenuCategories() {
         const menu = document.getElementById("listeCategories");
         const affichage = document.getElementById("categorieSelectionnee");
@@ -79,7 +80,20 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         };
     }
-    
+    const btnCartes = document.getElementById("btnModeCartes");
+const btnCategories = document.getElementById("btnModeCategories");
+if (btnCartes) {
+    btnCartes.addEventListener("click", () => changerModeAffichage("cartes"));
+} else {
+    console.warn("❗ Bouton #btnModeCartes non trouvé");
+}
+
+if (btnCategories) {
+    btnCategories.addEventListener("click", () => changerModeAffichage("categories"));
+} else {
+    console.warn("❗ Bouton #btnModeCategories non trouvé");
+}
+
     // Cliquer sur le champ ouvre/ferme le menu
     document.getElementById("categorieSelectionnee").addEventListener("click", (e) => {
         e.stopPropagation(); // Empêche que le clic ferme immédiatement le menu
@@ -190,9 +204,11 @@ request.onsuccess = function(event) {
     db = event.target.result;
     
     
-    chargerCategoriesExistantes(); // 🔹 Ajout de l’appel manquant !
-    afficherCartes(); // Charger les règles au démarrage
+    
     genererOptionsCouleursRestantes();
+    chargerMenuCategories();
+    // ✅ Charger l'affichage une fois la base disponible
+    changerModeAffichage("categories");
 };
 
 request.onerror = function() {
@@ -789,45 +805,7 @@ function enregistrerModificationInline(id) {
         };
     };
 }
-function chargerCategoriesExistantes() {
-    let transaction = db.transaction("categories", "readonly");
-    let store = transaction.objectStore("categories");
-    let request = store.getAll();
 
-    request.onsuccess = function () {
-        let categories = request.result;
-        const inputCategorie = document.getElementById("categorieChoisie");
-        select.innerHTML = "";
-
-        let defaut = document.createElement("option");
-        defaut.value = "";
-        defaut.textContent = "-- Choisir une catégorie --";
-        defaut.style.backgroundColor = "white";
-        defaut.style.color = "black";
-        select.appendChild(defaut);
-        categories.sort((a, b) => a.nom.localeCompare(b.nom));
-        categories.forEach(cat => {
-            let option = document.createElement("option");
-            option.value = cat.nom;
-            option.textContent = cat.nom;
-            option.dataset.couleur = cat.couleur;
-            option.style.backgroundColor = cat.couleur;
-            option.style.color = getTextColor(cat.couleur);
-            select.appendChild(option);
-
-            // Supprimer la couleur de la liste des couleurs disponibles
-            couleursDisponibles = couleursDisponibles.filter(c => c !== cat.couleur);
-        });
-
-        // Appliquer immédiatement la couleur au menu s’il y a une sélection
-        select.addEventListener("change", function () {
-            const selected = this.selectedOptions[0];
-            const couleur = selected.dataset.couleur || "#fff";
-            this.style.backgroundColor = couleur;
-            this.style.color = getTextColor(couleur);
-        });
-    };
-}
 function genererOptionsCouleursRestantes() {
     const select = document.getElementById("nouvelleCouleur");
     select.innerHTML = "";
@@ -1006,17 +984,20 @@ window.toggleForm = function toggleForm() {
 function activerMode(mode) {
     const btnCategories = document.getElementById("btnModeCategories");
     const btnCartes = document.getElementById("btnModeCartes");
-
+    const vueParCategories = document.getElementById("vue-par-categories");
+    const cartesContainer = document.getElementById("cartes-container");
+  
     if (mode === "categories") {
-        btnCategories.classList.add("active");
-        btnCartes.classList.remove("active");
-        // TODO: Afficher vue par catégories
+      btnCategories.classList.add("active");
+      btnCartes.classList.remove("active");
+      afficherVueParCategories();
     } else {
-        btnCartes.classList.add("active");
-        btnCategories.classList.remove("active");
-        // TODO: Afficher vue par cartes
+      btnCartes.classList.add("active");
+      btnCategories.classList.remove("active");
+      vueParCategories.style.display = "none";
+      afficherCartes(); // Affichage normal
     }
-}
+  }
 document.getElementById("btnModeCategories").addEventListener("click", function() {
     activerMode("categories");
 });
@@ -1024,3 +1005,98 @@ document.getElementById("btnModeCategories").addEventListener("click", function(
 document.getElementById("btnModeCartes").addEventListener("click", function() {
     activerMode("cartes");
 });
+function afficherVueParCategories() {
+    const container = document.getElementById("vue-par-categories");
+    const cartesContainer = document.getElementById("cartes-container");
+  
+    container.innerHTML = ""; // Vide le contenu
+    container.style.display = "flex";
+    cartesContainer.style.display = "none"; // Cache la vue normale
+  
+    const transaction = db.transaction("categories", "readonly");
+    const store = transaction.objectStore("categories");
+    const request = store.getAll();
+  
+    request.onsuccess = function () {
+      const categories = request.result;
+  
+      if (categories.length === 0) {
+        container.innerHTML = "<p>Aucune catégorie trouvée.</p>";
+        return;
+      }
+  
+      categories.forEach(cat => {
+        const div = document.createElement("div");
+        div.classList.add("carte-categorie");
+        div.style.backgroundColor = cat.couleur;
+        div.style.color = getTextColor(cat.couleur);
+        div.textContent = cat.nom;
+  
+        div.addEventListener("click", () => {
+          afficherCartesParCategorie(cat.nom);
+        });
+  
+        container.appendChild(div);
+      });
+    };
+  }
+  function afficherCartesParCategorie(nomCategorie) {
+    const cartesContainer = document.getElementById("cartes-container");
+    const vueCategories = document.getElementById("vue-par-categories");
+
+    cartesContainer.innerHTML = "";
+    cartesContainer.style.display = "block";
+    vueCategories.style.display = "none";
+    document.getElementById("btnRetourCategories").style.display = "block";
+    const transaction = db.transaction("regles", "readonly");
+    const store = transaction.objectStore("regles");
+    const request = store.getAll();
+
+    request.onsuccess = function () {
+        const toutesLesCartes = request.result;
+
+        const cartesFiltrees = toutesLesCartes.filter(carte =>
+            carte.categorie && carte.categorie.toLowerCase() === nomCategorie.toLowerCase()
+        );
+
+        if (cartesFiltrees.length === 0) {
+            cartesContainer.innerHTML = `<p>Aucune carte trouvée pour la catégorie "${nomCategorie}".</p>`;
+        } else {
+            afficherCartesFiltres(cartesFiltrees);
+        }
+    };
+
+    request.onerror = function () {
+        console.error("Erreur lors du chargement des cartes !");
+        cartesContainer.innerHTML = "<p>Erreur lors de l'affichage des cartes.</p>";
+    };
+}
+function changerModeAffichage(mode) {
+    const btnCartes = document.getElementById("btnModeCartes");
+const btnCategories = document.getElementById("btnModeCategories");
+    const vueCategories = document.getElementById("vue-par-categories");
+    const cartesContainer = document.getElementById("cartes-container");
+    const btnRetour = document.getElementById("btnRetourCategories");
+
+    if (mode === "cartes") {
+        document.getElementById("cartes-container").style.display = "block";
+        // document.getElementById("categories-container").style.display = "none";
+        btnCartes.classList.add("actif");
+        btnCategories.classList.remove("actif");
+        afficherCartes(); // 🔥 Important
+
+        // Mise à jour des styles boutons
+        btnCartes.classList.add("actif");
+        btnCategories.classList.remove("actif");
+    } else if (mode === "categories") {
+        cartesContainer.style.display = "none";
+        vueCategories.style.display = "flex";
+        btnRetour.style.display = "none";
+
+        btnCartes.classList.remove("actif");
+        btnCategories.classList.add("actif");
+
+        // ✅ Recharge les catégories visuellement
+        afficherVueParCategories();
+    }
+}
