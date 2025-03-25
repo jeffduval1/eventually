@@ -44,7 +44,33 @@ let modeTri = "date-desc"; // Mode de tri par défaut
 
 
 document.addEventListener("DOMContentLoaded", function() {
-
+    document.getElementById("btnGererCategories").addEventListener("click", () => {
+        document.getElementById("modalGestionCategories").style.display = "block";
+        afficherListeGestionCategories();
+    });
+    
+    document.getElementById("closeGestionModal").addEventListener("click", () => {
+        document.getElementById("modalGestionCategories").style.display = "none";
+    });
+    document.getElementById("btnGererCategories").addEventListener("click", () => {
+        const form = document.getElementById("ajoutCarteContainer");
+    
+        // Si le formulaire est caché, on l’affiche
+        if (form.style.display === "none") {
+            toggleForm(); // ta fonction déjà existante
+        }
+    
+        // Force l’ouverture du menu
+        const menu = document.getElementById("listeCategories");
+        if (menu) {
+            menu.style.display = "block";
+    
+            // On s’assure que le menu se fermera si on clique ailleurs
+            setTimeout(() => {
+                document.addEventListener("click", closeCategoryMenuOnClickOutside, { once: true });
+            }, 0);
+        }
+    });
     function chargerMenuCategories() {
         const menu = document.getElementById("listeCategories");
         const affichage = document.getElementById("categorieSelectionnee");
@@ -80,20 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         };
     }
-    const btnCartes = document.getElementById("btnModeCartes");
-const btnCategories = document.getElementById("btnModeCategories");
-if (btnCartes) {
-    btnCartes.addEventListener("click", () => changerModeAffichage("cartes"));
-} else {
-    console.warn("❗ Bouton #btnModeCartes non trouvé");
-}
-
-if (btnCategories) {
-    btnCategories.addEventListener("click", () => changerModeAffichage("categories"));
-} else {
-    console.warn("❗ Bouton #btnModeCategories non trouvé");
-}
-
+   
     // Cliquer sur le champ ouvre/ferme le menu
     document.getElementById("categorieSelectionnee").addEventListener("click", (e) => {
         e.stopPropagation(); // Empêche que le clic ferme immédiatement le menu
@@ -208,7 +221,7 @@ request.onsuccess = function(event) {
     genererOptionsCouleursRestantes();
     chargerMenuCategories();
     // ✅ Charger l'affichage une fois la base disponible
-    changerModeAffichage("categories");
+    changerModeAffichage("categories", true);
 };
 
 request.onerror = function() {
@@ -945,14 +958,22 @@ function chargerMenuCategories() {
         categories.sort((a, b) => a.nom.localeCompare(b.nom));
 
         categories.forEach(cat => {
-            let div = document.createElement("div");
-            div.textContent = cat.nom;
-            div.style.backgroundColor = cat.couleur;
-            div.style.color = getTextColor(cat.couleur);
-            div.style.padding = "6px";
-            div.style.cursor = "pointer";
+            let ligne = document.createElement("div");
+            ligne.classList.add("categorie-item");
+            ligne.style.display = "flex";
+            ligne.style.alignItems = "center";
+            ligne.style.justifyContent = "space-between";
+            ligne.style.padding = "6px";
 
-            div.addEventListener("click", () => {
+            let nom = document.createElement("span");
+            nom.textContent = cat.nom;
+            nom.style.backgroundColor = cat.couleur;
+            nom.style.color = getTextColor(cat.couleur);
+            nom.style.flex = "1";
+            nom.style.cursor = "pointer";
+            nom.style.padding = "4px 8px";
+
+            nom.addEventListener("click", () => {
                 affichage.textContent = cat.nom;
                 affichage.style.backgroundColor = cat.couleur;
                 affichage.style.color = getTextColor(cat.couleur);
@@ -961,7 +982,23 @@ function chargerMenuCategories() {
                 menu.style.display = "none";
             });
 
-            menu.appendChild(div);
+            let btnSupprimer = document.createElement("button");
+            btnSupprimer.textContent = "🗑";
+            btnSupprimer.title = "Supprimer cette catégorie";
+            btnSupprimer.style.marginLeft = "8px";
+            btnSupprimer.style.border = "none";
+            btnSupprimer.style.background = "transparent";
+            btnSupprimer.style.cursor = "pointer";
+            btnSupprimer.style.fontSize = "16px";
+
+            btnSupprimer.addEventListener("click", (e) => {
+                e.stopPropagation(); // évite de déclencher la sélection
+                supprimerCategorie(cat.nom, cat.couleur);
+            });
+
+            ligne.appendChild(nom);
+            ligne.appendChild(btnSupprimer);
+            menu.appendChild(ligne);
         });
     };
 }
@@ -980,31 +1017,15 @@ window.toggleForm = function toggleForm() {
     }
 }
 
-
-function activerMode(mode) {
-    const btnCategories = document.getElementById("btnModeCategories");
-    const btnCartes = document.getElementById("btnModeCartes");
-    const vueParCategories = document.getElementById("vue-par-categories");
-    const cartesContainer = document.getElementById("cartes-container");
-  
-    if (mode === "categories") {
-      btnCategories.classList.add("active");
-      btnCartes.classList.remove("active");
-      afficherVueParCategories();
-    } else {
-      btnCartes.classList.add("active");
-      btnCategories.classList.remove("active");
-      vueParCategories.style.display = "none";
-      afficherCartes(); // Affichage normal
-    }
-  }
-document.getElementById("btnModeCategories").addEventListener("click", function() {
-    activerMode("categories");
+document.getElementById("btnModeCategories").addEventListener("click", () => {
+    changerModeAffichage("categories");
 });
 
-document.getElementById("btnModeCartes").addEventListener("click", function() {
-    activerMode("cartes");
+document.getElementById("btnModeCartes").addEventListener("click", () => {
+    changerModeAffichage("cartes");
 });
+
+
 function afficherVueParCategories() {
     const container = document.getElementById("vue-par-categories");
     const cartesContainer = document.getElementById("cartes-container");
@@ -1071,23 +1092,22 @@ function afficherVueParCategories() {
         cartesContainer.innerHTML = "<p>Erreur lors de l'affichage des cartes.</p>";
     };
 }
-function changerModeAffichage(mode) {
+function changerModeAffichage(mode, initial = false) {
     const btnCartes = document.getElementById("btnModeCartes");
-const btnCategories = document.getElementById("btnModeCategories");
+    const btnCategories = document.getElementById("btnModeCategories");
     const vueCategories = document.getElementById("vue-par-categories");
     const cartesContainer = document.getElementById("cartes-container");
     const btnRetour = document.getElementById("btnRetourCategories");
 
     if (mode === "cartes") {
-        document.getElementById("cartes-container").style.display = "block";
-        // document.getElementById("categories-container").style.display = "none";
-        btnCartes.classList.add("actif");
-        btnCategories.classList.remove("actif");
-        afficherCartes(); // 🔥 Important
+        cartesContainer.style.display = "block";
+        vueCategories.style.display = "none";
+        btnRetour.style.display = "none";
 
-        // Mise à jour des styles boutons
         btnCartes.classList.add("actif");
         btnCategories.classList.remove("actif");
+
+        if (!initial) afficherCartes(); // 🚫 éviter appel initial si déjà fait
     } else if (mode === "categories") {
         cartesContainer.style.display = "none";
         vueCategories.style.display = "flex";
@@ -1096,7 +1116,139 @@ const btnCategories = document.getElementById("btnModeCategories");
         btnCartes.classList.remove("actif");
         btnCategories.classList.add("actif");
 
-        // ✅ Recharge les catégories visuellement
         afficherVueParCategories();
     }
+}
+function supprimerCategorie(nomCategorie, couleurCategorie) {
+    const confirmation = confirm(`Voulez-vous vraiment supprimer la catégorie "${nomCategorie}" ? Les cartes associées garderont cette étiquette mais elle ne sera plus dans la liste.`);
+
+    if (!confirmation) return;
+
+    let transaction = db.transaction("categories", "readwrite");
+    let store = transaction.objectStore("categories");
+
+    let request = store.delete(nomCategorie);
+    request.onsuccess = function () {
+        // On remet la couleur dans les couleurs disponibles
+        if (!couleursDisponibles.includes(couleurCategorie)) {
+            couleursDisponibles.push(couleurCategorie);
+        }
+
+        // Recharge l'affichage
+        chargerMenuCategories();
+        genererOptionsCouleursRestantes();
+
+        // Si la catégorie supprimée était sélectionnée, on la désélectionne
+        const input = document.getElementById("categorieChoisie");
+        const affichage = document.getElementById("categorieSelectionnee");
+        if (input.value === nomCategorie) {
+            input.value = "";
+            input.dataset.couleur = "";
+            affichage.textContent = "-- Choisir une catégorie --";
+            affichage.style.backgroundColor = "";
+            affichage.style.color = "";
+        }
+    };
+}
+function afficherListeGestionCategories() {
+    const container = document.getElementById("listeGestionCategories");
+    container.innerHTML = "";
+
+    const transaction = db.transaction("categories", "readonly");
+    const store = transaction.objectStore("categories");
+    const request = store.getAll();
+
+    request.onsuccess = function () {
+        const categories = request.result;
+        categories.sort((a, b) => a.nom.localeCompare(b.nom));
+
+        categories.forEach(cat => {
+            const ligne = document.createElement("div");
+            ligne.style.display = "flex";
+            ligne.style.alignItems = "center";
+            ligne.style.marginBottom = "6px";
+
+            const inputNom = document.createElement("input");
+            inputNom.type = "text";
+            inputNom.value = cat.nom;
+            inputNom.style.flex = "1";
+
+            const selectCouleur = document.createElement("select");
+            couleursDisponibles.concat(cat.couleur).forEach(couleur => {
+                const option = document.createElement("option");
+                option.value = couleur;
+                option.textContent = getNomCouleur(couleur);
+                option.style.backgroundColor = couleur;
+                option.style.color = getTextColor(couleur);
+                if (couleur === cat.couleur) option.selected = true;
+                selectCouleur.appendChild(option);
+            });
+
+            const btnEnregistrer = document.createElement("button");
+            btnEnregistrer.textContent = "💾";
+            btnEnregistrer.title = "Enregistrer";
+            btnEnregistrer.onclick = () => modifierCategorie(cat.nom, inputNom.value.trim(), selectCouleur.value);
+
+            const btnSupprimer = document.createElement("button");
+            btnSupprimer.textContent = "🗑";
+            btnSupprimer.title = "Supprimer";
+            btnSupprimer.onclick = () => supprimerCategorieAvecImpact(cat.nom);
+
+            ligne.appendChild(inputNom);
+            ligne.appendChild(selectCouleur);
+            ligne.appendChild(btnEnregistrer);
+            ligne.appendChild(btnSupprimer);
+
+            container.appendChild(ligne);
+        });
+    };
+}
+function modifierCategorie(ancienNom, nouveauNom, nouvelleCouleur) {
+    if (!nouveauNom) {
+        alert("Le nom de la catégorie ne peut pas être vide.");
+        return;
+    }
+
+    let transaction = db.transaction(["categories", "regles"], "readwrite");
+    let catStore = transaction.objectStore("categories");
+    let regleStore = transaction.objectStore("regles");
+
+    // Supprimer l’ancienne catégorie si le nom change
+    if (ancienNom !== nouveauNom) {
+        catStore.delete(ancienNom);
+    }
+
+    // Ajouter ou mettre à jour la nouvelle catégorie
+    catStore.put({ nom: nouveauNom, couleur: nouvelleCouleur });
+
+    // Mettre à jour toutes les cartes
+    const getAll = regleStore.getAll();
+    getAll.onsuccess = function () {
+        getAll.result.forEach(carte => {
+            if (carte.categorie === ancienNom) {
+                carte.categorie = nouveauNom;
+                carte.couleurCategorie = nouvelleCouleur;
+                regleStore.put(carte);
+            }
+        });
+    };
+
+    transaction.oncomplete = () => {
+        chargerMenuCategories();
+        genererOptionsCouleursRestantes();
+        afficherListeGestionCategories();
+        afficherCartes(); // Recharge les cartes visibles
+    };
+}
+function supprimerCategorieAvecImpact(nomCategorie) {
+    if (!confirm(`Supprimer définitivement la catégorie "${nomCategorie}" ? Les cartes associées conserveront ce nom et couleur, mais il ne sera plus modifiable.`)) return;
+
+    let transaction = db.transaction("categories", "readwrite");
+    let store = transaction.objectStore("categories");
+
+    store.delete(nomCategorie).onsuccess = function () {
+        chargerMenuCategories();
+        genererOptionsCouleursRestantes();
+        afficherListeGestionCategories();
+    };
 }

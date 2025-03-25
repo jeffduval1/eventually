@@ -292,4 +292,7 @@ button:hover {
   .carte-categorie:hover {
     transform: scale(1.05);
   }
+  .categorie-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
   

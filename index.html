@@ -40,6 +40,8 @@
 <!-- BOUTON DE CRÉATION DE CARTES -->
     <button id="toggleFormBtn" onclick="toggleForm()">Créer une nouvelle carte</button>
 
+<!-- 🧩 Bouton pour gérer les catégories -->
+<button id="btnGererCategories">Gérer les catégories</button>
 
 <!--TOGGLE VISUALISATION PAR CATÉGORIES OU PAR CARTES-->
     <div class="mode-toggle">
@@ -107,6 +109,16 @@
     <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
     <button id="btnRetourCategories" style="display: none;" onclick="afficherVueParCategories()">← Retour aux catégories</button>
     <div id="cartes-container"></div>
-
+<!-- 🌟 MODALE DE GESTION DES CATÉGORIES -->
+<div id="modalGestionCategories" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" id="closeGestionModal">&times;</span>
+      <h3>Gérer les catégories</h3>
+      <div id="listeGestionCategories">
+        <!-- Les catégories seront listées ici dynamiquement -->
+      </div>
+    </div>
+  </div>
+  
 </body>
 </html>
