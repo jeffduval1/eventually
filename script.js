@@ -742,7 +742,6 @@ function fermerCorbeille() {
     document.getElementById("corbeille-page").style.display = "none";
 }
 function mettreAJourTags(tags) {
-    console.log("Tags mis à jour :", tags); // 🔹 Debugging
     let select = document.getElementById("tagFilter");
     select.innerHTML = ""; // 🔹 Nettoie la liste avant de la recharger
 
@@ -1093,6 +1092,7 @@ function afficherVueParCategories() {
     };
 }
 function changerModeAffichage(mode, initial = false) {
+    console.log("👉 Mode d'affichage demandé :", mode, "| Initial ?", initial);
     const btnCartes = document.getElementById("btnModeCartes");
     const btnCategories = document.getElementById("btnModeCategories");
     const vueCategories = document.getElementById("vue-par-categories");
@@ -1104,8 +1104,8 @@ function changerModeAffichage(mode, initial = false) {
         vueCategories.style.display = "none";
         btnRetour.style.display = "none";
 
-        btnCartes.classList.add("actif");
-        btnCategories.classList.remove("actif");
+        btnCartes.classList.add("active");
+    btnCategories.classList.remove("active");
 
         if (!initial) afficherCartes(); // 🚫 éviter appel initial si déjà fait
     } else if (mode === "categories") {
@@ -1113,8 +1113,8 @@ function changerModeAffichage(mode, initial = false) {
         vueCategories.style.display = "flex";
         btnRetour.style.display = "none";
 
-        btnCartes.classList.remove("actif");
-        btnCategories.classList.add("actif");
+        btnCartes.classList.remove("active");
+        btnCategories.classList.add("active");
 
         afficherVueParCategories();
     }
