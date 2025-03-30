@@ -39,6 +39,38 @@
     
 <!-- BOUTON DE CRÉATION DE CARTES -->
     <button id="toggleFormBtn" onclick="toggleForm()">Créer une nouvelle carte</button>
+    <div id="modalAjoutCarte" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeModalAjoutCarte">&times;</span>
+        <h3>Créer une nouvelle carte</h3>
+        
+        <!-- 🟢 Formulaire existant déplacé ici -->
+        <div id="ajoutCarteContainer">
+          <input type="text" id="titre" placeholder="Titre">
+          <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+          
+          <!-- Sélection du parent -->
+          <label for="parentDirect">Parent dans l’arborescence :</label>
+          <select id="parentDirect">
+            <option value="">Aucun (niveau racine)</option>
+          </select>
+    
+          <!-- Catégories existantes -->
+          <label for="selectCategorie">Catégories existantes :</label>
+          <div id="menuCategorie" class="menu-categorie">
+            <div id="categorieSelectionnee" class="categorie-selection"> Choisir une catégorie</div>
+            <div id="listeCategories" class="liste-categories" style="display: none;"></div>
+          </div>
+          <input type="hidden" id="categorieChoisie">
+    
+          <!-- Bouton pour créer une catégorie -->
+          <button id="btnAfficherFormCategorie">Créer une catégorie</button>
+          <textarea id="contenu" placeholder="Contenu"></textarea>
+          <button id="ajoutCarteBtn" onclick="ajouterCarte()">Ajouter</button>
+          <button id="annulerModifBtn" onclick="annulerModification()" style="display: none;">Annuler</button>
+        </div>
+      </div>
+    </div>
 
 <!-- 🧩 Bouton pour gérer les catégories -->
 <button id="btnGererCategories">Gérer les catégories</button>
@@ -51,30 +83,7 @@
 <!--CONTENEUR DE CATÉGORIES-->      
       <div id="vue-par-categories" style="display: none;"></div>
     
-<!--CONTENEUR D'AJOUT DE CARTES-->
-<div id="ajoutCarteContainer" style="display: none;">
-    <input type="text" id="titre" placeholder="Titre">
-    <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
-    <label for="parentDirect">Parent dans l’arborescence :</label>
-<select id="parentDirect">
-  <option value="">Aucun (niveau racine)</option>
-  <!-- Options ajoutées dynamiquement -->
-</select>
 
-
-<!-- Choix d'une catégorie existante -->
-<label for="selectCategorie">Catégories existantes :</label>
-<!-- Conteneur pour le menu personnalisé -->
-<div id="menuCategorie" class="menu-categorie">
-    <div id="categorieSelectionnee" class="categorie-selection"> Choisir une catégorie</div>
-    <div id="listeCategories" class="liste-categories" style="display: none;"></div>
-  </div>
-  <input type="hidden" id="categorieChoisie">
-  <!-- <option value="">Sélectionner une catégorie</option> -->
-  <!-- Remplie dynamiquement -->
-</select>
-<!-- Bouton pour afficher le formulaire de création -->
-<button id="btnAfficherFormCategorie">Créer une catégorie</button>
 
 <!-- 🌟 FENÊTRE MODALE de création de catégorie -->
 <div id="modalCategorie" class="modal" style="display: none;">
@@ -96,10 +105,8 @@
   
       <button id="btnCreerCategorie">Ajouter la catégorie</button>
     </div>
+   
   </div>
-    <textarea id="contenu" placeholder="Contenu"></textarea>
-    <button id="ajoutCarteBtn" onclick="ajouterCarte()">Ajouter</button>
-    <button id="annulerModifBtn" onclick="annulerModification()" style="display: none;">Annuler</button>
 </div>
 
 

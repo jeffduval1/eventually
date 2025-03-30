@@ -23,13 +23,17 @@ select {
     }
 }
 
-input, textarea {
-    display: block;
-    width: 80%;
-    margin: 10px auto;
-
-    border: 1px solid #ccc;
-    border-radius: 5px;
+input, textarea, select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+textarea {
+  height: 100px;
+  resize: none;
 }
 .mode-toggle {
     display: flex;
@@ -67,18 +71,20 @@ input, textarea {
     color: rgba(0, 0, 0, 0.8); /* Texte à 80% d’opacité */
   }
   
-button {
-    padding: 10px 20px;
+  button {
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    padding: 10px 20px;
     cursor: pointer;
-}
+    font-size: 14px;
+    margin-top: 10px;
+  }
 
-button:hover {
+  button:hover {
     background-color: #218838;
-}
+  }
 .import_export{
 
 }
@@ -174,10 +180,14 @@ button:hover {
 }
 
 #ajoutCarteContainer {
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 450px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 /* Corbeille en plein écran */
 .corbeille-fullscreen {
@@ -197,6 +207,13 @@ button:hover {
 }
 
 /* Bouton de fermeture */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
 .close-btn {
     position: absolute;
     top: 10px; /* Ajuste la position */
@@ -211,6 +228,10 @@ button:hover {
 }
 .close-btn:hover {
     color: red;
+}
+.close:hover {
+  color: #000;
+  cursor: pointer;
 }
 /* Fond semi-transparent plein écran */
 .modal {
@@ -254,13 +275,8 @@ button:hover {
     border-radius: 4px;
   }
   
-  .liste-categories {
-    position: absolute;
-    width: 100%;
-    border: 1px solid #ccc;
-    background-color: white;
-    z-index: 10;
-    max-height: 200px;
+  #menuCategorie .liste-categories {
+    border-radius: 8px;
     overflow-y: auto;
   }
   
@@ -295,4 +311,30 @@ button:hover {
   .categorie-item:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
-  
+button#annulerModifBtn {
+  background-color: #ccc;
+}
+label {
+  font-weight: bold;
+  margin-top: 10px;
+  display: block;
+}
+/* Menu personnalisé */
+#categorieSelectionnee {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+/* Responsivité */
+@media (max-width: 480px) {
+  #ajoutCarteContainer {
+    width: 95%;
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

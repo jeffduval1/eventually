@@ -52,25 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("closeGestionModal").addEventListener("click", () => {
         document.getElementById("modalGestionCategories").style.display = "none";
     });
-    document.getElementById("btnGererCategories").addEventListener("click", () => {
-        const form = document.getElementById("ajoutCarteContainer");
-    
-        // Si le formulaire est caché, on l’affiche
-        if (form.style.display === "none") {
-            toggleForm(); // ta fonction déjà existante
-        }
-    
-        // Force l’ouverture du menu
-        const menu = document.getElementById("listeCategories");
-        if (menu) {
-            menu.style.display = "block";
-    
-            // On s’assure que le menu se fermera si on clique ailleurs
-            setTimeout(() => {
-                document.addEventListener("click", closeCategoryMenuOnClickOutside, { once: true });
-            }, 0);
-        }
-    });
+   
     function chargerMenuCategories() {
         const menu = document.getElementById("listeCategories");
         const affichage = document.getElementById("categorieSelectionnee");
@@ -279,30 +261,6 @@ function ajouterCarte() {
     }
 }
 
-function enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, parent) {
-    const transaction = db.transaction(["regles"], "readwrite");
-    const store = transaction.objectStore("regles");
-
-    const nouvelleRegle = {
-        titre,
-        tags,
-        contenu,
-        dateCreation: new Date().toISOString(),
-        categorie,
-        couleurCategorie,
-        parent
-    };
-
-    const request = store.add(nouvelleRegle);
-    request.onsuccess = function () {
-        console.log("🎉 Carte ajoutée avec succès !");
-        afficherCartes();
-        resetFormulaire();
-    };
-    request.onerror = function () {
-        console.error("❌ Une erreur s'est produite lors de l'ajout de la carte.");
-    };
-}
 function enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, parent) {
     const transaction = db.transaction(["regles"], "readwrite");
     const store = transaction.objectStore("regles");
@@ -1054,20 +1012,29 @@ function chargerMenuCategories() {
         });
     };
 }
-window.toggleForm = function toggleForm() {
-    let formContainer = document.getElementById("ajoutCarteContainer");
-    let toggleBtn = document.getElementById("toggleFormBtn");
-    let annulerBtn = document.getElementById("annulerModifBtn");
+function toggleForm() {
+    let modal = document.getElementById("modalAjoutCarte");
+    let closeModalBtn = document.getElementById("closeModalAjoutCarte");
 
-    if (formContainer.style.display === "none") {
-        formContainer.style.display = "block";
-        toggleBtn.style.display = "none";
-        annulerBtn.style.display = "inline-block"; // ✅ on l'affiche
-
-        // Charger les catégories dans le menu personnalisé
-        chargerMenuCategories();
-        chargerParentsDisponibles();
+    if (!modal) {
+        console.error("❌ La modale d'ajout de carte n'a pas été trouvée.");
+        return;
     }
+
+    modal.style.display = "block";
+
+    // ✅ Charger les catégories disponibles comme parents
+    chargerParentsDisponibles(); 
+
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
 }
 
 document.getElementById("btnModeCategories").addEventListener("click", () => {
