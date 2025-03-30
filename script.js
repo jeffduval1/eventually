@@ -39,7 +39,7 @@ const nomCouleurs = {
     "#FFD54F": "Jaune miel"
 };
 // 🚀 Ouvrir ou créer la base IndexedDB
-const request = indexedDB.open("MoteurDeRecherche", 3); // 🔹 Change la version de 1 à 2
+const request = indexedDB.open("MoteurDeRecherche", 4);
 let modeTri = "date-desc"; // Mode de tri par défaut
 
 
@@ -195,21 +195,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
 request.onupgradeneeded = function(event) {
     db = event.target.result;
+    let store = event.target.transaction.objectStore("categories");
 
-    if (!db.objectStoreNames.contains("regles")) {
-        let store = db.createObjectStore("regles", { keyPath: "id", autoIncrement: true });
-        store.createIndex("tags", "tags", { multiEntry: true });
-    }
-
-    if (!db.objectStoreNames.contains("corbeille")) {
-        db.createObjectStore("corbeille", { keyPath: "id", autoIncrement: true });
-    }
-
-    // 🔹 Le bloc qu’il faut vérifier
-    if (!db.objectStoreNames.contains("categories")) {
-        let catStore = db.createObjectStore("categories", { keyPath: "nom" });
-        catStore.createIndex("nom", "nom", { unique: true });
-    }
+    // Vérification si le champ "parent" est déjà présent
+    store.openCursor().onsuccess = function(event) {
+        let cursor = event.target.result;
+        if (cursor) {
+            let value = cursor.value;
+            if (!("parent" in value)) {
+                value.parent = null;
+                cursor.update(value);
+            }
+            cursor.continue();
+        }
+    };
 };
 
 
@@ -246,56 +245,106 @@ function ajouterCarte() {
 
     let tags = tagsInput ? tagsInput.toLowerCase().split(',').map(tag => tag.trim()) : [];
 
-    // 🔄 Récupération de la catégorie depuis le champ caché
+    // 🔎 Récupération des champs
     const inputCategorie = document.getElementById("categorieChoisie");
-    if (!inputCategorie) {
-        console.warn("⚠️ Le champ caché de catégorie est introuvable.");
-        return;
-    }
+    const parentSelectionne = document.getElementById("parentDirect") ? document.getElementById("parentDirect").value : null;
 
     let categorie = inputCategorie.value;
     let couleurCategorie = inputCategorie.dataset.couleur || "#ccc";
-    let dateCreation = new Date().toISOString();
 
-    let transaction = db.transaction(["regles", "categories"], "readwrite");
-    let store = transaction.objectStore("regles");
-    let catStore = transaction.objectStore("categories");
+    // ⚡ Prioriser la catégorie du parent s'il est sélectionné
+    if (parentSelectionne) {
+        let transaction = db.transaction("categories", "readonly");
+        let store = transaction.objectStore("categories");
 
-    let nouvelleRegle = {
+        let request = store.get(parentSelectionne);
+        request.onsuccess = function () {
+            const parentCategorie = request.result;
+
+            if (parentCategorie) {
+                console.log(`✅ Parent trouvé : ${parentCategorie.nom}`);
+                categorie = parentCategorie.nom;
+                couleurCategorie = parentCategorie.couleur;
+            }
+
+            // 📦 Enregistrement de la carte
+            enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, parentSelectionne);
+        };
+        request.onerror = function () {
+            console.error("❌ Erreur lors de la récupération du parent.");
+        };
+    } else {
+        // 📦 Enregistrement sans parent
+        enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, null);
+    }
+}
+
+function enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, parent) {
+    const transaction = db.transaction(["regles"], "readwrite");
+    const store = transaction.objectStore("regles");
+
+    const nouvelleRegle = {
         titre,
         tags,
         contenu,
-        dateCreation,
+        dateCreation: new Date().toISOString(),
         categorie,
-        couleurCategorie
+        couleurCategorie,
+        parent
     };
 
-    // Vérifie si la catégorie existe déjà
-    let getCategorie = catStore.get(categorie);
-    getCategorie.onsuccess = function () {
-        if (!getCategorie.result && categorie) {
-            let nouvelleCategorie = { nom: categorie, couleur: couleurCategorie };
-            catStore.add(nouvelleCategorie);
-        }
-    };
-
-    let request = store.add(nouvelleRegle);
+    const request = store.add(nouvelleRegle);
     request.onsuccess = function () {
+        console.log("🎉 Carte ajoutée avec succès !");
         afficherCartes();
-
-        // Réinitialiser les champs
-        document.getElementById("titre").value = "";
-        document.getElementById("tags").value = "";
-        document.getElementById("contenu").value = "";
-
-        document.getElementById("categorieSelectionnee").textContent = "-- Choisir une catégorie --";
-        document.getElementById("categorieSelectionnee").style = "";
-        inputCategorie.value = "";
-        inputCategorie.dataset.couleur = "";
-
-        document.getElementById("ajoutCarteContainer").style.display = "none";
-        document.getElementById("toggleFormBtn").style.display = "block";
+        resetFormulaire();
     };
+    request.onerror = function () {
+        console.error("❌ Une erreur s'est produite lors de l'ajout de la carte.");
+    };
+}
+function enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, parent) {
+    const transaction = db.transaction(["regles"], "readwrite");
+    const store = transaction.objectStore("regles");
+
+    const nouvelleRegle = {
+        titre,
+        tags,
+        contenu,
+        dateCreation: new Date().toISOString(),
+        categorie,
+        couleurCategorie,
+        parent
+    };
+
+    const request = store.add(nouvelleRegle);
+    request.onsuccess = function () {
+        console.log("🎉 Carte ajoutée avec succès !");
+        afficherCartes();
+        resetFormulaire();
+    };
+    request.onerror = function () {
+        console.error("❌ Une erreur s'est produite lors de l'ajout de la carte.");
+    };
+}
+
+function resetFormulaire() {
+    document.getElementById("titre").value = "";
+    document.getElementById("tags").value = "";
+    document.getElementById("contenu").value = "";
+
+    // Réinitialisation des sélections
+    const affichage = document.getElementById("categorieSelectionnee");
+    const inputCategorie = document.getElementById("categorieChoisie");
+    affichage.textContent = "-- Choisir une catégorie --";
+    affichage.style = "";
+    inputCategorie.value = "";
+    inputCategorie.dataset.couleur = "";
+
+    const parentField = document.getElementById("parentDirect");
+    if (parentField) {
+        parentField.value = ""; // Réinitialiser le parent s'il existe
+    }
 }
 
 
@@ -820,29 +869,32 @@ function enregistrerModificationInline(id) {
 
 function genererOptionsCouleursRestantes() {
     const select = document.getElementById("nouvelleCouleur");
+    const selectParent = document.getElementById("parentCategorie");
     select.innerHTML = "";
+    selectParent.innerHTML = '<option value="">Aucune (niveau racine)</option>'; // option par défaut
 
     couleursDisponibles.forEach(couleur => {
         const option = document.createElement("option");
         option.value = couleur;
-        option.textContent = getNomCouleur(couleur); // 🔹 Affiche un nom lisible
+        option.textContent = getNomCouleur(couleur);
         option.style.backgroundColor = couleur;
         option.style.color = getTextColor(couleur);
         select.appendChild(option);
     });
 
-    // 🔄 Mettre à jour le style du <select> quand une option est choisie
-    select.addEventListener("change", function () {
-        const couleur = this.value;
-        this.style.backgroundColor = couleur;
-        this.style.color = getTextColor(couleur);
-    });
+    // Remplir les options de parent
+    let transaction = db.transaction("categories", "readonly");
+    let store = transaction.objectStore("categories");
+    let request = store.getAll();
 
-    // 🖌️ Appliquer la couleur de la première option sélectionnée
-    if (select.value) {
-        select.style.backgroundColor = select.value;
-        select.style.color = getTextColor(select.value);
-    }
+    request.onsuccess = function () {
+        request.result.forEach(cat => {
+            const opt = document.createElement("option");
+            opt.value = cat.nom;
+            opt.textContent = cat.nom;
+            selectParent.appendChild(opt);
+        });
+    };
 }
 
 
@@ -893,6 +945,7 @@ function creerNouvelleCategorie() {
     const nomInput = document.getElementById("nouvelleCategorieNom");
     const couleurSelect = document.getElementById("nouvelleCouleur");
     const modal = document.getElementById("modalCategorie");
+    const parent = document.getElementById("parentCategorie").value || null;
 
     if (!nomInput || !couleurSelect || !modal) {
         console.error("❌ Un ou plusieurs éléments du DOM sont introuvables.");
@@ -910,7 +963,7 @@ function creerNouvelleCategorie() {
     let transaction = db.transaction("categories", "readwrite");
     let store = transaction.objectStore("categories");
 
-    let request = store.add({ nom, couleur });
+    let request = store.add({ nom, couleur, parent });
 
     request.onsuccess = function () {
         couleursDisponibles = couleursDisponibles.filter(c => c !== couleur);
@@ -1013,6 +1066,7 @@ window.toggleForm = function toggleForm() {
 
         // Charger les catégories dans le menu personnalisé
         chargerMenuCategories();
+        chargerParentsDisponibles();
     }
 }
 
@@ -1028,53 +1082,107 @@ document.getElementById("btnModeCartes").addEventListener("click", () => {
 function afficherVueParCategories() {
     const container = document.getElementById("vue-par-categories");
     const cartesContainer = document.getElementById("cartes-container");
-  
-    container.innerHTML = ""; // Vide le contenu
+    const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+    const btnRetour = document.getElementById("btnRetourCategories");
+
+    container.innerHTML = "";
     container.style.display = "flex";
-    cartesContainer.style.display = "none"; // Cache la vue normale
-  
-    const transaction = db.transaction("categories", "readonly");
-    const store = transaction.objectStore("categories");
-    const request = store.getAll();
-  
+    container.style.flexDirection = "column";
+    cartesContainer.style.display = "none";
+    btnRetour.style.display = "none";
+    if (titreCategorie) {
+        titreCategorie.style.display = "none"; // ➡️ Cache le titre si présent
+    }
+
+    let transaction = db.transaction("categories", "readonly");
+    let store = transaction.objectStore("categories");
+    let request = store.getAll();
+
     request.onsuccess = function () {
-      const categories = request.result;
-  
-      if (categories.length === 0) {
-        container.innerHTML = "<p>Aucune catégorie trouvée.</p>";
-        return;
-      }
-  
-      categories.forEach(cat => {
-        const div = document.createElement("div");
-        div.classList.add("carte-categorie");
-        div.style.backgroundColor = cat.couleur;
-        div.style.color = getTextColor(cat.couleur);
-        div.textContent = cat.nom;
-  
-        div.addEventListener("click", () => {
-          afficherCartesParCategorie(cat.nom);
+        const categories = request.result;
+
+        const parNom = {};
+        const racines = [];
+
+        categories.forEach(cat => {
+            cat.enfants = [];
+            parNom[cat.nom] = cat;
         });
-  
-        container.appendChild(div);
-      });
+
+        categories.forEach(cat => {
+            if (cat.parent && parNom[cat.parent]) {
+                parNom[cat.parent].enfants.push(cat);
+            } else {
+                racines.push(cat);
+            }
+        });
+
+        // Fonction récursive pour afficher la catégorie et ses enfants
+        function afficherCategorieEtEnfants(categorie, niveau = 0) {
+            const div = document.createElement("div");
+            div.classList.add("carte-categorie");
+            div.style.backgroundColor = categorie.couleur;
+            div.style.color = getTextColor(categorie.couleur);
+            div.style.marginLeft = `${niveau * 20}px`;
+            div.style.marginBottom = "8px";
+            div.textContent = categorie.nom;
+
+            div.addEventListener("click", () => {
+                afficherCartesParCategorie(categorie.nom);
+            });
+
+            container.appendChild(div);
+
+            categorie.enfants.forEach(enfant => {
+                afficherCategorieEtEnfants(enfant, niveau + 1);
+            });
+        }
+
+        racines.forEach(racine => {
+            afficherCategorieEtEnfants(racine);
+        });
     };
-  }
-  function afficherCartesParCategorie(nomCategorie) {
+
+    request.onerror = function () {
+        console.error("Erreur lors du chargement des catégories.");
+    };
+}
+
+function afficherCartesParCategorie(nomCategorie) {
     const cartesContainer = document.getElementById("cartes-container");
     const vueCategories = document.getElementById("vue-par-categories");
+    const titreCategorie = document.getElementById("titreCategorieSelectionnee");
 
     cartesContainer.innerHTML = "";
     cartesContainer.style.display = "block";
     vueCategories.style.display = "none";
     document.getElementById("btnRetourCategories").style.display = "block";
-    const transaction = db.transaction("regles", "readonly");
-    const store = transaction.objectStore("regles");
-    const request = store.getAll();
+
+    // Trouver la couleur et les informations de la catégorie
+    const transaction = db.transaction(["regles", "categories"], "readonly");
+    const store = transaction.objectStore("categories");
+    const requestCategorie = store.get(nomCategorie);
+
+    requestCategorie.onsuccess = function () {
+        const categorie = requestCategorie.result;
+
+        if (categorie) {
+            titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
+            titreCategorie.style.display = "block";
+            titreCategorie.style.backgroundColor = categorie.couleur;
+            titreCategorie.style.color = getTextColor(categorie.couleur);
+            titreCategorie.style.padding = "10px";
+            titreCategorie.style.borderRadius = "8px";
+            titreCategorie.style.marginBottom = "20px";
+        }
+    };
+
+    // Charger et afficher les cartes de cette catégorie
+    const storeRegles = transaction.objectStore("regles");
+    const request = storeRegles.getAll();
 
     request.onsuccess = function () {
         const toutesLesCartes = request.result;
-
         const cartesFiltrees = toutesLesCartes.filter(carte =>
             carte.categorie && carte.categorie.toLowerCase() === nomCategorie.toLowerCase()
         );
@@ -1082,7 +1190,27 @@ function afficherVueParCategories() {
         if (cartesFiltrees.length === 0) {
             cartesContainer.innerHTML = `<p>Aucune carte trouvée pour la catégorie "${nomCategorie}".</p>`;
         } else {
-            afficherCartesFiltres(cartesFiltrees);
+            cartesFiltrees.forEach((carte) => {
+                const dateAffichee = carte.dateCreation
+                    ? new Date(carte.dateCreation).toLocaleDateString()
+                    : "Date inconnue";
+
+                const div = document.createElement("div");
+                div.classList.add("carte");
+                div.setAttribute("data-id", carte.id);
+                div.innerHTML = `
+                    <h3>${carte.titre}</h3>
+                    <p>${carte.contenu}</p>
+                    <p class="tags">Tags : ${carte.tags.join(", ")}</p>
+                    <span style="font-size: 12px; color: gray;">Créé le : ${dateAffichee}</span>
+                    <button onclick="modifierCarte(${carte.id})">Modifier</button>
+                    <button onclick="supprimerCarte(${carte.id})">Supprimer</button>
+                `;
+
+                // 🎨 Appliquer la couleur de la catégorie à la bordure des cartes
+                div.style.borderLeft = `8px solid ${carte.couleurCategorie || '#ccc'}`;
+                cartesContainer.appendChild(div);
+            });
         }
     };
 
@@ -1252,3 +1380,57 @@ function supprimerCategorieAvecImpact(nomCategorie) {
         afficherListeGestionCategories();
     };
 }
+function chargerParentsDisponibles() {
+    const select = document.getElementById("parentDirect");
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Aucun (niveau racine)</option>'; // Par défaut
+
+    let transaction = db.transaction("categories", "readonly");
+    let store = transaction.objectStore("categories");
+    let request = store.getAll();
+
+    request.onsuccess = function () {
+        request.result.forEach(cat => {
+            let option = document.createElement("option");
+            option.value = cat.nom;
+            option.textContent = cat.nom;
+            select.appendChild(option);
+        });
+    };
+}
+document.getElementById("parentDirect").addEventListener("change", function () {
+    const parentNom = this.value;
+    const inputCategorie = document.getElementById("categorieChoisie");
+    const affichageCategorie = document.getElementById("categorieSelectionnee");
+
+    if (parentNom) {
+        let transaction = db.transaction("categories", "readonly");
+        let store = transaction.objectStore("categories");
+        let request = store.get(parentNom);
+
+        request.onsuccess = function () {
+            const parentCat = request.result;
+            if (parentCat) {
+                // Appliquer la catégorie du parent
+                inputCategorie.value = parentCat.nom;
+                inputCategorie.dataset.couleur = parentCat.couleur;
+
+                // Ajuster visuellement
+                affichageCategorie.textContent = parentCat.nom;
+                affichageCategorie.style.backgroundColor = parentCat.couleur;
+                affichageCategorie.style.color = getTextColor(parentCat.couleur);
+
+                // Désactiver la sélection manuelle
+                affichageCategorie.style.pointerEvents = "none";
+            }
+        };
+    } else {
+        // Réactiver la sélection manuelle
+        inputCategorie.value = "";
+        affichageCategorie.textContent = "Choisir une catégorie";
+        affichageCategorie.style.backgroundColor = "";
+        affichageCategorie.style.color = "";
+        affichageCategorie.style.pointerEvents = "auto";
+    }
+});

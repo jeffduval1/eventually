@@ -50,10 +50,18 @@
       </div>
 <!--CONTENEUR DE CATÉGORIES-->      
       <div id="vue-par-categories" style="display: none;"></div>
+    
 <!--CONTENEUR D'AJOUT DE CARTES-->
 <div id="ajoutCarteContainer" style="display: none;">
     <input type="text" id="titre" placeholder="Titre">
     <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+    <label for="parentDirect">Parent dans l’arborescence :</label>
+<select id="parentDirect">
+  <option value="">Aucun (niveau racine)</option>
+  <!-- Options ajoutées dynamiquement -->
+</select>
+
+
 <!-- Choix d'une catégorie existante -->
 <label for="selectCategorie">Catégories existantes :</label>
 <!-- Conteneur pour le menu personnalisé -->
@@ -76,7 +84,11 @@
   
       <label for="nouvelleCategorieNom">Nom :</label>
       <input type="text" id="nouvelleCategorieNom" placeholder="Nom de la catégorie">
-  
+      <label for="parentCategorie">Catégorie parent :</label>
+      <select id="parentCategorie">
+        <option value="">Aucune (niveau racine)</option>
+        <!-- Options générées dynamiquement -->
+      </select>
       <label for="nouvelleCouleur">Choisir une couleur :</label>
       <select id="nouvelleCouleur">
         <!-- Couleurs générées dynamiquement -->
@@ -108,6 +120,7 @@
 
     <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
     <button id="btnRetourCategories" style="display: none;" onclick="afficherVueParCategories()">← Retour aux catégories</button>
+    <h2 id="titreCategorieSelectionnee" style="display:none;"></h2>
     <div id="cartes-container"></div>
 <!-- 🌟 MODALE DE GESTION DES CATÉGORIES -->
 <div id="modalGestionCategories" class="modal" style="display: none;">
