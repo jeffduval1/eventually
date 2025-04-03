@@ -62,10 +62,16 @@
 
 <!-- Zone cliquable pour afficher le nom de la catégorie choisie -->
 <div id="categorieSelectionnee"
-     style="padding: 8px; border: 1px solid #ccc; margin-top: 6px; cursor: pointer;">
+     style="padding: 8px; border: 1px solid #ccc; margin-top: 6px; cursor: pointer; display: none;">
   -- Choisir une catégorie --
 </div>
-
+<div id="choixParentContainer" style="display: none;">
+  <label for="parentDirect">Choisir un parent :</label>
+  <select id="parentDirect">
+    <option value="">Aucun (niveau racine)</option>
+    <!-- Options injectées dynamiquement -->
+  </select>
+</div>
 <!-- Menu déroulant personnalisé pour les catégories -->
 <div id="listeCategories"
      class="liste-categories"

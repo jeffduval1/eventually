@@ -48,16 +48,37 @@ document.addEventListener("DOMContentLoaded", function() {
 document.getElementById("btnChoisirExistante").addEventListener("click", () => {
     document.getElementById("modalChoixCategorie").style.display = "none";
 
-    // Simule un clic sur la zone personnalisée
-    const zone = document.getElementById("categorieSelectionnee");
-    if (zone) zone.click();
-});
+     // Activer le div personnalisé
+     const zone = document.getElementById("categorieSelectionnee");
+     if (zone) {
+         zone.style.display = "block"; // 👈 on le rend visible
+         zone.click(); // 👈 on peut simuler un clic si souhaité
+     }
+ 
+     // Cacher le champ parent si visible
+     document.getElementById("choixParentContainer").style.display = "none";
+ });
 
 // ▶ 2. Choisir un parent dans l’arborescence
 document.getElementById("btnChoisirParent").addEventListener("click", () => {
     document.getElementById("modalChoixCategorie").style.display = "none";
 
-    // Met le focus sur le champ <select> de parent pour guider l’utilisateur
+    // Affiche le champ de choix de parent
+    document.getElementById("choixParentContainer").style.display = "block";
+
+    // Réinitialise la sélection de catégorie existante
+    const affichage = document.getElementById("categorieSelectionnee");
+    const input = document.getElementById("categorieChoisie");
+
+    affichage.textContent = "-- Choisir une catégorie --";
+    affichage.style.backgroundColor = "";
+    affichage.style.color = "";
+    affichage.style.display = "none"; // 👈 Cache complètement le champ
+    affichage.style.pointerEvents = "auto";
+
+    input.value = "";
+    input.dataset.couleur = "";
+
     const parentSelect = document.getElementById("parentDirect");
     if (parentSelect) parentSelect.focus();
 });
@@ -84,7 +105,25 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
             document.getElementById("modalChoixCategorie").style.display = "none";
         });
       
-    
+     // 🧼 Réinitialiser le choix de parent
+     const parentContainer = document.getElementById("choixParentContainer");
+     if (parentContainer) parentContainer.style.display = "none";
+ 
+     if (parentSelect) parentSelect.value = "";
+ 
+     const categorieAffichage = document.getElementById("categorieSelectionnee");
+     if (categorieAffichage) {
+         categorieAffichage.textContent = "-- Choisir une catégorie --";
+         categorieAffichage.style.backgroundColor = "";
+         categorieAffichage.style.color = "";
+         categorieAffichage.style.pointerEvents = "auto";
+     }
+ 
+     const inputCategorie = document.getElementById("categorieChoisie");
+     if (inputCategorie) {
+         inputCategorie.value = "";
+         inputCategorie.dataset.couleur = "";
+     }
         // Si un parent est sélectionné, on désactive les deux premiers boutons
         const parentSelect = document.getElementById("parentDirect");
         const parentNom = parentSelect ? parentSelect.value : "";
@@ -335,6 +374,7 @@ function enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, par
         console.log("🎉 Carte ajoutée avec succès !");
         afficherCartes();
         resetFormulaire();
+        document.getElementById("modalAjoutCarte").style.display = "none";
     };
     request.onerror = function () {
         console.error("❌ Une erreur s'est produite lors de l'ajout de la carte.");
@@ -1434,25 +1474,20 @@ document.getElementById("parentDirect").addEventListener("change", function () {
         request.onsuccess = function () {
             const parentCat = request.result;
             if (parentCat) {
-                // Appliquer la catégorie du parent
                 inputCategorie.value = parentCat.nom;
                 inputCategorie.dataset.couleur = parentCat.couleur;
 
-                // Ajuster visuellement
-                affichageCategorie.textContent = parentCat.nom;
-                affichageCategorie.style.backgroundColor = parentCat.couleur;
-                affichageCategorie.style.color = getTextColor(parentCat.couleur);
-
-                // Désactiver la sélection manuelle
-                affichageCategorie.style.pointerEvents = "none";
+                // Cacher complètement le champ d'affichage
+                affichageCategorie.style.display = "none";
             }
         };
     } else {
-        // Réactiver la sélection manuelle
+        // Si l'utilisateur revient à "aucun parent", on réaffiche le champ
         inputCategorie.value = "";
-        affichageCategorie.textContent = "Choisir une catégorie";
+        inputCategorie.dataset.couleur = "";
+        affichageCategorie.textContent = "-- Choisir une catégorie --";
         affichageCategorie.style.backgroundColor = "";
         affichageCategorie.style.color = "";
-        affichageCategorie.style.pointerEvents = "auto";
+        affichageCategorie.style.display = "block";
     }
 });
