@@ -370,12 +370,20 @@ function enregistrerCarte(titre, tags, contenu, categorie, couleurCategorie, par
     };
 
     const request = store.add(nouvelleRegle);
-    request.onsuccess = function () {
-        console.log("🎉 Carte ajoutée avec succès !");
-        afficherCartes();
-        resetFormulaire();
-        document.getElementById("modalAjoutCarte").style.display = "none";
-    };
+request.onsuccess = function () {
+    console.log("🎉 Carte ajoutée avec succès !");
+    afficherCartes();
+    resetFormulaire();
+
+    // 🔽 Fermeture animée de la modale
+    const modal = document.getElementById("modalAjoutCarte");
+    modal.classList.add("fade-out");
+
+    setTimeout(() => {
+        modal.style.display = "none";
+        modal.classList.remove("fade-out");
+    }, 300); // Durée identique à la transition CSS
+};
     request.onerror = function () {
         console.error("❌ Une erreur s'est produite lors de l'ajout de la carte.");
     };
@@ -1293,7 +1301,7 @@ function changerModeAffichage(mode, initial = false) {
         cartesContainer.style.display = "block";
         vueCategories.style.display = "none";
         btnRetour.style.display = "none";
-
+        document.getElementById("titreCategorieSelectionnee").style.display = "none";
         btnCartes.classList.add("active");
     btnCategories.classList.remove("active");
 
