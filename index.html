@@ -29,8 +29,7 @@
     <button onclick="importerCartes()">Importer des cartes</button>
     <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
   </div>
-  </div>
-  </div>
+ 
   <!--RÉINITIALISER LES FILTRES-->
   <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
     Réinitialiser le filtre
@@ -45,6 +44,9 @@
   <!-- 🟢 Nouveau formulaire modale simplifié pour ajout de carte -->
   <!-- 🌟 Nouvelle modale de création de carte -->
   <div id="modalAjoutCarte" class="modal">
+    <!-- Champ caché pour stocker la catégorie choisie -->
+<input type="hidden" id="categorieChoisie">
+
     <div class="modal-content">
       <span class="close" id="closeModalAjoutCarte">&times;</span>
       <h3>Créer une nouvelle carte</h3>
@@ -55,7 +57,19 @@
 
         <!-- Nouveau bouton de sélection de catégorie -->
         <button id="btnCategorieOptions">Catégorie</button>
+<!-- Champ caché pour stocker la catégorie choisie -->
+<input type="hidden" id="categorieChoisie">
 
+<!-- Zone cliquable pour afficher le nom de la catégorie choisie -->
+<div id="categorieSelectionnee"
+     style="padding: 8px; border: 1px solid #ccc; margin-top: 6px; cursor: pointer;">
+  -- Choisir une catégorie --
+</div>
+
+<!-- Menu déroulant personnalisé pour les catégories -->
+<div id="listeCategories"
+     class="liste-categories"
+     style="display: none; border: 1px solid #ccc; margin-top: 4px;"></div>
         <!-- Résumé visuel de la catégorie choisie -->
         <div id="resumeCategorieChoisie" style="margin: 10px 0; font-weight: bold;"></div>
 
@@ -76,9 +90,7 @@
       <button id="btnNouvelleCategorie">Créer une nouvelle catégorie</button>
     </div>
   </div>
-  </div>
-  </div>
-  </div>
+  
 
   <!-- 🧩 Bouton pour gérer les catégories -->
   <button id="btnGererCategories">Gérer les catégories</button>
@@ -115,7 +127,7 @@
     </div>
 
   </div>
-  </div>
+  
 
 
   <label for="triSelect">Trier par :</label>

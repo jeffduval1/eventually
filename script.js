@@ -44,6 +44,32 @@ let modeTri = "date-desc"; // Mode de tri par défaut
 
 
 document.addEventListener("DOMContentLoaded", function() {
+    // ▶ 1. Choisir une catégorie existante
+document.getElementById("btnChoisirExistante").addEventListener("click", () => {
+    document.getElementById("modalChoixCategorie").style.display = "none";
+
+    // Simule un clic sur la zone personnalisée
+    const zone = document.getElementById("categorieSelectionnee");
+    if (zone) zone.click();
+});
+
+// ▶ 2. Choisir un parent dans l’arborescence
+document.getElementById("btnChoisirParent").addEventListener("click", () => {
+    document.getElementById("modalChoixCategorie").style.display = "none";
+
+    // Met le focus sur le champ <select> de parent pour guider l’utilisateur
+    const parentSelect = document.getElementById("parentDirect");
+    if (parentSelect) parentSelect.focus();
+});
+
+// ▶ 3. Créer une nouvelle catégorie
+document.getElementById("btnNouvelleCategorie").addEventListener("click", () => {
+    document.getElementById("modalChoixCategorie").style.display = "none";
+
+    // Simule un clic sur le bouton qui ouvre la modale de création de catégorie
+    const btn = document.getElementById("btnAfficherFormCategorie");
+    if (btn) btn.click();
+});
     document.getElementById("btnGererCategories").addEventListener("click", () => {
         document.getElementById("modalGestionCategories").style.display = "block";
         afficherListeGestionCategories();
@@ -57,9 +83,11 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("closeModalChoixCategorie").addEventListener("click", () => {
             document.getElementById("modalChoixCategorie").style.display = "none";
         });
+      
     
         // Si un parent est sélectionné, on désactive les deux premiers boutons
-        const parentNom = document.getElementById("parentDirect").value;
+        const parentSelect = document.getElementById("parentDirect");
+        const parentNom = parentSelect ? parentSelect.value : "";
         const existante = document.getElementById("btnChoisirExistante");
         const parent = document.getElementById("btnChoisirParent");
         const creer = document.getElementById("btnNouvelleCategorie");
