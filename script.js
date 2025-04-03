@@ -52,7 +52,34 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("closeGestionModal").addEventListener("click", () => {
         document.getElementById("modalGestionCategories").style.display = "none";
     });
-   
+    document.getElementById("btnCategorieOptions").addEventListener("click", () => {
+        document.getElementById("modalChoixCategorie").style.display = "block";
+        document.getElementById("closeModalChoixCategorie").addEventListener("click", () => {
+            document.getElementById("modalChoixCategorie").style.display = "none";
+        });
+    
+        // Si un parent est sélectionné, on désactive les deux premiers boutons
+        const parentNom = document.getElementById("parentDirect").value;
+        const existante = document.getElementById("btnChoisirExistante");
+        const parent = document.getElementById("btnChoisirParent");
+        const creer = document.getElementById("btnNouvelleCategorie");
+    
+        if (parentNom) {
+            existante.disabled = true;
+            parent.disabled = true;
+            creer.disabled = true;
+    
+            // Ajoute une info-bulle explicative au survol
+            [existante, parent, creer].forEach(btn => {
+                btn.title = "Désactivé si un parent est sélectionné";
+            });
+        } else {
+            existante.disabled = false;
+            parent.disabled = false;
+            creer.disabled = false;
+            [existante, parent, creer].forEach(btn => (btn.title = ""));
+        }
+    });
     function chargerMenuCategories() {
         const menu = document.getElementById("listeCategories");
         const affichage = document.getElementById("categorieSelectionnee");
