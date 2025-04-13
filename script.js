@@ -41,7 +41,30 @@ const nomCouleurs = {
 // 🚀 Ouvrir ou créer la base IndexedDB
 const request = indexedDB.open("MoteurDeRecherche", 4);
 let modeTri = "date-desc"; // Mode de tri par défaut
+function toggleForm() {
+    let modal = document.getElementById("modalAjoutCarte");
+    let closeModalBtn = document.getElementById("closeModalAjoutCarte");
 
+    if (!modal) {
+        console.error("❌ La modale d'ajout de carte n'a pas été trouvée.");
+        return;
+    }
+
+    modal.style.display = "block";
+
+    // ✅ Charger les catégories disponibles comme parents
+    chargerParentsDisponibles(); 
+
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     // ▶ 1. Choisir une catégorie existante
@@ -1027,23 +1050,30 @@ function creerNouvelleCategorie() {
     let request = store.add({ nom, couleur, parent });
 
     request.onsuccess = function () {
-        couleursDisponibles = couleursDisponibles.filter(c => c !== couleur);
-        genererOptionsCouleursRestantes();
-        chargerMenuCategories(); // 🔁 Recharge le menu personnalisé
-
-        // Appliquer la catégorie sélectionnée visuellement
-        document.getElementById("categorieSelectionnee").textContent = nom;
-        document.getElementById("categorieSelectionnee").style.backgroundColor = couleur;
-        document.getElementById("categorieSelectionnee").style.color = getTextColor(couleur);
-
-        // Stocker dans le champ caché
-        const inputCat = document.getElementById("categorieChoisie");
-        inputCat.value = nom;
-        inputCat.dataset.couleur = couleur;
-
+        // 🧼 Nettoyage visuel
         modal.style.display = "none";
         nomInput.value = "";
         couleurSelect.value = "";
+
+        // 🎯 Appliquer la nouvelle catégorie dans la création de carte
+        const affichage = document.getElementById("categorieSelectionnee");
+        const inputCat = document.getElementById("categorieChoisie");
+
+        affichage.textContent = nom;
+        affichage.style.backgroundColor = couleur;
+        affichage.style.color = getTextColor(couleur);
+        affichage.style.display = "block"; // 👈 Réactiver si caché
+
+        inputCat.value = nom;
+        inputCat.dataset.couleur = couleur;
+
+        // 🧼 Réinitialiser le champ parent
+        const parentDirect = document.getElementById("parentDirect");
+        if (parentDirect) parentDirect.value = "";
+
+        // 🔄 Mettre à jour les menus
+        chargerMenuCategories();
+        genererOptionsCouleursRestantes();
     };
 
     request.onerror = function () {
@@ -1115,30 +1145,7 @@ function chargerMenuCategories() {
         });
     };
 }
-function toggleForm() {
-    let modal = document.getElementById("modalAjoutCarte");
-    let closeModalBtn = document.getElementById("closeModalAjoutCarte");
 
-    if (!modal) {
-        console.error("❌ La modale d'ajout de carte n'a pas été trouvée.");
-        return;
-    }
-
-    modal.style.display = "block";
-
-    // ✅ Charger les catégories disponibles comme parents
-    chargerParentsDisponibles(); 
-
-    closeModalBtn.onclick = function() {
-        modal.style.display = "none";
-    };
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    };
-}
 
 document.getElementById("btnModeCategories").addEventListener("click", () => {
     changerModeAffichage("categories");
