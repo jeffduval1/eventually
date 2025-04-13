@@ -1360,7 +1360,7 @@ function supprimerCategorie(nomCategorie, couleurCategorie) {
 function afficherListeGestionCategories() {
     const container = document.getElementById("listeGestionCategories");
     container.innerHTML = "";
-
+   
     const transaction = db.transaction("categories", "readonly");
     const store = transaction.objectStore("categories");
     const request = store.getAll();
@@ -1374,12 +1374,21 @@ function afficherListeGestionCategories() {
             ligne.style.display = "flex";
             ligne.style.alignItems = "center";
             ligne.style.marginBottom = "6px";
-
+            ligne.style.gap = "8px";
+        
+            // 🔹 Nom original non modifiable
+            const labelNom = document.createElement("span");
+            labelNom.textContent = cat.nom + " :";
+            labelNom.style.width = "120px";
+            labelNom.style.fontWeight = "bold";
+        
+            // 🔹 Champ texte pour modifier le nom
             const inputNom = document.createElement("input");
             inputNom.type = "text";
             inputNom.value = cat.nom;
             inputNom.style.flex = "1";
-
+        
+            // 🔹 Sélecteur pour modifier la couleur
             const selectCouleur = document.createElement("select");
             couleursDisponibles.concat(cat.couleur).forEach(couleur => {
                 const option = document.createElement("option");
@@ -1390,22 +1399,26 @@ function afficherListeGestionCategories() {
                 if (couleur === cat.couleur) option.selected = true;
                 selectCouleur.appendChild(option);
             });
-
+        
+            // 🔹 Bouton Enregistrer
             const btnEnregistrer = document.createElement("button");
             btnEnregistrer.textContent = "💾";
             btnEnregistrer.title = "Enregistrer";
             btnEnregistrer.onclick = () => modifierCategorie(cat.nom, inputNom.value.trim(), selectCouleur.value);
-
+        
+            // 🔹 Bouton Supprimer
             const btnSupprimer = document.createElement("button");
             btnSupprimer.textContent = "🗑";
             btnSupprimer.title = "Supprimer";
             btnSupprimer.onclick = () => supprimerCategorieAvecImpact(cat.nom);
-
+        
+            // 🔹 Assemblage
+            ligne.appendChild(labelNom);
             ligne.appendChild(inputNom);
             ligne.appendChild(selectCouleur);
             ligne.appendChild(btnEnregistrer);
             ligne.appendChild(btnSupprimer);
-
+        
             container.appendChild(ligne);
         });
     };
