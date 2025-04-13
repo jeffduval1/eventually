@@ -276,6 +276,8 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
             option.style.backgroundColor = couleur;
             option.style.color = getTextColor(couleur);
             select.appendChild(option);
+             // Recharger la page pour afficher la nouvelle catégorie
+
         });
     }
     
@@ -1070,7 +1072,7 @@ function creerNouvelleCategorie() {
         // 🧼 Réinitialiser le champ parent
         const parentDirect = document.getElementById("parentDirect");
         if (parentDirect) parentDirect.value = "";
-
+        window.location.reload();
         // 🔄 Mettre à jour les menus
         chargerMenuCategories();
         genererOptionsCouleursRestantes();
