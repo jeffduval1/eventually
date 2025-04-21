@@ -121,18 +121,27 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
     
     document.getElementById("closeGestionModal").addEventListener("click", () => {
         document.getElementById("modalGestionCategories").style.display = "none";
+    
+        // 🔁 Rafraîchir la vue actuelle (catégories ou cartes)
+        const boutonActif = document.querySelector(".mode-toggle .active");
+        if (boutonActif?.id === "btnModeCategories") {
+            afficherVueParCategories();
+        } else {
+            afficherCartes();
+        }
     });
     document.getElementById("btnCategorieOptions").addEventListener("click", () => {
         document.getElementById("modalChoixCategorie").style.display = "block";
         document.getElementById("closeModalChoixCategorie").addEventListener("click", () => {
             document.getElementById("modalChoixCategorie").style.display = "none";
         });
-      
-     // 🧼 Réinitialiser le choix de parent
-     const parentContainer = document.getElementById("choixParentContainer");
-     if (parentContainer) parentContainer.style.display = "none";
- 
-     if (parentSelect) parentSelect.value = "";
+    
+        // 🧼 Réinitialiser le choix de parent
+        const parentContainer = document.getElementById("choixParentContainer");
+        if (parentContainer) parentContainer.style.display = "none";
+    
+        parentSelect.value = "";
+        if (parentSelect) parentSelect.value = "";
  
      const categorieAffichage = document.getElementById("categorieSelectionnee");
      if (categorieAffichage) {
@@ -170,41 +179,7 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
             [existante, parent, creer].forEach(btn => (btn.title = ""));
         }
     });
-    function chargerMenuCategories() {
-        const menu = document.getElementById("listeCategories");
-        const affichage = document.getElementById("categorieSelectionnee");
-        const input = document.getElementById("categorieChoisie");
     
-        // Nettoyer le menu
-        menu.innerHTML = "";
-    
-        let transaction = db.transaction("categories", "readonly");
-        let store = transaction.objectStore("categories");
-        let request = store.getAll();
-    
-        request.onsuccess = function () {
-            const categories = request.result;
-    
-            categories.sort((a, b) => a.nom.localeCompare(b.nom));
-            categories.forEach(cat => {
-                let div = document.createElement("div");
-                div.textContent = cat.nom;
-                div.style.backgroundColor = cat.couleur;
-                div.style.color = getTextColor(cat.couleur);
-    
-                div.addEventListener("click", () => {
-                    affichage.textContent = cat.nom;
-                    affichage.style.backgroundColor = cat.couleur;
-                    affichage.style.color = getTextColor(cat.couleur);
-                    input.value = cat.nom;
-                    input.dataset.couleur = cat.couleur;
-                    menu.style.display = "none";
-                });
-    
-                menu.appendChild(div);
-            });
-        };
-    }
    
     // Cliquer sur le champ ouvre/ferme le menu
     document.getElementById("categorieSelectionnee").addEventListener("click", (e) => {
@@ -312,7 +287,41 @@ request.onupgradeneeded = function(event) {
     };
 };
 
+function chargerMenuCategories() {
+    const menu = document.getElementById("listeCategories");
+    const affichage = document.getElementById("categorieSelectionnee");
+    const input = document.getElementById("categorieChoisie");
 
+    // Nettoyer le menu
+    menu.innerHTML = "";
+
+    let transaction = db.transaction("categories", "readonly");
+    let store = transaction.objectStore("categories");
+    let request = store.getAll();
+
+    request.onsuccess = function () {
+        const categories = request.result;
+
+        categories.sort((a, b) => a.nom.localeCompare(b.nom));
+        categories.forEach(cat => {
+            let div = document.createElement("div");
+            div.textContent = cat.nom;
+            div.style.backgroundColor = cat.couleur;
+            div.style.color = getTextColor(cat.couleur);
+
+            div.addEventListener("click", () => {
+                affichage.textContent = cat.nom;
+                affichage.style.backgroundColor = cat.couleur;
+                affichage.style.color = getTextColor(cat.couleur);
+                input.value = cat.nom;
+                input.dataset.couleur = cat.couleur;
+                menu.style.display = "none";
+            });
+
+            menu.appendChild(div);
+        });
+    };
+}
 request.onsuccess = function(event) {
     db = event.target.result;
     
@@ -1072,7 +1081,6 @@ function creerNouvelleCategorie() {
         // 🧼 Réinitialiser le champ parent
         const parentDirect = document.getElementById("parentDirect");
         if (parentDirect) parentDirect.value = "";
-        window.location.reload();
         // 🔄 Mettre à jour les menus
         chargerMenuCategories();
         genererOptionsCouleursRestantes();
@@ -1080,71 +1088,6 @@ function creerNouvelleCategorie() {
 
     request.onerror = function () {
         alert("Cette catégorie existe déjà.");
-    };
-}
-function chargerMenuCategories() {
-    const menu = document.getElementById("listeCategories");
-    const affichage = document.getElementById("categorieSelectionnee");
-    const input = document.getElementById("categorieChoisie");
-
-    if (!menu || !affichage || !input) {
-        console.warn("⚠️ Eléments du menu de catégorie manquants.");
-        return;
-    }
-
-    menu.innerHTML = "";
-
-    let transaction = db.transaction("categories", "readonly");
-    let store = transaction.objectStore("categories");
-    let request = store.getAll();
-
-    request.onsuccess = function () {
-        const categories = request.result;
-        categories.sort((a, b) => a.nom.localeCompare(b.nom));
-
-        categories.forEach(cat => {
-            let ligne = document.createElement("div");
-            ligne.classList.add("categorie-item");
-            ligne.style.display = "flex";
-            ligne.style.alignItems = "center";
-            ligne.style.justifyContent = "space-between";
-            ligne.style.padding = "6px";
-
-            let nom = document.createElement("span");
-            nom.textContent = cat.nom;
-            nom.style.backgroundColor = cat.couleur;
-            nom.style.color = getTextColor(cat.couleur);
-            nom.style.flex = "1";
-            nom.style.cursor = "pointer";
-            nom.style.padding = "4px 8px";
-
-            nom.addEventListener("click", () => {
-                affichage.textContent = cat.nom;
-                affichage.style.backgroundColor = cat.couleur;
-                affichage.style.color = getTextColor(cat.couleur);
-                input.value = cat.nom;
-                input.dataset.couleur = cat.couleur;
-                menu.style.display = "none";
-            });
-
-            let btnSupprimer = document.createElement("button");
-            btnSupprimer.textContent = "🗑";
-            btnSupprimer.title = "Supprimer cette catégorie";
-            btnSupprimer.style.marginLeft = "8px";
-            btnSupprimer.style.border = "none";
-            btnSupprimer.style.background = "transparent";
-            btnSupprimer.style.cursor = "pointer";
-            btnSupprimer.style.fontSize = "16px";
-
-            btnSupprimer.addEventListener("click", (e) => {
-                e.stopPropagation(); // évite de déclencher la sélection
-                supprimerCategorie(cat.nom, cat.couleur);
-            });
-
-            ligne.appendChild(nom);
-            ligne.appendChild(btnSupprimer);
-            menu.appendChild(ligne);
-        });
     };
 }
 
@@ -1376,20 +1319,33 @@ function afficherListeGestionCategories() {
             ligne.style.marginBottom = "6px";
             ligne.style.gap = "8px";
         
-            // 🔹 Nom original non modifiable
-            const labelNom = document.createElement("span");
-            labelNom.textContent = cat.nom + " :";
-            labelNom.style.width = "120px";
-            labelNom.style.fontWeight = "bold";
-        
-            // 🔹 Champ texte pour modifier le nom
-            const inputNom = document.createElement("input");
-            inputNom.type = "text";
-            inputNom.value = cat.nom;
-            inputNom.style.flex = "1";
+            // Conteneur de l'ensemble
+ligne.classList.add("ligne-categorie");
+
+// Ligne nom + crayon
+const conteneurNom = document.createElement("div");
+conteneurNom.classList.add("nom-et-edition");
+
+const nomAffiche = document.createElement("span");
+nomAffiche.classList.add("nom-categorie");
+nomAffiche.textContent = cat.nom;
+nomAffiche.setAttribute("contenteditable", "false");
+
+const btnEditer = document.createElement("button");
+btnEditer.textContent = "✏️";
+btnEditer.title = "Modifier le nom";
+btnEditer.onclick = () => {
+  const editable = nomAffiche.getAttribute("contenteditable") === "true";
+  nomAffiche.setAttribute("contenteditable", String(!editable));
+  nomAffiche.focus();
+};
+
+conteneurNom.appendChild(nomAffiche);
+conteneurNom.appendChild(btnEditer);
         
             // 🔹 Sélecteur pour modifier la couleur
             const selectCouleur = document.createElement("select");
+            selectCouleur.classList.add("select-couleur");
             couleursDisponibles.concat(cat.couleur).forEach(couleur => {
                 const option = document.createElement("option");
                 option.value = couleur;
@@ -1400,25 +1356,30 @@ function afficherListeGestionCategories() {
                 selectCouleur.appendChild(option);
             });
         
-            // 🔹 Bouton Enregistrer
-            const btnEnregistrer = document.createElement("button");
-            btnEnregistrer.textContent = "💾";
-            btnEnregistrer.title = "Enregistrer";
-            btnEnregistrer.onclick = () => modifierCategorie(cat.nom, inputNom.value.trim(), selectCouleur.value);
-        
-            // 🔹 Bouton Supprimer
+            const actions = document.createElement("div");
+            actions.classList.add("actions-categorie");
+            
+            const btnSave = document.createElement("button");
+            btnSave.textContent = "💾";
+            btnSave.title = "Enregistrer";
+            btnSave.onclick = () => modifierCategorie(
+              cat.nom,
+              nomAffiche.textContent.trim(),
+              selectCouleur.value
+            );
+            
             const btnSupprimer = document.createElement("button");
             btnSupprimer.textContent = "🗑";
             btnSupprimer.title = "Supprimer";
             btnSupprimer.onclick = () => supprimerCategorieAvecImpact(cat.nom);
+            
+            actions.appendChild(btnSave);
+            actions.appendChild(btnSupprimer);
         
             // 🔹 Assemblage
-            ligne.appendChild(labelNom);
-            ligne.appendChild(inputNom);
+            ligne.appendChild(conteneurNom);
             ligne.appendChild(selectCouleur);
-            ligne.appendChild(btnEnregistrer);
-            ligne.appendChild(btnSupprimer);
-        
+            ligne.appendChild(actions);
             container.appendChild(ligne);
         });
     };
@@ -1444,15 +1405,33 @@ function modifierCategorie(ancienNom, nouveauNom, nouvelleCouleur) {
     // Mettre à jour toutes les cartes
     const getAll = regleStore.getAll();
     getAll.onsuccess = function () {
-        getAll.result.forEach(carte => {
-            if (carte.categorie === ancienNom) {
+        const cartes = getAll.result.filter(carte => carte.categorie === ancienNom);
+        let total = cartes.length;
+        let misesAJour = 0;
+    
+        if (total === 0) {
+            terminerMiseAJour();
+        } else {
+            cartes.forEach(carte => {
                 carte.categorie = nouveauNom;
                 carte.couleurCategorie = nouvelleCouleur;
-                regleStore.put(carte);
-            }
-        });
+    
+                const majRequest = regleStore.put(carte);
+                majRequest.onsuccess = () => {
+                    misesAJour++;
+                    if (misesAJour === total) {
+                        terminerMiseAJour();
+                    }
+                };
+            });
+        }
+        function terminerMiseAJour() {
+            chargerMenuCategories();
+            genererOptionsCouleursRestantes();
+            afficherListeGestionCategories();
+            afficherCartes(); // ✅ maintenant déclenché au bon moment
+        }
     };
-
     transaction.oncomplete = () => {
         chargerMenuCategories();
         genererOptionsCouleursRestantes();

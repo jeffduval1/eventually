@@ -346,3 +346,46 @@ label {
     margin-bottom: 10px;
   }
 }
+.ligne-categorie {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+}
+
+.nom-et-edition {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nom-categorie {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.nom-categorie[contenteditable="true"] {
+  background-color: #fff6cc;
+  border-bottom: 1px dashed #aaa;
+}
+
+.select-couleur {
+  margin-top: 6px;
+}
+
+.actions-categorie {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+  justify-content: flex-end;
+}
+
+.actions-categorie button {
+  flex: 1;
+  padding: 6px;
+  font-size: 16px;
+}
