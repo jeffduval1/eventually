@@ -131,6 +131,7 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
         }
     });
     document.getElementById("btnCategorieOptions").addEventListener("click", () => {
+        const parentSelect = document.getElementById("parentDirect");
         document.getElementById("modalChoixCategorie").style.display = "block";
         document.getElementById("closeModalChoixCategorie").addEventListener("click", () => {
             document.getElementById("modalChoixCategorie").style.display = "none";
@@ -141,7 +142,7 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
         if (parentContainer) parentContainer.style.display = "none";
     
         parentSelect.value = "";
-        if (parentSelect) parentSelect.value = "";
+      
  
      const categorieAffichage = document.getElementById("categorieSelectionnee");
      if (categorieAffichage) {
@@ -157,7 +158,7 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
          inputCategorie.dataset.couleur = "";
      }
         // Si un parent est sélectionné, on désactive les deux premiers boutons
-        const parentSelect = document.getElementById("parentDirect");
+       
         const parentNom = parentSelect ? parentSelect.value : "";
         const existante = document.getElementById("btnChoisirExistante");
         const parent = document.getElementById("btnChoisirParent");
