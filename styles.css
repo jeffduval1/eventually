@@ -389,3 +389,61 @@ label {
   padding: 6px;
   font-size: 16px;
 }
+/* Menu hamburger */
+.hamburger-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#btnHamburger {
+  font-size: 24px;
+  background-color: #FFD54F; /* Jaune miel */
+  color: #333;               /* Icône foncée */
+  border: none;
+  border-radius: 50%;        /* Cercle */
+  padding: 8px 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Légère ombre */
+}
+
+.menu-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 10px;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.menu-content .menu-section {
+  margin-bottom: 12px;
+}
+
+.menu-content .menu-section h4 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+}
+
+.menu-content button {
+  width: 100%;
+  text-align: left;
+  background-color: #f9f9f9;
+  color: #333;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.menu-content button:hover {
+  background-color: #eee;
+}

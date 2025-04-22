@@ -1501,3 +1501,28 @@ document.getElementById("parentDirect").addEventListener("change", function () {
         affichageCategorie.style.display = "block";
     }
 });
+// Afficher/masquer le menu hamburger
+document.getElementById("btnHamburger").addEventListener("click", function(event) {
+    event.stopPropagation(); // Évite de fermer le menu immédiatement
+    const menu = document.getElementById("menuContent");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  });
+  
+  // Fermer si clic en dehors
+  document.addEventListener("click", function(event) {
+    const menu = document.getElementById("menuContent");
+    const btn = document.getElementById("btnHamburger");
+    if (!menu.contains(event.target) && event.target !== btn) {
+      menu.style.display = "none";
+    }
+  });
+  
+  // Placeholder pour les fonctions "Personnalisation" et "À propos"
+  function ouvrirPersonnalisation() {
+    alert("Personnalisation à venir !");
+  }
+  
+  function ouvrirAPropos() {
+    alert("Bee Organized - Version 1.0\nUn outil pour organiser vos idées !");
+  }
+  

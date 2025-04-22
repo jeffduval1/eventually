@@ -18,18 +18,44 @@
     <button onclick="viderCorbeille()">Vider la corbeille</button>
     <div id="cartes-corbeille"></div>
   </div>
+<!-- MENU HAMBURGER -->
+<div id="menuHamburger" class="hamburger-container">
+  <button id="btnHamburger">☰</button>
+  <div id="menuContent" class="menu-content">
+    <div class="menu-section">
+      <h4>Modes</h4>
+      <button onclick="changerModeAffichage('cartes')">Afficher les cartes</button>
+      <button onclick="changerModeAffichage('categories')">Afficher les catégories</button>
+    </div>
+    <div class="menu-section">
+      <h4>Outils</h4>
+      <button onclick="exporterCartes()">Exporter les cartes</button>
+      <button onclick="importerCartes()">Importer des cartes</button>
+      <button onclick="afficherCorbeille()">Voir la corbeille</button>
+    </div>
+    <div class="menu-section">
+      <h4>Personnalisation</h4>
+      <button onclick="ouvrirPersonnalisation()">Changer la palette</button>
+    </div>
+    <div class="menu-section">
+      <h4>À propos</h4>
+      <button onclick="ouvrirAPropos()">Tout savoir sur Bee Organized</button>
+    </div>
+  </div>
+</div>
 
   <!--LOGO H1-->
   <h1>BEE Organized</h1>
   <input type="hidden" id="carteId">
 
-  <!--BOUTONS D'IMPORT ET D'EXPORT DES DONNÉES-->
+  <!--BOUTONS D'IMPORT ET D'EXPORT DES DONNÉES
   <div class="import_export">
     <button onclick="exporterCartes()">Exporter les cartes</button>
     <button onclick="importerCartes()">Importer des cartes</button>
     <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
   </div>
- 
+-->
+<input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
   <!--RÉINITIALISER LES FILTRES-->
   <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
     Réinitialiser le filtre
