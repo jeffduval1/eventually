@@ -68,6 +68,14 @@ function toggleForm() {
 
 document.addEventListener("DOMContentLoaded", function() {
     // ▶ 1. Choisir une catégorie existante
+    // Boutons du menu hamburger
+document.getElementById("btnNouvelleCategorieMenu").addEventListener("click", () => {
+    document.getElementById("btnAfficherFormCategorie").click(); // Simule le clic du bouton principal
+});
+
+document.getElementById("btnGererCategoriesMenu").addEventListener("click", () => {
+    document.getElementById("btnGererCategories").click(); // Simule le clic du bouton principal
+});
 document.getElementById("btnChoisirExistante").addEventListener("click", () => {
     document.getElementById("modalChoixCategorie").style.display = "none";
 

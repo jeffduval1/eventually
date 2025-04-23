@@ -447,3 +447,7 @@ label {
 .menu-content button:hover {
   background-color: #eee;
 }
+#btnAfficherFormCategorie,
+#btnGererCategories {
+    display: none;
+}
