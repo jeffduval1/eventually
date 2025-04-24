@@ -161,7 +161,7 @@
   </div>
   
 
-
+  <div id="zoneFiltres">
   <label for="triSelect">Trier par :</label>
   <select id="triSelect" onchange="changerTri()">
     <option value="date-desc">Du plus récent au plus ancien</option>
@@ -173,14 +173,15 @@
     <option value="">Sélectionner un tag</option>
   </select>
 
-
-
-
-
   <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
-  <button id="btnRetourCategories" style="display: none;" onclick="afficherVueParCategories()">← Retour aux
+</div>
+
+  <div id="zoneRetourSimple">
+  <button id="btnRetourCategories" style="display: none;" onclick="afficherVueParCategories()">Retour aux
     catégories</button>
+  </div>
   <h2 id="titreCategorieSelectionnee" style="display:none;"></h2>
+
   <div id="cartes-container"></div>
   <!-- 🌟 MODALE DE GESTION DES CATÉGORIES -->
   <div id="modalGestionCategories" class="modal" style="display: none;">

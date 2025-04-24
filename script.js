@@ -1195,6 +1195,7 @@ function afficherCartesParCategorie(nomCategorie) {
 
         if (categorie) {
             titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
+            document.getElementById("zoneFiltres").style.display = "block";
             titreCategorie.style.display = "block";
             titreCategorie.style.backgroundColor = categorie.couleur;
             titreCategorie.style.color = getTextColor(categorie.couleur);
@@ -1254,7 +1255,10 @@ function changerModeAffichage(mode, initial = false) {
     const cartesContainer = document.getElementById("cartes-container");
     const btnRetour = document.getElementById("btnRetourCategories");
 
+
     if (mode === "cartes") {
+        // Cache les filtres si pas de catégorie sélectionnée
+        document.getElementById("zoneFiltres").style.display = "block";
         cartesContainer.style.display = "block";
         vueCategories.style.display = "none";
         btnRetour.style.display = "none";
@@ -1267,7 +1271,7 @@ function changerModeAffichage(mode, initial = false) {
         cartesContainer.style.display = "none";
         vueCategories.style.display = "flex";
         btnRetour.style.display = "none";
-
+        document.getElementById("zoneFiltres").style.display = "none";
         btnCartes.classList.remove("active");
         btnCategories.classList.add("active");
 

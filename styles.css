@@ -4,8 +4,21 @@ body {
     padding: 0;
     
 }
+h1 {
+  font-family: Cambria, serif;
+  font-size: 24px; /* Mobile par défaut */
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #263238; /* Gris anthracite pour rester dans ta palette */
+}
 
-
+/* Tablette et bureau */
+@media (min-width: 768px) {
+  h1 {
+    font-size: 32px;
+  }
+}
 
 select {
     display: block;
@@ -295,7 +308,7 @@ textarea {
   }
   
   .carte-categorie {
-    padding: 16px;
+    padding: 0.5rem;
     border-radius: 8px;
     color: white;
     cursor: pointer;
@@ -489,5 +502,35 @@ label {
     font-size: 16px;
     gap: 8px;
   }
+}
+#btnRetourCategories {
+  background-color: #f9ff4f; /* Jaune miel */
+  color: #263238; /* Gris anthracite */
+  border: none;
+  border-radius: 30px;
+  padding: 0.7rem 1rem;
+  font-weight: bold;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin: 10px 0;
+}
 
+#btnRetourCategories:hover {
+  background-color: #FFC107; /* Jaune un peu plus vif */
+  transform: translateY(-2px); /* Petit effet de soulèvement */
+}
+
+#btnRetourCategories::before {
+  content: "←";
+  font-size: 16px;
+}
+.zoneRetourSimple{
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start;
 }
