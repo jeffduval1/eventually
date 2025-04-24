@@ -202,6 +202,7 @@ textarea {
 
 
 #ajoutCarteContainer {
+  
   border: 1px solid #ddd;
   padding: 20px;
   border-radius: 12px;
@@ -210,6 +211,10 @@ textarea {
   max-width: 450px;
   margin: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.modal-container{
+  display: flex;
+  justify-content: center;
 }
 /* Corbeille en plein écran */
 .corbeille-fullscreen {
@@ -281,6 +286,15 @@ textarea {
     max-width: 500px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     animation: fadeIn 0.3s ease-out;
+  }
+  @media (min-width: 320px) and (max-width: 400px) {
+    .modal-content {
+      width: 85%;         
+      padding: 5%;     
+      margin: 5% auto;   
+      max-height: 90vh;   
+      overflow-y: auto;   
+    }
   }
   .modal.fade-out {
     opacity: 0;

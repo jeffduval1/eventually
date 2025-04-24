@@ -74,10 +74,10 @@
     <!-- Champ caché pour stocker la catégorie choisie -->
 <input type="hidden" id="categorieChoisie">
 
-    <div class="modal-content">
+    <div class="modal-content">      
       <span class="close" id="closeModalAjoutCarte">&times;</span>
       <h3>Créer une nouvelle carte</h3>
-
+      <div class="modal-container">
       <div id="ajoutCarteContainer">
         <input type="text" id="titre" placeholder="Titre">
         <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
@@ -109,6 +109,7 @@
         <button id="annulerModifBtn" onclick="annulerModification()" style="display: none;">Annuler</button>
       </div>
     </div>
+  </div>
   </div>
   <!-- 🌟 Nouvelle modale pour la gestion des catégories (choix, parent, création) -->
   <div id="modalChoixCategorie" class="modal">
