@@ -168,16 +168,7 @@ textarea {
 .show {
     display: block;
 }
-#toggleFormBtn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    display: block;
-    margin-bottom: 10px;
-}
+
 
 #ajoutCarteContainer {
   border: 1px solid #ddd;
@@ -450,4 +441,53 @@ label {
 #btnAfficherFormCategorie,
 #btnGererCategories {
     display: none;
+}
+/* Style du bouton flottant (par défaut : mobile) */
+#toggleFormBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #FFD54F; /* Jaune miel */
+  color: #263238; /* Gris anthracite */
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 28px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, transform 0.2s;
+  z-index: 1000;
+}
+#toggleFormBtn::before {
+  content: "➕"; /* Affiche le + par défaut (mobile) */
+  font-size: 20px;
+}
+
+@media (min-width: 768px) {
+  #toggleFormBtn::before {
+    content: "➕ Ajouter une carte"; /* Texte complet sur bureau */
+    font-size: 16px;
+  }
+}
+#toggleFormBtn:hover {
+  background-color: #FFC107; /* Jaune un peu plus vif */
+  transform: scale(1.05);
+}
+
+/* Tablette et bureau */
+@media (min-width: 768px) {
+  #toggleFormBtn {
+    border-radius: 30px;
+    width: auto;
+    height: auto;
+    padding: 12px 20px;
+    font-size: 16px;
+    gap: 8px;
+  }
+
 }
