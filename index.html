@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moteur de recherche de règles</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <script src="script.js" defer></script>
 </head>
 
@@ -163,13 +164,13 @@
 
   <div id="zoneFiltres">
   <label for="triSelect">Trier par :</label>
-  <select id="triSelect" onchange="changerTri()">
+  <select id="triSelect" class="triSelect" onchange="changerTri()">
     <option value="date-desc">Du plus récent au plus ancien</option>
     <option value="date-asc">Du plus ancien au plus récent</option>
     <option value="titre-asc">Titre (A → Z)</option>
     <option value="titre-desc">Titre (Z → A)</option>
   </select>
-  <select id="tagFilter">
+  <select id="tagFilter" class="tagFilter">
     <option value="">Sélectionner un tag</option>
   </select>
 

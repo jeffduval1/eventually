@@ -1,18 +1,23 @@
 body {
-    font-family: Arial, sans-serif;
+  font-family: 'Inter', sans-serif; /* Texte courant */
     margin: 1rem;
     padding: 0;
     
 }
+button, select, input, textarea {
+  font-family: 'Inter', sans-serif;
+}
 h1 {
-  font-family: Cambria, serif;
+  /* font-family: Cambria, serif; */
   font-size: 24px; /* Mobile par défaut */
   font-weight: bold;
   margin-top: 0;
   margin-bottom: 20px;
   color: #263238; /* Gris anthracite pour rester dans ta palette */
 }
-
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif; /* Titres */
+}
 /* Tablette et bureau */
 @media (min-width: 768px) {
   h1 {
@@ -48,9 +53,22 @@ textarea {
   height: 100px;
   resize: none;
 }
+.triSelect{
+  width:240px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+}
+.tagFilter {
+  width:240px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+}
 .mode-toggle {
     display: flex;
     margin-bottom: 1rem;
+  }
+  #zoneFiltres input[type="text"] {
+    margin-top: 0;  /* Espace au-dessus du champ de recherche */
   }
   
   .toggle-btn {
@@ -401,7 +419,7 @@ label {
 }
 
 #btnHamburger {
-  font-size: 24px;
+  font-size: 18px;
   background-color: #FFD54F; /* Jaune miel */
   color: #333;               /* Icône foncée */
   border: none;
@@ -504,8 +522,8 @@ label {
   }
 }
 #btnRetourCategories {
-  background-color: #f9ff4f; /* Jaune miel */
-  color: #263238; /* Gris anthracite */
+  background-color: #333333; 
+  color: #f9f9f9; 
   border: none;
   border-radius: 30px;
   padding: 0.7rem 1rem;
