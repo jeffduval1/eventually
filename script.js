@@ -1120,6 +1120,8 @@ function afficherVueParCategories() {
     if (titreCategorie) {
         titreCategorie.style.display = "none"; // ➡️ Cache le titre si présent
     }
+    // 🟢 Ajout pour masquer les filtres
+document.getElementById("zoneFiltres").style.display = "none";
 
     let transaction = db.transaction("categories", "readonly");
     let store = transaction.objectStore("categories");
