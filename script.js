@@ -119,7 +119,20 @@ document.getElementById("btnNouvelleCategorie").addEventListener("click", () => 
         document.getElementById("modalGestionCategories").style.display = "block";
         afficherListeGestionCategories();
     });
-    
+    // Gérer les catégories via le menu hamburger
+document.getElementById("btnGererCategoriesMenu").addEventListener("click", () => {
+    document.getElementById("menuContent").style.display = "none"; // Ferme le menu hamburger
+    document.getElementById("modalGestionCategories").style.display = "block";
+    afficherListeGestionCategories();
+});
+
+// Créer une nouvelle catégorie via le menu hamburger
+document.getElementById("btnNouvelleCategorieMenu").addEventListener("click", () => {
+    document.getElementById("menuContent").style.display = "none"; // Ferme le menu hamburger
+    genererOptionsCouleursRestantes();
+    document.getElementById("modalCategorie").style.display = "block";
+});
+
     document.getElementById("closeGestionModal").addEventListener("click", () => {
         document.getElementById("modalGestionCategories").style.display = "none";
     
