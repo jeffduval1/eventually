@@ -36,7 +36,7 @@
     </div>
     <div class="menu-section">
       <h4>Personnalisation</h4>
-      <button onclick="ouvrirPersonnalisation()">Changer la palette</button>
+      <button onclick="ouvrirModalePalette()">Changer la palette</button>
     </div>
     <div class="menu-section">
       <h4>À propos</h4>
@@ -195,7 +195,16 @@
       </div>
     </div>
   </div>
-
+<!-- 🌈 Modale de sélection de palette -->
+<div id="modalPalette" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="fermerPalette()">×</span>
+    <h3>Choisir une palette de couleurs</h3>
+    <div id="listePalettes">
+      <!-- Palettes injectées dynamiquement ici -->
+    </div>
+  </div>
+</div>
 </body>
 
 </html>

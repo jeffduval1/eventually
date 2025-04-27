@@ -1,43 +1,362 @@
 let db;
-let couleursDisponibles = [
-    "#E53935", "#D32F2F", "#FB8C00", "#FDD835", "#FBC02D", "#C0CA33",
-    "#43A047", "#2E7D32", "#00ACC1", "#00897B", "#29B6F6", "#1E88E5",
-    "#1565C0", "#3949AB", "#5C6BC0", "#AB47BC", "#7B1FA2", "#D81B60",
-    "#F06292", "#FF7043", "#A1887F", "#546E7A", "#B0BEC5", "#263238",
-    "#FFE082", "#AED581", "#4FC3F7", "#B39DDB", "#8D6E63", "#FFD54F"
-];
-const nomCouleurs = {
-    "#E53935": "Rouge vif",
-    "#D32F2F": "Rouge foncé",
-    "#FB8C00": "Orange",
-    "#FDD835": "Jaune citron",
-    "#FBC02D": "Jaune doré",
-    "#C0CA33": "Vert lime",
-    "#43A047": "Vert",
-    "#2E7D32": "Vert foncé",
-    "#00ACC1": "Bleu sarcelle",
-    "#00897B": "Bleu-vert foncé",
-    "#29B6F6": "Bleu clair",
-    "#1E88E5": "Bleu moyen",
-    "#1565C0": "Bleu foncé",
-    "#3949AB": "Indigo",
-    "#5C6BC0": "Indigo clair",
-    "#AB47BC": "Violet",
-    "#7B1FA2": "Violet foncé",
-    "#D81B60": "Rose framboise",
-    "#F06292": "Rose clair",
-    "#FF7043": "Orange saumon",
-    "#A1887F": "Brun taupe",
-    "#546E7A": "Bleu gris",
+const palettes = [
+    {
+      nom: "Bee Classic",
+      id: "beeClassic",
+      couleurs: ["#FFD54F", "#263238", "#F9F9F9"] // juste 3 couleurs représentatives
+    },
+    {
+      nom: "Honey Luxe",
+      id: "honeyLuxe",
+      couleurs: ["#FB8C00", "#8D6E63", "#FFF3E0"]
+    },
+    {
+      nom: "Minimal Mist",
+      id: "minimalMist",
+      couleurs: ["#FAFAFA", "#B0BEC5", "#263238"]
+    },
+    {
+      nom: "Forest Grove",
+      id: "forestGrove",
+      couleurs: ["#4CAF50", "#8BC34A", "#263238"]
+    },
+    {
+      nom: "Ocean Depths",
+      id: "oceanDepths",
+      couleurs: ["#00BCD4", "#0288D1", "#263238"]
+    },
+    {
+      nom: "Sunset Bloom",
+      id: "sunsetBloom",
+      couleurs: ["#FB8C00", "#F48FB1", "#263238"]
+    },
+    {
+      nom: "Stone Steel",
+      id: "stoneSteel",
+      couleurs: ["#BDBDBD", "#757575", "#263238"]
+    },
+    {
+      nom: "Vintage Books",
+      id: "vintageBooks",
+      couleurs: ["#A1887F", "#FFCC80", "#263238"]
+    },
+    {
+      nom: "Modern Tech",
+      id: "modernTech",
+      couleurs: ["#00E5FF", "#616161", "#263238"]
+    }
+  ];
+  let paletteActuelle = "beeClassic"; // par défaut, ou récupérée du localStorage plus tard
+  
+
+
+
+  function getCouleursDisponibles() {
+    return Object.keys(nomsCouleursParPalette[paletteActuelle]);
+}
+const beeClassicPalette = {
+    "#000000": "Noir",
+    "#1C1C1C": "Noir graphite",
+    "#333333": "Gris anthracite",
+    "#4F4F4F": "Gris fusain",
+    "#666666": "Gris moyen",
     "#B0BEC5": "Gris clair",
-    "#263238": "Gris anthracite",
+    "#ECEFF1": "Gris perle",
+    "#FFFFFF": "Blanc",
+    "#FFD54F": "Jaune miel",
+    "#FFC107": "Jaune doré",
+    "#FFEB3B": "Jaune soleil",
+    "#F9A825": "Ocre doré",
     "#FFE082": "Jaune pastel",
-    "#AED581": "Vert pastel",
-    "#4FC3F7": "Bleu pastel",
-    "#B39DDB": "Lavande",
-    "#8D6E63": "Brun chaud",
-    "#FFD54F": "Jaune miel"
+    "#F5F5DC": "Beige lin",
+    "#E0C097": "Sable",
+    "#D6A21E": "Moutarde",
+    "#B8860B": "Bronze clair",
+    "#FFB300": "Ambre",
+    "#A1887F": "Brun taupe",
+    "#8D6E63": "Brun moka",
+    "#FFF8DC": "Crème douce",
+    "#FFE4B5": "Beige miel",
+    "#FFDAB9": "Pêche claire",
+    "#FFF176": "Jaune éclatant",
+    "#FFA000": "Orange ambré",
+    "#FF8F00": "Orange foncé",
+    "#E65100": "Terre brûlée",
+    "#5D4037": "Brun profond",
+    "#3E2723": "Chocolat noir",
+    "#212121": "Charbon profond"
 };
+  const honeyLuxePalette = {
+    "#1A1A1A": "Noir profond",
+    "#333333": "Gris anthracite",
+    "#4F4F4F": "Gris fusain",
+    "#BDBDBD": "Gris soie",
+    "#FFFFFF": "Blanc pur",
+    "#FFD700": "Or",
+    "#FFB300": "Ambre royal",
+    "#FFC107": "Miel doré",
+    "#F57F17": "Orange safran",
+    "#E65100": "Orange brûlée",
+    "#D84315": "Rouille",
+    "#C0A16B": "Champagne",
+    "#A1887F": "Brun taupe",
+    "#8D6E63": "Brun moka",
+    "#6D4C41": "Chocolat",
+    "#4E342E": "Cacao",
+    "#3E2723": "Bois foncé",
+    "#BF9B30": "Or vieilli",
+    "#F5F5DC": "Beige lin",
+    "#FFF8E1": "Ivoire doux",
+    "#FAF3E0": "Crème claire",
+    "#FBE9E7": "Pêche légère",
+    "#FFE082": "Jaune pastel",
+    "#FFA726": "Orange miel",
+    "#FF8F00": "Orange brûlé",
+    "#B8860B": "Bronze foncé",
+    "#8B5E3C": "Cuir vieilli",
+    "#5D4037": "Brun profond",
+    "#3E2723": "Chocolat noir",
+    "#212121": "Charbon profond"
+  };
+  const minimalMistPalette = {
+    "#0D0D0D": "Noir brume",
+    "#1C1C1C": "Charbon doux",
+    "#2E2E2E": "Anthracite pâle",
+    "#B0BEC5": "Gris nuage",
+    "#CFD8DC": "Gris brouillard",
+    "#ECEFF1": "Gris givré",
+    "#FFFFFF": "Blanc pur",
+    "#90CAF9": "Bleu ciel",
+    "#64B5F6": "Bleu pastel",
+    "#42A5F5": "Bleu poudre",
+    "#2196F3": "Bleu classique",
+    "#1976D2": "Bleu profond",
+    "#BBDEFB": "Bleu brume",
+    "#81D4FA": "Bleu lagon",
+    "#4DD0E1": "Turquoise doux",
+    "#26C6DA": "Turquoise givré",
+    "#80CBC4": "Vert d'eau",
+    "#A5D6A7": "Vert tendre",
+    "#C8E6C9": "Vert brume",
+    "#E0F2F1": "Aqua léger",
+    "#F1F8E9": "Vert brume pâle",
+    "#E8F5E9": "Vert givré",
+    "#D7CCC8": "Gris taupe léger",
+    "#BCAAA4": "Gris taupe",
+    "#A1887F": "Gris brun doux",
+    "#78909C": "Gris bleuté",
+    "#546E7A": "Gris bleu foncé",
+    "#37474F": "Bleu-gris tempête",
+    "#263238": "Bleu-gris ardoise",
+    "#212121": "Noir charbon"
+  };
+  const forestGrovePalette = {
+    "#263238": "Gris ardoise",
+    "#37474F": "Bleu-gris profond",
+    "#455A64": "Bleu-gris forestier",
+    "#607D8B": "Gris forêt",
+    "#789262": "Vert sauge",
+    "#8BC34A": "Vert mousse",
+    "#689F38": "Vert sapin",
+    "#558B2F": "Vert fougère",
+    "#33691E": "Vert épinette",
+    "#C8E6C9": "Vert lichen",
+    "#A5D6A7": "Vert tendre",
+    "#81C784": "Vert feuillage",
+    "#4CAF50": "Vert forêt",
+    "#388E3C": "Vert profond",
+    "#2E7D32": "Vert cèdre",
+    "#1B5E20": "Vert sombre",
+    "#D7CCC8": "Brun écorce",
+    "#BCAAA4": "Brun mousse",
+    "#8D6E63": "Brun terre",
+    "#5D4037": "Brun riche",
+    "#3E2723": "Brun profond",
+    "#4E342E": "Brun cacao",
+    "#6D4C41": "Brun chocolat",
+    "#9E9E9E": "Gris pierre",
+    "#BDBDBD": "Gris galet",
+    "#E0E0E0": "Gris clair",
+    "#F5F5F5": "Brume blanche",
+    "#C0CA33": "Vert lime mousse",
+    "#AFB42B": "Vert olive sombre",
+    "#827717": "Vert olive foncé"
+  };
+  const oceanDepthsPalette = {
+    "#E0F7FA": "Bleu lagon",
+    "#B2EBF2": "Bleu écume",
+    "#80DEEA": "Bleu azur",
+    "#4DD0E1": "Bleu tropique",
+    "#26C6DA": "Bleu corail",
+    "#00BCD4": "Bleu lagon profond",
+    "#00ACC1": "Bleu sarcelle",
+    "#0097A7": "Bleu sarcelle foncé",
+    "#00838F": "Bleu marin",
+    "#006064": "Bleu abysse",
+    "#B3E5FC": "Bleu ciel",
+    "#81D4FA": "Bleu horizon",
+    "#4FC3F7": "Bleu océan",
+    "#29B6F6": "Bleu des mers du Sud",
+    "#03A9F4": "Bleu profond",
+    "#039BE5": "Bleu cobalt",
+    "#0288D1": "Bleu marine",
+    "#0277BD": "Bleu atlantique",
+    "#01579B": "Bleu pacifique",
+    "#B2DFDB": "Vert d’eau",
+    "#80CBC4": "Vert corail",
+    "#4DB6AC": "Vert turquoise",
+    "#26A69A": "Turquoise profond",
+    "#009688": "Turquoise foncé",
+    "#00695C": "Turquoise abyssal",
+    "#004D40": "Turquoise crépusculaire",
+    "#E0F2F1": "Aqua léger",
+    "#B2DFDB": "Aqua brume",
+    "#80DEEA": "Bleu pastel",
+    "#64B5F6": "Bleu ciel pâle"
+  };
+  const sunsetBloomPalette = {
+    "#FFF3E0": "Pêche pastel",
+    "#FFE0B2": "Abricot doux",
+    "#FFCC80": "Mandarine pâle",
+    "#FFB74D": "Mandarine",
+    "#FFA726": "Orange floraison",
+    "#FF9800": "Orange vibrant",
+    "#FB8C00": "Orange brûlé",
+    "#F57C00": "Orange coucher de soleil",
+    "#EF6C00": "Orange terre cuite",
+    "#E65100": "Orange profond",
+    "#F8BBD0": "Rose pétale",
+    "#F48FB1": "Rose tendre",
+    "#F06292": "Rose vif",
+    "#EC407A": "Rose bougainvillier",
+    "#E91E63": "Rose fuchsia",
+    "#D81B60": "Rose framboise",
+    "#C2185B": "Rose magenta",
+    "#AD1457": "Rose foncé",
+    "#880E4F": "Rose aubergine",
+    "#FFEBEE": "Rosé pastel",
+    "#FFCDD2": "Rosé clair",
+    "#EF9A9A": "Rosé corail",
+    "#E57373": "Rosé soutenu",
+    "#EF5350": "Rouge floral",
+    "#F44336": "Rouge éclatant",
+    "#B71C1C": "Rouge grenat",
+    "#C62828": "Rouge brique",
+    "#BF360C": "Orange terre brûlée",
+    "#FF8A65": "Orange saumon doux",
+    "#E64A19": "Orange rouille"
+};
+const stoneSteelPalette = {
+    "#FAFAFA": "Gris perle",
+    "#F5F5F5": "Gris brume",
+    "#EEEEEE": "Gris léger",
+    "#E0E0E0": "Gris doux",
+    "#BDBDBD": "Gris clair",
+    "#9E9E9E": "Gris moyen",
+    "#757575": "Gris béton",
+    "#616161": "Gris acier",
+    "#424242": "Gris profond",
+    "#212121": "Gris charbon",
+    "#CFD8DC": "Bleu-gris brume",
+    "#B0BEC5": "Bleu-gris doux",
+    "#90A4AE": "Bleu-gris pâle",
+    "#78909C": "Bleu-gris acier",
+    "#607D8B": "Bleu-gris",
+    "#546E7A": "Bleu-gris foncé",
+    "#455A64": "Bleu-gris tempête",
+    "#37474F": "Bleu-gris profond",
+    "#263238": "Bleu-gris anthracite",
+    "#ECEFF1": "Gris glacier",
+    "#CFD8DC": "Gris polaire",
+    "#B0BEC5": "Gris acier doux",
+    "#90A4AE": "Gris cendré",
+    "#78909C": "Gris sidéral",
+    "#607D8B": "Gris ardoise",
+    "#546E7A": "Gris minéral",
+    "#455A64": "Gris roche",
+    "#37474F": "Gris graphite",
+    "#263238": "Gris ombre",
+    "#1C1C1C": "Noir profond"
+};
+const vintageBooksPalette = {
+    "#FFF8E1": "Ivoire doux",
+    "#FFE0B2": "Crème vanille",
+    "#FFD180": "Sable doré",
+    "#FFCC80": "Blé ancien",
+    "#FFB74D": "Caramel",
+    "#FFA726": "Miel brun",
+    "#FF8F00": "Ambre",
+    "#EF6C00": "Tabac",
+    "#D84315": "Rouille",
+    "#A1887F": "Brun parchemin",
+    "#8D6E63": "Brun cuir",
+    "#6D4C41": "Brun ancien",
+    "#4E342E": "Brun bibliothèque",
+    "#3E2723": "Brun profond",
+    "#C5E1A5": "Vert sauge",
+    "#AED581": "Vert olive pâle",
+    "#9CCC65": "Vert olive",
+    "#7CB342": "Vert mousse",
+    "#558B2F": "Vert cèdre",
+    "#33691E": "Vert forêt",
+    "#D7CCC8": "Gris beige",
+    "#BCAAA4": "Taupe doux",
+    "#A1887F": "Taupe foncé",
+    "#8D6E63": "Brun taupe",
+    "#5D4037": "Brun foncé",
+    "#EFEBE9": "Lin ancien",
+    "#D7CCC8": "Gris sable",
+    "#BCAAA4": "Argile",
+    "#8D6E63": "Brun patiné",
+    "#5D4037": "Brun ombré"
+};
+const modernTechPalette = {
+    "#FFFFFF": "Blanc pur",
+    "#F5F5F5": "Gris très pâle",
+    "#E0E0E0": "Gris clair",
+    "#BDBDBD": "Gris moyen",
+    "#9E9E9E": "Gris anthracite",
+    "#616161": "Gris charbon",
+    "#424242": "Noir fumée",
+    "#212121": "Noir profond",
+    "#00E5FF": "Cyan électrique",
+    "#00B8D4": "Cyan profond",
+    "#0097A7": "Bleu acier",
+    "#006064": "Bleu pétrole",
+    "#64FFDA": "Vert menthe fluo",
+    "#1DE9B6": "Vert émeraude néon",
+    "#00BFA5": "Vert jade",
+    "#A7FFEB": "Turquoise pâle",
+    "#76FF03": "Vert lime néon",
+    "#64DD17": "Vert lime profond",
+    "#FFD600": "Jaune fluo",
+    "#FFAB00": "Orange techno",
+    "#FF6D00": "Orange brûlé",
+    "#D500F9": "Violet électrique",
+    "#AA00FF": "Violet techno",
+    "#6200EA": "Indigo digital",
+    "#304FFE": "Bleu roi",
+    "#00C853": "Vert techno",
+    "#C51162": "Rose neon",
+    "#FF1744": "Rouge neon",
+    "#2979FF": "Bleu vif",
+    "#00B0FF": "Bleu néon"
+};
+  const nomsCouleursParPalette = {
+    "beeClassic": beeClassicPalette,
+    "honeyLuxe": honeyLuxePalette,
+    "minimalMist": minimalMistPalette,
+    "forestGrove": forestGrovePalette,
+    "oceanDepths": oceanDepthsPalette,
+    "sunsetBloom": sunsetBloomPalette,
+    "stoneSteel": stoneSteelPalette,
+    "vintageBooks": vintageBooksPalette,
+    "modernTech": modernTechPalette
+  };
+  function getNomCouleur(hex, palette = "beeClassic") {
+    const paletteObj = nomsCouleursParPalette[palette] || {};
+    return paletteObj[hex] || hex;
+  }
 // 🚀 Ouvrir ou créer la base IndexedDB
 const request = indexedDB.open("MoteurDeRecherche", 4);
 let modeTri = "date-desc"; // Mode de tri par défaut
@@ -259,15 +578,13 @@ document.getElementById("btnNouvelleCategorieMenu").addEventListener("click", ()
         const select = document.getElementById("couleurCategorie");
         select.innerHTML = "";
     
-        couleursDisponibles.forEach(couleur => {
+        getCouleursDisponibles().forEach(couleur => {
             const option = document.createElement("option");
             option.value = couleur;
-            option.textContent = couleur;
+            option.textContent = getNomCouleur(couleur, paletteActuelle);
             option.style.backgroundColor = couleur;
             option.style.color = getTextColor(couleur);
             select.appendChild(option);
-             // Recharger la page pour afficher la nouvelle catégorie
-
         });
     }
     
@@ -337,6 +654,8 @@ function chargerMenuCategories() {
         });
     };
 }
+
+
 request.onsuccess = function(event) {
     db = event.target.result;
     
@@ -344,10 +663,10 @@ request.onsuccess = function(event) {
     
     genererOptionsCouleursRestantes();
     chargerMenuCategories();
-    // ✅ Charger l'affichage une fois la base disponible
     changerModeAffichage("categories", true);
+    corrigerCouleursExistantes();
 };
-
+  
 request.onerror = function() {
     console.error("Erreur d'accès à IndexedDB !");
 };
@@ -604,9 +923,9 @@ function modifierCarte(id) {
             <input type="text" id="edit-tags-${id}" value="${carte.tags.join(", ")}">
             <input type="text" id="edit-categorie-${id}" value="${carte.categorie || ""}">
             <select id="edit-couleur-${id}">
-                ${couleursDisponibles.map(c => 
-                    `<option value="${c}" ${carte.couleurCategorie === c ? "selected" : ""} style="background:${c};color:${getTextColor(c)}">${c}</option>`
-                ).join("")}
+            ${getCouleursDisponibles().map(c => 
+                `<option value="${c}" ${carte.couleurCategorie === c ? "selected" : ""} style="background:${c};color:${getTextColor(c)}">${getNomCouleur(c, paletteActuelle)}</option>`
+            ).join("")}
             </select>
             <textarea id="edit-contenu-${id}">${carte.contenu}</textarea>
             <button onclick="enregistrerModificationInline(${id})">Enregistrer</button>
@@ -986,10 +1305,10 @@ function genererOptionsCouleursRestantes() {
     select.innerHTML = "";
     selectParent.innerHTML = '<option value="">Aucune (niveau racine)</option>'; // option par défaut
 
-    couleursDisponibles.forEach(couleur => {
+    getCouleursDisponibles().forEach(couleur => {
         const option = document.createElement("option");
         option.value = couleur;
-        option.textContent = getNomCouleur(couleur);
+        option.textContent = getNomCouleur(couleur, paletteActuelle);
         option.style.backgroundColor = couleur;
         option.style.color = getTextColor(couleur);
         select.appendChild(option);
@@ -1018,7 +1337,7 @@ function getTextColor(hexColor) {
     const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
     return luminance > 0.6 ? "black" : "white";
 }
-function getNomCouleur(hex) {
+/* function getNomCouleur(hex) {
     const noms = {
         "#E53935": "Rouge vif",
         "#D32F2F": "Rouge foncé",
@@ -1052,7 +1371,7 @@ function getNomCouleur(hex) {
         "#FFD54F": "Jaune soleil"
     };
     return noms[hex] || hex;
-}
+} */
 
 function creerNouvelleCategorie() {
     const nomInput = document.getElementById("nouvelleCategorieNom");
@@ -1370,7 +1689,7 @@ conteneurNom.appendChild(btnEditer);
             // 🔹 Sélecteur pour modifier la couleur
             const selectCouleur = document.createElement("select");
             selectCouleur.classList.add("select-couleur");
-            couleursDisponibles.concat(cat.couleur).forEach(couleur => {
+            getCouleursDisponibles().concat(cat.couleur).forEach(couleur => {
                 const option = document.createElement("option");
                 option.value = couleur;
                 option.textContent = getNomCouleur(couleur);
@@ -1548,4 +1867,115 @@ document.getElementById("btnHamburger").addEventListener("click", function(event
   function ouvrirAPropos() {
     alert("Bee Organized - Version 1.0\nUn outil pour organiser vos idées !");
   }
+  function ouvrirModalePalette() {
+    const menu = document.getElementById("menuContent");
+    menu.style.display = "none";
+
+    const container = document.getElementById("listePalettes");
+    container.innerHTML = ""; // nettoie
   
+    palettes.forEach(palette => {
+      const btn = document.createElement("button");
+      btn.classList.add("palette-btn");
+      if (palette.id === paletteActuelle) btn.classList.add("active");
+      btn.setAttribute("data-id", palette.id);
+      btn.onclick = () => changerPalette(palette.id);
+  
+      const preview = document.createElement("div");
+      preview.classList.add("palette-aperçu");
+      palette.couleurs.forEach(couleur => {
+        const rond = document.createElement("span");
+        rond.classList.add("couleur");
+        rond.style.backgroundColor = couleur;
+        preview.appendChild(rond);
+      });
+  
+      btn.appendChild(preview);
+      btn.append(palette.nom);
+      container.appendChild(btn);
+    });
+  
+    document.getElementById("modalPalette").style.display = "block";
+  }
+  
+  function fermerPalette() {
+    document.getElementById("modalPalette").style.display = "none";
+  }
+  
+  function changerPalette(id) {
+    if (Object.keys(nomsCouleursParPalette[paletteActuelle]).length !== Object.keys(nomsCouleursParPalette[id]).length) {
+        alert("⚠️ Les palettes n'ont pas le même nombre de couleurs !");
+        return;
+    }
+    const anciennePalette = paletteActuelle; // ✅ Récupère avant de changer
+    paletteActuelle = id;
+    genererOptionsCouleursRestantes();
+    appliquerPaletteGlobale(anciennePalette); // passe l'ancienne palette
+    console.log("🎨 Nouvelle palette sélectionnée :", id);
+
+    document.querySelectorAll(".palette-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-id") === id);
+    });
+
+    setTimeout(fermerPalette, 300);
+}
+function appliquerPaletteGlobale(anciennePaletteId) {
+    const ancienneCouleurs = Object.keys(nomsCouleursParPalette[anciennePaletteId]);
+    const nouvelleCouleurs = Object.keys(nomsCouleursParPalette[paletteActuelle]);
+
+    // Mise à jour des catégories
+    let transaction = db.transaction("categories", "readwrite");
+    let store = transaction.objectStore("categories");
+    store.getAll().onsuccess = function(event) {
+        const categories = event.target.result;
+        categories.forEach(cat => {
+            const index = ancienneCouleurs.indexOf(cat.couleur);
+            if (index !== -1) {
+                cat.couleur = nouvelleCouleurs[index]; // Index pour index
+                store.put(cat);
+            }
+        });
+
+        // Recharge les vues après mise à jour
+        chargerMenuCategories();
+        afficherVueParCategories();
+    };
+
+    // Mise à jour visuelle immédiate des cartes (déjà affichées)
+    document.querySelectorAll(".carte").forEach(div => {
+        const couleurActuelle = rgbToHex(div.style.borderLeftColor);
+        const index = ancienneCouleurs.indexOf(couleurActuelle);
+        if (index !== -1) {
+            div.style.borderLeftColor = nouvelleCouleurs[index];
+        }
+    });
+
+    // Mise à jour du titre de catégorie sélectionnée
+    const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+    if (titreCategorie && titreCategorie.style.backgroundColor) {
+        const couleurActuelle = rgbToHex(titreCategorie.style.backgroundColor);
+        const index = ancienneCouleurs.indexOf(couleurActuelle);
+        if (index !== -1) {
+            titreCategorie.style.backgroundColor = nouvelleCouleurs[index];
+        }
+    }
+}
+function corrigerCouleursExistantes() {
+    const couleursBeeClassic = Object.keys(nomsCouleursParPalette["beeClassic"]);
+    const transaction = db.transaction("categories", "readwrite");
+    const store = transaction.objectStore("categories");
+
+    store.getAll().onsuccess = function(event) {
+        const categories = event.target.result;
+        categories.forEach((cat, index) => {
+            if (!couleursBeeClassic.includes(cat.couleur)) {
+                // 🔄 Remplacement basé sur l'index de la catégorie
+                const nouvelleCouleur = couleursBeeClassic[index % couleursBeeClassic.length];
+                console.log(`🛠️ Correction catégorie "${cat.nom}" : ${cat.couleur} → ${nouvelleCouleur}`);
+                cat.couleur = nouvelleCouleur;
+                store.put(cat);
+            }
+        });
+    };
+}
+
