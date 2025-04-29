@@ -126,27 +126,27 @@ const royalDuskPalette = {
     "#FFF8E1": "Ivoire doux"
    
   };
-  const minimalMistPalette = {
-    "#0D0D0D": "Noir brume",
-    "#1C1C1C": "Charbon doux",
-    "#2E2E2E": "Anthracite pâle",
-    "#B0BEC5": "Gris nuage",
-    "#CFD8DC": "Gris brouillard",
-    "#ECEFF1": "Gris givré",
-    "#FFFFFF": "Blanc pur",
-    "#90CAF9": "Bleu ciel",
-    "#64B5F6": "Bleu pastel",
-    "#42A5F5": "Bleu poudre",
-    "#2196F3": "Bleu classique",
-    "#1976D2": "Bleu profond",
-    "#BBDEFB": "Bleu brume",
-    "#81D4FA": "Bleu lagon",
-    "#4DD0E1": "Turquoise doux",
-    "#26C6DA": "Turquoise givré",
-    "#80CBC4": "Vert d'eau",
-    "#A5D6A7": "Vert tendre",
-    "#C8E6C9": "Vert brume",
-    "#E0F2F1": "Aqua léger"
+  const solsticeClairPalette = {
+    "#FFE177": "Limonade dorée",
+    "#F8C4C0": "Rose coquillage",
+    "#A7D8F0": "Bleu horizon",
+    "#B9E4D4": "Menthe givrée",
+    "#FCE8D8": "Ivoire pêche",
+    "#DDF28F": "Citron doux",
+    "#F9CBA4": "Sorbet pêche",
+    "#D2C3F2": "Brume de lavande",
+    "#DDECF7": "Bleu porcelaine",
+    "#E39A81": "Argile rose",
+    "#A5B8A3": "Sauge argentée",
+    "#FFF3B0": "Bouton d’or pâle",
+    "#B7C7CD": "Brume matinale",
+    "#CBA8D5": "Mauve fumé",
+    "#F5C96A": "Miel floral",
+    "#C3A38A": "Cacao lait",
+    "#BBDBE3": "Ciel lavé",
+    "#F7B5A0": "Rosé agrume",
+    "#DDD4C4": "Sable fin",
+    "#C9DDB8": "Feuille tendre"
   };
   const forestGrovePalette = {
     "#263238": "Gris ardoise",
@@ -284,7 +284,7 @@ const modernTechPalette = {
     "royalDusk": royalDuskPalette,
     // "beeClassic": beeClassicPalette,
     "honeyLuxe": honeyLuxePalette,
-    "minimalMist": minimalMistPalette,
+    "solsticeClair": solsticeClairPalette,
     "forestGrove": forestGrovePalette,
     "oceanDepths": oceanDepthsPalette,
     "sunsetBloom": sunsetBloomPalette,
@@ -604,6 +604,7 @@ request.onsuccess = function(event) {
     chargerMenuCategories();
     changerModeAffichage("categories", true);
     corrigerCouleursExistantes();
+    corrigerCouleursCartesExistantes();
 };
   
 request.onerror = function() {
@@ -1311,6 +1312,16 @@ function getTextColor(hexColor) {
     };
     return noms[hex] || hex;
 } */
+function rgbToHex(rgb) {
+    if (!rgb) return "#000000"; // 🔹 Sécurité
+    const result = rgb.match(/\d+/g);
+    if (!result) return "#000000"; // 🔹 Sécurité
+
+    return "#" + result.slice(0, 3).map(x => {
+        const hex = parseInt(x).toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+    }).join("");
+}
 
 function creerNouvelleCategorie() {
     const nomInput = document.getElementById("nouvelleCategorieNom");
@@ -1862,25 +1873,44 @@ function appliquerPaletteGlobale(anciennePaletteId) {
     const ancienneCouleurs = Object.keys(nomsCouleursParPalette[anciennePaletteId]);
     const nouvelleCouleurs = Object.keys(nomsCouleursParPalette[paletteActuelle]);
 
-    // Mise à jour des catégories
-    let transaction = db.transaction("categories", "readwrite");
-    let store = transaction.objectStore("categories");
-    store.getAll().onsuccess = function(event) {
+    // 🔹 Mise à jour des catégories
+    let transactionCategories = db.transaction("categories", "readwrite");
+    let storeCategories = transactionCategories.objectStore("categories");
+
+    storeCategories.getAll().onsuccess = function(event) {
         const categories = event.target.result;
         categories.forEach(cat => {
             const index = ancienneCouleurs.indexOf(cat.couleur);
             if (index !== -1) {
-                cat.couleur = nouvelleCouleurs[index]; // Index pour index
-                store.put(cat);
+                cat.couleur = nouvelleCouleurs[index]; // 🖌 Mise à jour par index
+                storeCategories.put(cat);
             }
         });
 
-        // Recharge les vues après mise à jour
+        // 🔹 Recharge les menus et vue de catégories
         chargerMenuCategories();
         afficherVueParCategories();
     };
 
-    // Mise à jour visuelle immédiate des cartes (déjà affichées)
+    // 🔹 Mise à jour des cartes
+    let transactionCartes = db.transaction("regles", "readwrite");
+    let storeCartes = transactionCartes.objectStore("regles");
+
+    storeCartes.getAll().onsuccess = function(event) {
+        const cartes = event.target.result;
+        cartes.forEach(carte => {
+            const index = ancienneCouleurs.indexOf(carte.couleurCategorie);
+            if (index !== -1) {
+                carte.couleurCategorie = nouvelleCouleurs[index]; // 🖌 Mise à jour par index
+                storeCartes.put(carte);
+            }
+        });
+
+        // 🔹 Recharge l'affichage des cartes après la mise à jour
+        afficherCartes();
+    };
+
+    // 🔹 Mise à jour visuelle immédiate des cartes déjà affichées dans le DOM
     document.querySelectorAll(".carte").forEach(div => {
         const couleurActuelle = rgbToHex(div.style.borderLeftColor);
         const index = ancienneCouleurs.indexOf(couleurActuelle);
@@ -1889,7 +1919,7 @@ function appliquerPaletteGlobale(anciennePaletteId) {
         }
     });
 
-    // Mise à jour du titre de catégorie sélectionnée
+    // 🔹 Mise à jour du titre de catégorie sélectionnée (si affiché)
     const titreCategorie = document.getElementById("titreCategorieSelectionnee");
     if (titreCategorie && titreCategorie.style.backgroundColor) {
         const couleurActuelle = rgbToHex(titreCategorie.style.backgroundColor);
@@ -1899,6 +1929,7 @@ function appliquerPaletteGlobale(anciennePaletteId) {
         }
     }
 }
+
 function corrigerCouleursExistantes() {
     const couleursRoyalDusk = Object.keys(nomsCouleursParPalette["royalDusk"]);
     const transaction = db.transaction("categories", "readwrite");
@@ -1909,10 +1940,27 @@ function corrigerCouleursExistantes() {
         categories.forEach((cat, index) => {
             if (!couleursRoyalDusk.includes(cat.couleur)) {
                 // 🔄 Remplacement basé sur l'index de la catégorie
-                const nouvelleCouleur = couleursRoyalDusk[index % couleursBeeClassic.length];
+                const nouvelleCouleur = couleursRoyalDusk[index % couleursRoyalDusk.length];
                 console.log(`🛠️ Correction catégorie "${cat.nom}" : ${cat.couleur} → ${nouvelleCouleur}`);
                 cat.couleur = nouvelleCouleur;
                 store.put(cat);
+            }
+        });
+    };
+}
+function corrigerCouleursCartesExistantes() {
+    const couleursRoyalDusk = Object.keys(nomsCouleursParPalette["royalDusk"]);
+    const transaction = db.transaction("regles", "readwrite");
+    const store = transaction.objectStore("regles");
+
+    store.getAll().onsuccess = function(event) {
+        const cartes = event.target.result;
+        cartes.forEach((carte, index) => {
+            if (!couleursRoyalDusk.includes(carte.couleurCategorie)) {
+                const nouvelleCouleur = couleursRoyalDusk[index % couleursRoyalDusk.length];
+                console.log(`🛠️ Correction carte "${carte.titre}" : ${carte.couleurCategorie} → ${nouvelleCouleur}`);
+                carte.couleurCategorie = nouvelleCouleur;
+                store.put(carte);
             }
         });
     };
