@@ -5,11 +5,16 @@ const palettes = [
         id: "royalDusk",
         couleurs: ["#BF5700", "#5B2234", "#8C6BB1"] // juste 3 couleurs représentatives
     },
- /*    {
-      nom: "Bee Classic",
-      id: "beeClassic",
-      couleurs: ["#FFD54F", "#263238", "#F9F9F9"] // juste 3 couleurs représentatives
-    }, */
+    {
+        nom: "Solstice Clair",
+        id: "solsticeClair",
+        couleurs: ["#FFE177", "#F8C4C0", "#A7D8F0"] // juste 3 couleurs représentatives pour l'aperçu
+    },
+    {
+        nom: "Carnaval Électrique",
+        id: "carnavalElectrique",
+        couleurs: ["#FF3F3F", "#FFD700", "#00E676"] // couleurs d’aperçu
+      },
     {
       nom: "Honey Luxe",
       id: "honeyLuxe",
@@ -21,25 +26,25 @@ const palettes = [
       couleurs: ["#FAFAFA", "#B0BEC5", "#263238"]
     },
     {
-      nom: "Forest Grove",
-      id: "forestGrove",
-      couleurs: ["#4CAF50", "#8BC34A", "#263238"]
-    },
-    {
-      nom: "Ocean Depths",
-      id: "oceanDepths",
-      couleurs: ["#00BCD4", "#0288D1", "#263238"]
-    },
+        nom: "Terra Forte",
+        id: "terraForte",
+        couleurs: ["#D2691E", "#5A3E36", "#C2B280"] 
+      },
+      {
+        nom: "Éclats Fruités",
+        id: "eclatsFruites",
+        couleurs: ["#FF6F61", "#64B5F6", "#81C784"] 
+      },
     {
       nom: "Sunset Bloom",
       id: "sunsetBloom",
       couleurs: ["#FB8C00", "#F48FB1", "#263238"]
     },
     {
-      nom: "Stone Steel",
-      id: "stoneSteel",
-      couleurs: ["#BDBDBD", "#757575", "#263238"]
-    },
+        nom: "Mélodie Nocturne",
+        id: "melodieNocturne",
+        couleurs: ["#1B263B", "#3D2C8D", "#627C85"] // 3 couleurs représentatives
+      },
     {
       nom: "Vintage Books",
       id: "vintageBooks",
@@ -81,28 +86,28 @@ const royalDuskPalette = {
     "#FFF8E1": "Ivoire léger",
     "#212121": "Charbon"
   };
-/* const beeClassicPalette = {
-    "#000000": "Noir",
-    "#1C1C1C": "Noir graphite",
-    "#333333": "Gris anthracite",
-    "#4F4F4F": "Gris fusain",
-    "#666666": "Gris moyen",
-    "#B0BEC5": "Gris clair",
-    "#ECEFF1": "Gris perle",
-    "#FFFFFF": "Blanc",
-    "#FFD54F": "Jaune miel",
-    "#FFC107": "Jaune doré",
-    "#FFEB3B": "Jaune soleil",
-    "#F9A825": "Ocre doré",
-    "#FFE082": "Jaune pastel",
-    "#F5F5DC": "Beige lin",
-    "#E0C097": "Sable",
-    "#D6A21E": "Moutarde",
-    "#B8860B": "Bronze clair",
-    "#FFB300": "Ambre",
-    "#A1887F": "Brun taupe",
-    "#8D6E63": "Brun moka"
-}; */
+  const carnavalElectriquePalette = {
+    "#FF3F3F": "Rouge cerise",
+    "#FF6F61": "Corail vif",
+    "#FFB74D": "Orange tropical",
+    "#FFD700": "Jaune éclatant",
+    "#F9A825": "Or soleil",
+    "#C6FF00": "Vert fluo citron",
+    "#00E676": "Vert menthe électrique",
+    "#00C853": "Émeraude vive",
+    "#00B8D4": "Turquoise néon",
+    "#1DE9B6": "Aqua punch",
+    "#40C4FF": "Bleu givré",
+    "#2979FF": "Bleu vif",
+    "#7C4DFF": "Violet électrique",
+    "#E040FB": "Magenta laser",
+    "#FF5722": "Orange électrique",
+    "#FF80AB": "Rose néon",
+    "#D500F9": "Violet pop",
+    "#FF4081": "Fuchsia dynamite",
+    "#FFAB00": "Orange lumière",
+    "#FF00FF": "Magenta pur néon"
+  };
   const honeyLuxePalette = {
     "#1A1A1A": "Noir profond",
     "#333333": "Gris anthracite",
@@ -134,13 +139,13 @@ const royalDuskPalette = {
     "#FCE8D8": "Ivoire pêche",
     "#DDF28F": "Citron doux",
     "#F9CBA4": "Sorbet pêche",
-    "#D2C3F2": "Brume de lavande",
+    "#D6D2C4": "Lichen pierre",
     "#DDECF7": "Bleu porcelaine",
     "#E39A81": "Argile rose",
     "#A5B8A3": "Sauge argentée",
     "#FFF3B0": "Bouton d’or pâle",
     "#B7C7CD": "Brume matinale",
-    "#CBA8D5": "Mauve fumé",
+    "#E0B8A1": "Argile claire",
     "#F5C96A": "Miel floral",
     "#C3A38A": "Cacao lait",
     "#BBDBE3": "Ciel lavé",
@@ -148,49 +153,51 @@ const royalDuskPalette = {
     "#DDD4C4": "Sable fin",
     "#C9DDB8": "Feuille tendre"
   };
-  const forestGrovePalette = {
-    "#263238": "Gris ardoise",
-    "#37474F": "Bleu-gris profond",
-    "#455A64": "Bleu-gris forestier",
-    "#607D8B": "Gris forêt",
-    "#789262": "Vert sauge",
-    "#8BC34A": "Vert mousse",
-    "#689F38": "Vert sapin",
-    "#558B2F": "Vert fougère",
-    "#33691E": "Vert épinette",
-    "#C8E6C9": "Vert lichen",
-    "#A5D6A7": "Vert tendre",
-    "#81C784": "Vert feuillage",
-    "#4CAF50": "Vert forêt",
-    "#388E3C": "Vert profond",
-    "#2E7D32": "Vert cèdre",
-    "#1B5E20": "Vert sombre",
-    "#D7CCC8": "Brun écorce",
-    "#BCAAA4": "Brun mousse",
-    "#8D6E63": "Brun terre",
-    "#5D4037": "Brun riche"
+  const terraFortePalette = {
+    // "#7F4F24": "Terre brûlée",
+    "#A68A64": "Argile grise",
+    "#DDB892": "Sable rosé",
+    "#BC6C25": "Cuivre sec",
+    "#99582A": "Noisette",
+    "#FFE6A7": "Lin pâle",
+    "#6A994E": "Vert olivier",
+    "#386641": "Feuille sombre",
+    "#283618": "Écorce",
+    "#F5CB5C": "Moutarde douce",
+    "#A98467": "Cannelle douce",
+    "#7DA27E": "Vert mousse fraîche",
+    "#582F0E": "Châtaigne foncée",
+    "#C1A57B": "Sable ancien",
+    "#D6AD60": "Or poussiéreux",
+    "#B5A642": "Olive dorée",
+    "#5F6F52": "Sauge brûmée",
+    "#8B6B4A": "Caramel éteint",
+    "#8AA7B3": "Bleu pierre",  
+    // "#997B66": "Beige cacao",
+    "#726953": "Brume forestière",
+    "#433520": "Bois ancien"
   };
-  const oceanDepthsPalette = {
-    "#E0F7FA": "Bleu lagon",
-    "#B2EBF2": "Bleu écume",
-    "#80DEEA": "Bleu azur",
-    "#4DD0E1": "Bleu tropique",
-    "#26C6DA": "Bleu corail",
-    "#00BCD4": "Bleu lagon profond",
-    "#00ACC1": "Bleu sarcelle",
-    "#0097A7": "Bleu sarcelle foncé",
-    "#00838F": "Bleu marin",
-    "#006064": "Bleu abysse",
-    "#B3E5FC": "Bleu ciel",
-    "#81D4FA": "Bleu horizon",
-    "#4FC3F7": "Bleu océan",
-    "#29B6F6": "Bleu des mers du Sud",
-    "#03A9F4": "Bleu profond",
-    "#039BE5": "Bleu cobalt",
-    "#0288D1": "Bleu marine",
-    "#0277BD": "Bleu atlantique",
-    "#01579B": "Bleu pacifique",
-    "#B2DFDB": "Vert d’eau"
+  const eclatsFruitesPalette = {
+    "#FF6F61": "Framboise éclatante",
+    "#FF8A65": "Mandarine douce",
+    "#FFD180": "Pêche pastel",
+    "#FFAB91": "Melon d'été",
+    "#F48FB1": "Rose goyave",
+    "#F8BBD0": "Rose pétale",
+    "#81D4FA": "Bleu ciel doux",
+    "#B2EBF2": "Menthe givrée",
+    "#4FC3F7": "Bleu cristal",
+    "#4DD0E1": "Turquoise givré",
+    "#81C784": "Vert kiwi",
+    "#AED581": "Pomme verte",
+    "#DCE775": "Citron doux",
+    "#FFF176": "Jaune éclat",
+    "#FFD54F": "Mangue dorée",
+    "#E6EE9C": "Poire lumineuse",
+    "#FFECB3": "Vanille légère",
+    "#FFF8E1": "Ivoire crème",
+    "#F5F5F5": "Blanc mat",
+    "#D7CCC8": "Sable clair"
   };
   const sunsetBloomPalette = {
     "#FFF3E0": "Pêche pastel",
@@ -214,28 +221,28 @@ const royalDuskPalette = {
     "#880E4F": "Rose aubergine",
     "#FFEBEE": "Rosé pastel"
 };
-const stoneSteelPalette = {
-    "#FAFAFA": "Gris perle",
-    "#F5F5F5": "Gris brume",
-    "#EEEEEE": "Gris léger",
-    "#E0E0E0": "Gris doux",
-    "#BDBDBD": "Gris clair",
-    "#9E9E9E": "Gris moyen",
-    "#757575": "Gris béton",
-    "#616161": "Gris acier",
-    "#424242": "Gris profond",
-    "#212121": "Gris charbon",
-    "#CFD8DC": "Bleu-gris brume",
-    "#B0BEC5": "Bleu-gris doux",
-    "#90A4AE": "Bleu-gris pâle",
-    "#78909C": "Bleu-gris acier",
-    "#607D8B": "Bleu-gris",
-    "#546E7A": "Bleu-gris foncé",
-    "#455A64": "Bleu-gris tempête",
-    "#37474F": "Bleu-gris profond",
-    "#263238": "Bleu-gris anthracite",
-    "#ECEFF1": "Gris glacier"
-};
+const melodieNocturnePalette = {
+    "#1B263B": "Bleu minuit",
+    "#27374D": "Bleu crépuscule",
+    "#526D82": "Brume acier",
+    "#9DB2BF": "Bleu de lune",
+    "#DDE6ED": "Argent de nuit",
+    "#3D2C8D": "Violet cosmique",
+    "#5C5470": "Violet fumé",
+    "#8D8DAA": "Gris lilas",
+    "#B9B4C7": "Brume violette",
+    "#EBE3D5": "Sable lunaire",
+    "#2C3333": "Vert de minuit",
+    "#395B64": "Vert givré",
+    "#627C85": "Bleu-forêt",
+    "#A5C9CA": "Brouillard glacé",
+    "#E7F6F2": "Blanc givré",
+    "#6B4226": "Chocolat noir",
+    "#9E6F41": "Cuir vieilli",
+    "#C8AD7F": "Sable doré",
+    "#F1E0C5": "Ivoire antique",
+    "#FFFFFF": "Lueur blanche"
+  };
 const vintageBooksPalette = {
     "#FFF8E1": "Ivoire doux",
     "#FFE0B2": "Crème vanille",
@@ -282,13 +289,13 @@ const modernTechPalette = {
 };
   const nomsCouleursParPalette = {
     "royalDusk": royalDuskPalette,
-    // "beeClassic": beeClassicPalette,
+    "carnavalElectrique": carnavalElectriquePalette,
     "honeyLuxe": honeyLuxePalette,
     "solsticeClair": solsticeClairPalette,
-    "forestGrove": forestGrovePalette,
-    "oceanDepths": oceanDepthsPalette,
+    "terraForte": terraFortePalette,
+    "eclatsFruites": eclatsFruitesPalette,
     "sunsetBloom": sunsetBloomPalette,
-    "stoneSteel": stoneSteelPalette,
+    "melodieNocturne": melodieNocturnePalette,
     "vintageBooks": vintageBooksPalette,
     "modernTech": modernTechPalette
   };
