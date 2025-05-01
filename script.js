@@ -20,11 +20,7 @@ const palettes = [
       id: "honeyLuxe",
       couleurs: ["#FB8C00", "#8D6E63", "#FFF3E0"]
     },
-    {
-      nom: "Minimal Mist",
-      id: "minimalMist",
-      couleurs: ["#FAFAFA", "#B0BEC5", "#263238"]
-    },
+   
     {
         nom: "Terra Forte",
         id: "terraForte",
@@ -50,11 +46,7 @@ const palettes = [
       id: "vintageBooks",
       couleurs: ["#A1887F", "#FFCC80", "#263238"]
     },
-    {
-      nom: "Modern Tech",
-      id: "modernTech",
-      couleurs: ["#00E5FF", "#616161", "#263238"]
-    }
+   
   ];
   let paletteActuelle = "royalDusk"; // par défaut, ou récupérée du localStorage plus tard
   
@@ -265,28 +257,7 @@ const vintageBooksPalette = {
     "#558B2F": "Vert cèdre",
     "#33691E": "Vert forêt"
 };
-const modernTechPalette = {
-    "#FFFFFF": "Blanc pur",
-    "#F5F5F5": "Gris très pâle",
-    "#E0E0E0": "Gris clair",
-    "#BDBDBD": "Gris moyen",
-    "#9E9E9E": "Gris anthracite",
-    "#616161": "Gris charbon",
-    "#424242": "Noir fumée",
-    "#212121": "Noir profond",
-    "#00E5FF": "Cyan électrique",
-    "#00B8D4": "Cyan profond",
-    "#0097A7": "Bleu acier",
-    "#006064": "Bleu pétrole",
-    "#64FFDA": "Vert menthe fluo",
-    "#1DE9B6": "Vert émeraude néon",
-    "#00BFA5": "Vert jade",
-    "#A7FFEB": "Turquoise pâle",
-    "#76FF03": "Vert lime néon",
-    "#64DD17": "Vert lime profond",
-    "#FFD600": "Jaune fluo",
-    "#FFAB00": "Orange techno"
-};
+
   const nomsCouleursParPalette = {
     "royalDusk": royalDuskPalette,
     "carnavalElectrique": carnavalElectriquePalette,
@@ -296,8 +267,7 @@ const modernTechPalette = {
     "eclatsFruites": eclatsFruitesPalette,
     "sunsetBloom": sunsetBloomPalette,
     "melodieNocturne": melodieNocturnePalette,
-    "vintageBooks": vintageBooksPalette,
-    "modernTech": modernTechPalette
+    "vintageBooks": vintageBooksPalette
   };
   function getNomCouleur(hex, palette = "royalDusk") {
     const paletteObj = nomsCouleursParPalette[palette] || {};
