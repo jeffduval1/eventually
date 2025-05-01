@@ -1,4 +1,5 @@
 let db;
+let idCategorieActuelle = null;
 const palettes = [
     {
         nom: "Royal dusk",
@@ -46,6 +47,11 @@ const palettes = [
       id: "vintageBooks",
       couleurs: ["#A1887F", "#FFCC80", "#263238"]
     },
+    {
+        nom: "Palette à Jeff",
+        id: "jeff",
+        couleurs: ["#1D3461", "#F26419", "#95BF74"] // Delft Blue, Orange Pantone, Pistachio
+      }
    
   ];
   let paletteActuelle = "royalDusk"; // par défaut, ou récupérée du localStorage plus tard
@@ -257,6 +263,29 @@ const vintageBooksPalette = {
     "#558B2F": "Vert cèdre",
     "#33691E": "Vert forêt"
 };
+const jeffPalette = {
+    "#1D3461": "Delft Blue",
+    "#404E7C": "YInMn Blue",
+    "#4E8098": "Air Force Blue",
+    "#B3C5D7": "Powder Blue",
+    "#AED4E6": "Colombia Blue",
+    "#0A2472": "Royal Blue",
+    "#750D37": "Claret",
+    "#B6465F": "Raspberry Rose",
+    "#F26419": "Orange Pantone",
+    "#FFF07C": "Maize",
+    "#FCE694": "Jasmine",
+    "#EAC435": "Saffron",
+    "#DDE8B9": "Tea Green",
+    "#63C132": "Kelly Green",
+    "#95BF74": "Pistachio",
+    "#139A43": "Pigment Green",
+    "#574F2A": "Café Noir",
+    "#5D5F71": "Payne’s Gray",
+    "#E8E9F3": "Ghost White",
+    "#A499B3": "Rose Quartz"
+  };
+
 
   const nomsCouleursParPalette = {
     "royalDusk": royalDuskPalette,
@@ -267,7 +296,8 @@ const vintageBooksPalette = {
     "eclatsFruites": eclatsFruitesPalette,
     "sunsetBloom": sunsetBloomPalette,
     "melodieNocturne": melodieNocturnePalette,
-    "vintageBooks": vintageBooksPalette
+    "vintageBooks": vintageBooksPalette,
+    "jeff": jeffPalette
   };
   function getNomCouleur(hex, palette = "royalDusk") {
     const paletteObj = nomsCouleursParPalette[palette] || {};
@@ -302,8 +332,29 @@ function toggleForm() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    // ▶ 1. Choisir une catégorie existante
+
+    document.getElementById("btnAjouterSousCategorie").addEventListener("click", () => {
+        console.log("➡️ Clic sur Ajouter une sous-catégorie");
+        console.log("🔍 idCategorieActuelle =", idCategorieActuelle);
     
+        if (idCategorieActuelle) {
+            document.getElementById("modalCategorie").style.display = "block";
+            genererOptionsCouleursRestantes();
+    
+            setTimeout(() => {
+                const selectParent = document.getElementById("parentCategorie");
+                if (selectParent) {
+                    selectParent.value = idCategorieActuelle;
+                    selectParent.disabled = true; // 🚫 On bloque le menu
+                    selectParent.title = "Ce champ est verrouillé car vous ajoutez une sous-catégorie.";
+                    console.log("✅ parentCategorie verrouillé sur :", selectParent.value);
+                }
+            }, 50);
+        } else {
+            console.warn("⚠️ Aucune catégorie sélectionnée.");
+        }
+    });
+      
 document.getElementById("btnChoisirExistante").addEventListener("click", () => {
     document.getElementById("modalChoixCategorie").style.display = "none";
 
@@ -1440,6 +1491,11 @@ function afficherCartesParCategorie(nomCategorie) {
     const cartesContainer = document.getElementById("cartes-container");
     const vueCategories = document.getElementById("vue-par-categories");
     const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+// Affiche le bouton "Ajouter une sous-catégorie"
+    document.getElementById("btnAjouterSousCategorie").style.display = "inline-block";
+
+// Stocke l'ID actuel de la catégorie (pour le bouton)
+    idCategorieActuelle = nomCategorie;
 
     cartesContainer.innerHTML = "";
     cartesContainer.style.display = "block";
