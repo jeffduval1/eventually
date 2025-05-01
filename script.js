@@ -1427,11 +1427,8 @@ function afficherVueParCategories() {
     container.style.flexDirection = "column";
     cartesContainer.style.display = "none";
     btnRetour.style.display = "none";
-    if (titreCategorie) {
-        titreCategorie.style.display = "none"; // ➡️ Cache le titre si présent
-    }
-    // 🟢 Ajout pour masquer les filtres
-document.getElementById("zoneFiltres").style.display = "none";
+    if (titreCategorie) titreCategorie.style.display = "none";
+    document.getElementById("zoneFiltres").style.display = "none";
 
     let transaction = db.transaction("categories", "readonly");
     let store = transaction.objectStore("categories");
@@ -1439,7 +1436,6 @@ document.getElementById("zoneFiltres").style.display = "none";
 
     request.onsuccess = function () {
         const categories = request.result;
-
         const parNom = {};
         const racines = [];
 
@@ -1456,34 +1452,65 @@ document.getElementById("zoneFiltres").style.display = "none";
             }
         });
 
-        // Fonction récursive pour afficher la catégorie et ses enfants
+        // 🔄 Ajout d’un conteneur par catégorie récursive
         function afficherCategorieEtEnfants(categorie, niveau = 0) {
-            const div = document.createElement("div");
-            div.classList.add("carte-categorie");
-            div.style.backgroundColor = categorie.couleur;
-            div.style.color = getTextColor(categorie.couleur);
-            div.style.marginLeft = `${niveau * 20}px`;
-            div.style.marginBottom = "8px";
-            div.textContent = categorie.nom;
+            const wrapper = document.createElement("div");
+            wrapper.classList.add("bloc-categorie");
+            wrapper.style.marginLeft = `${niveau * 20}px`;
 
-            div.addEventListener("click", () => {
-                afficherCartesParCategorie(categorie.nom);
+            const ligne = document.createElement("div");
+            ligne.classList.add("ligne-categorie");
+            ligne.style.backgroundColor = categorie.couleur;
+            ligne.style.color = getTextColor(categorie.couleur);
+            ligne.style.padding = "8px";
+            ligne.style.borderRadius = "6px";
+            ligne.style.marginBottom = "4px";
+            ligne.style.display = "flex";
+            ligne.style.alignItems = "center";
+            ligne.style.cursor = "pointer";
+            ligne.style.gap = "8px";
+
+            const fleche = document.createElement("span");
+            fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
+            fleche.style.transition = "transform 0.2s ease";
+            fleche.style.display = "inline-block";
+            fleche.style.width = "20px";
+
+            const titre = document.createElement("span");
+            titre.textContent = categorie.nom;
+            titre.style.flexGrow = "1";
+
+            ligne.appendChild(fleche);
+            ligne.appendChild(titre);
+            wrapper.appendChild(ligne);
+
+            const sousContainer = document.createElement("div");
+            sousContainer.style.display = "none";
+            wrapper.appendChild(sousContainer);
+
+            ligne.addEventListener("click", () => {
+                if (categorie.enfants.length > 0) {
+                    const ouvert = sousContainer.style.display === "block";
+                    sousContainer.style.display = ouvert ? "none" : "block";
+                    fleche.textContent = ouvert ? "➤" : "⬇";
+                } else {
+                    afficherCartesParCategorie(categorie.nom);
+                }
             });
 
-            container.appendChild(div);
+            container.appendChild(wrapper);
 
             categorie.enfants.forEach(enfant => {
-                afficherCategorieEtEnfants(enfant, niveau + 1);
+                const enfantDiv = afficherCategorieEtEnfants(enfant, niveau + 1);
+                sousContainer.appendChild(enfantDiv);
             });
+
+            return wrapper;
         }
 
         racines.forEach(racine => {
             afficherCategorieEtEnfants(racine);
         });
-    };
-
-    request.onerror = function () {
-        console.error("Erreur lors du chargement des catégories.");
     };
 }
 
