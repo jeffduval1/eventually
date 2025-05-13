@@ -1,0 +1,11 @@
+export function afficherCartes() { /* ... */ }
+export function ajouterCarte() { /* ... */ }
+export function modifierCarteInline(id) { /* ... */ }
+export function supprimerCarte(id) { /* ... */ }
+export function filtrerCartes() { /* ... */ }
+export function filtrerParTag() { /* ... */ }
+export function importerCartes() { /* ... */ }
+export function exporterCartes() { /* ... */ }
+export function afficherCorbeille() { /* ... */ }
+export function restaurerCarte(id) { /* ... */ }
+export function viderCorbeille() { /* ... */ }
