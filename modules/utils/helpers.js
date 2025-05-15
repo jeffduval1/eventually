@@ -1,3 +1,12 @@
+/**
+ * 🛠 helpers.js
+ * Fonctions utilitaires **pures et réutilisables** sans dépendance au DOM.
+ * - getTextColor(hex) : détermine texte blanc/noir selon couleur.
+ * - rgbToHex(rgb) : convertit du RGB en hexadécimal.
+ * - getNomCouleur(hex, palette) : retourne le nom d'une couleur.
+ * ❗️ Ce fichier doit rester indépendant (pas de manipulation DOM, pas de globales).
+ */
+
 import { nomsCouleursParPalette, paletteActuelle } from '../config.js';
 export function getCouleursDisponibles() {
     return Object.keys(nomsCouleursParPalette[paletteActuelle]);
@@ -20,10 +29,12 @@ export function rgbToHex(rgb) {
         return hex.length === 1 ? "0" + hex : hex;
     }).join("");
 }
+
 export function getNomCouleur(hex, palette = "royalDusk") {
     const paletteObj = nomsCouleursParPalette[palette] || {};
     return paletteObj[hex] || hex;
   }
+
 // 🚀 Ouvrir ou créer la base IndexedDB
 const request = indexedDB.open("MoteurDeRecherche", 4);
 let modeTri = "date-desc"; // Mode de tri par défaut

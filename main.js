@@ -1,68 +1,39 @@
-// 📁 main.js
+// Config
+import { paletteActuelle, nomsCouleursParPalette, setPaletteActuelle } from './modules/config.js';
 
-// --- Config & Helpers ---
-import { paletteActuelle, nomsCouleursParPalette } from './modules/config.js';
+// Helpers
 import { getTextColor, getNomCouleur, rgbToHex } from './modules/utils/helpers.js';
 
-// --- DB ---
+// DB
 import { ouvrirDB } from './modules/db/indexedDB.js';
 
-// --- Modules principaux ---
-import { afficherCartes, ajouterCarte } from './modules/cartes.js';
-import { afficherVueParCategories, creerNouvelleCategorie } from './modules/categories.js';
-import { appliquerPaletteGlobale } from './modules/palette.js';
-import { afficherCorbeille, fermerCorbeille, viderCorbeille } from './modules/ui.js';
-import { reinitialiserFiltre } from './modules/filters.js';
+// Modules principaux
+import { afficherCartes, afficherCartesParCategorie, ajouterCarte } from './modules/modules/cartes.js';
+import { afficherVueParCategories, creerNouvelleCategorie } from './modules/modules/categories.js';
+import { appliquerPaletteGlobale, changerPalette } from './modules/modules/palette.js';
+import { filtrerParTag, reinitialiserFiltre } from './modules/modules/filters.js';
+import { afficherCorbeille, fermerCorbeille, viderCorbeille } from './modules/modules/ui.js';
 
-// --- Lancer l'application ---
+// Initialisation
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🟢 Initialisation de Bee Organized');
-
+    console.log('🟢 Initialisation Bee Organized');
     await ouvrirDB();
 
-    afficherVueParCategories();
     appliquerPaletteGlobale();
+    afficherVueParCategories();
 
-    // === Écouteurs d’événements globaux ===
-
-    // --- Catégories ---
+    // Écouteurs globaux
     document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
         document.getElementById("modalCategorie").style.display = "block";
     });
-
     document.getElementById("btnGererCategories").addEventListener("click", () => {
         document.getElementById("modalGestionCategories").style.display = "block";
     });
-
     document.getElementById("btnRetourCategories").addEventListener("click", afficherVueParCategories);
-
     document.getElementById("btnCreerCategorie").addEventListener("click", creerNouvelleCategorie);
-
-    // --- Cartes ---
     document.getElementById("ajoutCarteBtn").addEventListener("click", ajouterCarte);
-
-    // --- Mode d'affichage ---
     document.getElementById("btnModeCategories").addEventListener("click", afficherVueParCategories);
     document.getElementById("btnModeCartes").addEventListener("click", afficherCartes);
-
-    // --- Filtres ---
     document.getElementById("resetFilterBtn").addEventListener("click", reinitialiserFiltre);
-
-    // --- Corbeille ---
-    const btnCorbeille = document.getElementById("btnAfficherCorbeille");
-    if (btnCorbeille) {
-        btnCorbeille.addEventListener("click", afficherCorbeille);
-    }
-
-    const btnViderCorbeille = document.getElementById("btnViderCorbeille");
-    if (btnViderCorbeille) {
-        btnViderCorbeille.addEventListener("click", viderCorbeille);
-    }
-
-    const btnFermerCorbeille = document.getElementById("btnFermerCorbeille");
-    if (btnFermerCorbeille) {
-        btnFermerCorbeille.addEventListener("click", fermerCorbeille);
-    }
-
-    console.log('✅ Bee Organized prêt !');
+    document.getElementById("btnAfficherCorbeille").addEventListener("click", afficherCorbeille);
 });

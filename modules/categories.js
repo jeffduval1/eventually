@@ -1,22 +1,33 @@
-import { getCategories } from './db/indexedDB.js';
-import { getTextColor } from './utils/helpers.js';
-import { afficherCartesParCategorie } from './cartes.js';
+/**
+ * 🗂 categories.js
+ * Gère les catégories (CRUD + affichage arborescence)
+ * - afficherVueParCategories() : vue arborescente
+ * - ajouter / modifier / supprimer une catégorie
+ * - interactions pour sélection & gestion
+ * Dépend : db (IndexedDB), helpers, config (palettes)
+ */
 
-// Affiche la vue principale des catégories (arborescence)
+import { getTextColor, getNomCouleur } from './utils/helpers.js';
+import { paletteActuelle, nomsCouleursParPalette } from './config.js';
+import { afficherCartes } from './cartes.js';
+
+export let idCategorieActuelle = null;
+
 export function afficherVueParCategories() {
     const container = document.getElementById("vue-par-categories");
     const cartesContainer = document.getElementById("cartes-container");
     const titreCategorie = document.getElementById("titreCategorieSelectionnee");
-    const btnRetour = document.getElementById("btnRetourCategories");
 
     container.innerHTML = "";
     container.style.display = "flex";
     cartesContainer.style.display = "none";
-    btnRetour.style.display = "none";
     titreCategorie.style.display = "none";
-    document.getElementById("zoneFiltres").style.display = "none";
 
-    getCategories().then(categories => {
+    const transaction = window.db.transaction("categories", "readonly");
+    const store = transaction.objectStore("categories");
+
+    store.getAll().onsuccess = function (event) {
+        const categories = event.target.result;
         const parNom = {};
         const racines = [];
 
@@ -34,13 +45,13 @@ export function afficherVueParCategories() {
         });
 
         racines.forEach(racine => {
-            afficherCategorieEtEnfants(racine, 0, container);
+            const wrapper = creerBlocCategorie(racine);
+            container.appendChild(wrapper);
         });
-    });
+    };
 }
 
-// Affiche une catégorie et ses sous-catégories (récursif)
-function afficherCategorieEtEnfants(categorie, niveau, container) {
+function creerBlocCategorie(categorie, niveau = 0) {
     const wrapper = document.createElement("div");
     wrapper.classList.add("bloc-categorie");
     wrapper.style.marginLeft = `${niveau * 20}px`;
@@ -51,15 +62,12 @@ function afficherCategorieEtEnfants(categorie, niveau, container) {
     ligne.style.color = getTextColor(categorie.couleur);
     ligne.style.padding = "8px";
     ligne.style.borderRadius = "6px";
-    ligne.style.marginBottom = "4px";
     ligne.style.display = "flex";
-    ligne.style.alignItems = "center";
     ligne.style.cursor = "pointer";
     ligne.style.gap = "8px";
 
     const fleche = document.createElement("span");
     fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
-    fleche.style.transition = "transform 0.2s ease";
     fleche.style.width = "20px";
 
     const titre = document.createElement("span");
@@ -80,47 +88,94 @@ function afficherCategorieEtEnfants(categorie, niveau, container) {
             sousContainer.style.display = ouvert ? "none" : "block";
             fleche.textContent = ouvert ? "➤" : "⬇";
         } else {
-            afficherCartesParCategorie(categorie.id);
+            afficherCartesParCategorie(categorie.nom);
         }
     });
 
-    container.appendChild(wrapper);
-
     categorie.enfants.forEach(enfant => {
-        afficherCategorieEtEnfants(enfant, niveau + 1, sousContainer);
+        const enfantDiv = creerBlocCategorie(enfant, niveau + 1);
+        sousContainer.appendChild(enfantDiv);
     });
+
+    return wrapper;
 }
 
-// Créer une nouvelle catégorie (via le formulaire)
-export function creerNouvelleCategorie() {
-    const nomInput = document.getElementById("nouvelleCategorieNom");
-    const couleurSelect = document.getElementById("nouvelleCouleur");
-    const parentSelect = document.getElementById("parentCategorie");
+export function afficherCartesParCategorie(nomCategorie) {
+    idCategorieActuelle = nomCategorie;
 
-    const nom = nomInput.value.trim();
-    const couleur = couleurSelect.value;
-    const parent = parentSelect.value || null;
+    const cartesContainer = document.getElementById("cartes-container");
+    const vueCategories = document.getElementById("vue-par-categories");
+    const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+
+    cartesContainer.innerHTML = "";
+    cartesContainer.style.display = "block";
+    vueCategories.style.display = "none";
+
+    const transaction = window.db.transaction(["categories"], "readonly");
+    const store = transaction.objectStore("categories");
+
+    store.get(nomCategorie).onsuccess = function (event) {
+        const categorie = event.target.result;
+        if (categorie) {
+            titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
+            titreCategorie.style.backgroundColor = categorie.couleur;
+            titreCategorie.style.color = getTextColor(categorie.couleur);
+            titreCategorie.style.display = "block";
+        }
+    };
+
+    // Tu peux appeler afficherCartes filtré si tu veux afficher seulement cette catégorie
+    afficherCartes();
+}
+
+export function creerNouvelleCategorie() {
+    const nom = document.getElementById("nouvelleCategorieNom").value.trim();
+    const couleur = document.getElementById("nouvelleCouleur").value;
+    const parent = document.getElementById("parentCategorie").value || null;
 
     if (!nom || !couleur) {
-        alert("Veuillez nommer la catégorie et choisir une couleur.");
+        alert("Veuillez renseigner le nom et la couleur.");
         return;
     }
 
-    const transaction = db.transaction("categories", "readwrite");
+    const transaction = window.db.transaction("categories", "readwrite");
     const store = transaction.objectStore("categories");
 
-    const request = store.add({ nom, couleur, parent });
-
-    request.onsuccess = () => {
-        document.getElementById("modalCategorie").style.display = "none";
-        nomInput.value = "";
-        couleurSelect.value = "";
-        parentSelect.value = "";
-
+    store.add({ nom, couleur, parent }).onsuccess = function () {
+        console.log("✅ Catégorie ajoutée");
         afficherVueParCategories();
+        chargerMenuCategories();
     };
+}
 
-    request.onerror = () => {
-        alert("Erreur : cette catégorie existe déjà.");
+export function chargerMenuCategories() {
+    const menu = document.getElementById("listeCategories");
+    const inputCategorie = document.getElementById("categorieChoisie");
+
+    menu.innerHTML = "";
+
+    const transaction = window.db.transaction("categories", "readonly");
+    const store = transaction.objectStore("categories");
+
+    store.getAll().onsuccess = function (event) {
+        const categories = event.target.result.sort((a, b) => a.nom.localeCompare(b.nom));
+
+        categories.forEach(cat => {
+            const div = document.createElement("div");
+            div.textContent = cat.nom;
+            div.style.backgroundColor = cat.couleur;
+            div.style.color = getTextColor(cat.couleur);
+
+            div.addEventListener("click", () => {
+                inputCategorie.value = cat.nom;
+                inputCategorie.dataset.couleur = cat.couleur;
+                document.getElementById("categorieSelectionnee").textContent = cat.nom;
+                document.getElementById("categorieSelectionnee").style.backgroundColor = cat.couleur;
+                document.getElementById("categorieSelectionnee").style.color = getTextColor(cat.couleur);
+                menu.style.display = "none";
+            });
+
+            menu.appendChild(div);
+        });
     };
 }
