@@ -1,211 +1,150 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moteur de recherche de règles</title>
+  <title>Bee Organized</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <script src="script.js" defer></script> 
+  <script type="module" src="main.js"></script>
+  <script type="module" src="tests.js"></script>
 </head>
 
 <body>
-
-  <!-- CONTENEUR DE LA CORBEILLE en plein écran (caché par défaut) -->
-  <div id="corbeille-page" class="corbeille-fullscreen" style="display: none;">
-    <button class="close-btn" onclick="fermerCorbeille()">✖</button>
-    <h2>Éléments supprimés</h2>
-    <button onclick="viderCorbeille()">Vider la corbeille</button>
-    <div id="cartes-corbeille"></div>
-  </div>
-<!-- MENU HAMBURGER -->
-<div id="menuHamburger" class="hamburger-container">
-  <button id="btnHamburger">☰</button>
-  <div id="menuContent" class="menu-content">
-    <div class="menu-section">
-      <h4>Catégories</h4>
-      <button id="btnNouvelleCategorieMenu">➕ Créer une nouvelle catégorie</button>
-<button id="btnGererCategoriesMenu">🛠 Gérer les catégories</button>
-    </div>
-    <div class="menu-section">
-      <h4>Outils</h4>
-      <button onclick="exporterCartes()">Exporter les cartes</button>
-      <button onclick="importerCartes()">Importer des cartes</button>
-      <button onclick="afficherCorbeille()">Voir la corbeille</button>
-    </div>
-    <div class="menu-section">
-      <h4>Personnalisation</h4>
-      <button onclick="ouvrirModalePalette()">Changer la palette</button>
-    </div>
-    <div class="menu-section">
-      <h4>À propos</h4>
-      <button onclick="ouvrirAPropos()">Tout savoir sur Bee Organized</button>
-    </div>
-  </div>
-</div>
-
-  <!--LOGO H1-->
   <h1>BEE Organized</h1>
   <input type="hidden" id="carteId">
 
-  <!--BOUTONS D'IMPORT ET D'EXPORT DES DONNÉES
-  <div class="import_export">
-    <button onclick="exporterCartes()">Exporter les cartes</button>
-    <button onclick="importerCartes()">Importer des cartes</button>
-    <input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
-  </div>
--->
-<input type="file" id="importFile" style="display: none;" onchange="chargerFichierImport()">
-  <!--RÉINITIALISER LES FILTRES-->
-  <button id="resetFilterBtn" onclick="reinitialiserFiltre()" style="margin-top: 10px; display: none;">
-    Réinitialiser le filtre
-  </button>
-
-  <!--CONTENEUR D'ÉTIQUETTES-->
-  <div id="etiquettes-container" style="margin-top: 10px;"></div>
-
-  <!-- BOUTON DE CRÉATION DE CARTES -->
-  <button id="toggleFormBtn" onclick="toggleForm()"></button>
-
-  <!-- 🟢 Nouveau formulaire modale simplifié pour ajout de carte -->
-  <!-- 🌟 Nouvelle modale de création de carte -->
-  <div id="modalAjoutCarte" class="modal">
-    <!-- Champ caché pour stocker la catégorie choisie -->
-<input type="hidden" id="categorieChoisie">
-
-    <div class="modal-content">      
-      <span class="close" id="closeModalAjoutCarte">&times;</span>
-      <h3>Créer une nouvelle carte</h3>
-      <div class="modal-container">
-      <div id="ajoutCarteContainer">
-        <input type="text" id="titre" placeholder="Titre">
-        <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
-
-        <!-- Nouveau bouton de sélection de catégorie -->
-        <button id="btnCategorieOptions">Catégorie</button>
-
-<!-- Zone cliquable pour afficher le nom de la catégorie choisie -->
-<div id="categorieSelectionnee"
-     style="padding: 8px; border: 1px solid #ccc; margin-top: 6px; cursor: pointer; display: none;">
-  -- Choisir une catégorie --
-</div>
-<div id="choixParentContainer" style="display: none;">
-  <label for="parentDirect">Choisir un parent :</label>
-  <select id="parentDirect">
-    <option value="">Aucun (niveau racine)</option>
-    <!-- Options injectées dynamiquement -->
-  </select>
-</div>
-<!-- Menu déroulant personnalisé pour les catégories -->
-<div id="listeCategories"
-     class="liste-categories"
-     style="display: none; border: 1px solid #ccc; margin-top: 4px;"></div>
-        <!-- Résumé visuel de la catégorie choisie -->
-        <div id="resumeCategorieChoisie" style="margin: 10px 0; font-weight: bold;"></div>
-
-        <textarea id="contenu" placeholder="Contenu"></textarea>
-        <button id="ajoutCarteBtn" onclick="ajouterCarte()">Ajouter</button>
-        <button id="annulerModifBtn" onclick="annulerModification()" style="display: none;">Annuler</button>
-      </div>
-    </div>
-  </div>
-  </div>
-  <!-- 🌟 Nouvelle modale pour la gestion des catégories (choix, parent, création) -->
-  <div id="modalChoixCategorie" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeModalChoixCategorie">&times;</span>
-      <h3>Choisir une catégorie</h3>
-
-      <button id="btnChoisirExistante">Choisir une catégorie existante</button>
-      <button id="btnChoisirParent">Choisir un parent dans l’arborescence</button>
-      <button id="btnNouvelleCategorie">Créer une nouvelle catégorie</button>
-    </div>
-  </div>
-  
-
-  <!-- 🧩 Bouton pour gérer les catégories -->
-  <button id="btnGererCategories">Gérer les catégories</button>
-  <!-- 🧩 Bouton pour créer une nouvelle catégorie -->
-  <button id="btnAfficherFormCategorie">Créer une nouvelle catégorie</button>
-
-  <!--TOGGLE VISUALISATION PAR CATÉGORIES OU PAR CARTES-->
+  <!-- Boutons principaux -->
   <div class="mode-toggle">
     <button id="btnModeCategories" class="toggle-btn">Par catégories</button>
     <button id="btnModeCartes" class="toggle-btn">Par cartes</button>
   </div>
-  <!--CONTENEUR DE CATÉGORIES-->
-  <div id="vue-par-categories" style="display: none;"></div>
 
+  <!-- 🟢 Bouton global d’ajout de carte -->
+  <button id="toggleFormBtn"></button>
 
+  <!-- Étiquettes & réinitialisation -->
+  <div id="etiquettes-container"></div>
+  <button id="resetFilterBtn" style="display: none;">Réinitialiser le filtre</button>
 
-  <!-- 🌟 FENÊTRE MODALE de création de catégorie -->
-  <div id="modalCategorie" class="modal" style="display: none;">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h3>Créer une nouvelle catégorie</h3>
-
-      <label for="nouvelleCategorieNom">Nom :</label>
-      <input type="text" id="nouvelleCategorieNom" placeholder="Nom de la catégorie">
-      <label for="parentCategorie">Catégorie parent :</label>
-      <select id="parentCategorie">
-        <option value="">Aucune (niveau racine)</option>
-        <!-- Options générées dynamiquement -->
-      </select>
-      <label for="nouvelleCouleur">Choisir une couleur :</label>
-      <select id="nouvelleCouleur">
-        <!-- Couleurs générées dynamiquement -->
-      </select>
-
-      <button id="btnCreerCategorie">Ajouter la catégorie</button>
-    </div>
-
-  </div>
-  
-
-  <div id="zoneFiltres">
-  <label for="triSelect">Trier par :</label>
-  <select id="triSelect" class="triSelect" onchange="changerTri()">
-    <option value="date-desc">Du plus récent au plus ancien</option>
-    <option value="date-asc">Du plus ancien au plus récent</option>
-    <option value="titre-asc">Titre (A → Z)</option>
-    <option value="titre-desc">Titre (Z → A)</option>
-  </select>
-  <select id="tagFilter" class="tagFilter">
-    <option value="">Sélectionner un tag</option>
-  </select>
-
-  <input type="text" id="search" placeholder="Rechercher par tag..." oninput="filtrerCartes()">
-</div>
-
+  <!-- Zone de retour et titre de catégorie -->
   <div id="zoneRetourSimple">
-  <button id="btnRetourCategories" style="display: none;" onclick="afficherVueParCategories()">Retour aux
-    catégories</button>
+    <button id="btnRetourCategories" style="display: none;">Retour aux catégories</button>
   </div>
-  <h2 id="titreCategorieSelectionnee" style="display:none;"></h2>
+  <h2 id="titreCategorieSelectionnee" style="display: none;"></h2>
   <button id="btnAjouterSousCategorie" class="btn-action">+ Ajouter une sous-catégorie</button>
 
+  <!-- Conteneur des vues -->
+  <div id="vue-par-categories" style="display: none;"></div>
   <div id="cartes-container"></div>
-  <!-- 🌟 MODALE DE GESTION DES CATÉGORIES -->
+
+  <!-- 🔍 Zone de tri et filtres -->
+  <div id="zoneFiltres">
+    <label for="triSelect">Trier par :</label>
+    <select id="triSelect" class="triSelect">
+      <option value="date-desc">Du plus récent au plus ancien</option>
+      <option value="date-asc">Du plus ancien au plus récent</option>
+      <option value="titre-asc">Titre (A → Z)</option>
+      <option value="titre-desc">Titre (Z → A)</option>
+    </select>
+
+    <select id="tagFilter" class="tagFilter">
+      <option value="">Sélectionner un tag</option>
+    </select>
+
+    <input type="text" id="search" placeholder="Rechercher par tag...">
+  </div>
+
+  <!-- 📂 Modale de création de carte -->
+  <div id="modalAjoutCarte" class="modal">
+    <input type="hidden" id="categorieChoisie">
+    <div class="modal-content">
+      <span class="close" id="closeModalAjoutCarte">&times;</span>
+      <h3>Créer une nouvelle carte</h3>
+      <div class="modal-container">
+        <input type="text" id="titre" placeholder="Titre">
+        <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+        <button id="btnCategorieOptions">Catégorie</button>
+
+        <div id="categorieSelectionnee" style="display: none;">-- Choisir une catégorie --</div>
+        <div id="listeCategories" class="liste-categories" style="display: none;"></div>
+        <div id="resumeCategorieChoisie"></div>
+
+        <textarea id="contenu" placeholder="Contenu"></textarea>
+        <button id="ajoutCarteBtn">Ajouter</button>
+        <button id="annulerModifBtn" style="display: none;">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📁 Modale pour gestion complète des catégories -->
   <div id="modalGestionCategories" class="modal" style="display: none;">
     <div class="modal-content">
       <span class="close" id="closeGestionModal">&times;</span>
       <h3>Gérer les catégories</h3>
-      <div id="listeGestionCategories">
-        <!-- Les catégories seront listées ici dynamiquement -->
+      <div id="listeGestionCategories"></div>
+    </div>
+  </div>
+
+  <!-- 📂 Modale de création de catégorie -->
+  <div id="modalCategorie" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h3>Créer une nouvelle catégorie</h3>
+      <label for="nouvelleCategorieNom">Nom :</label>
+      <input type="text" id="nouvelleCategorieNom">
+      <label for="parentCategorie">Catégorie parent :</label>
+      <select id="parentCategorie"><option value="">Aucune</option></select>
+      <label for="nouvelleCouleur">Couleur :</label>
+      <select id="nouvelleCouleur"></select>
+      <button id="btnCreerCategorie">Ajouter la catégorie</button>
+    </div>
+  </div>
+
+  <!-- 🎨 Modale pour changer la palette -->
+  <div id="modalPalette" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" id="fermerPaletteBtn">×</span>
+      <h3>Choisir une palette de couleurs</h3>
+      <div id="listePalettes"></div>
+    </div>
+  </div>
+
+  <!-- 🧺 Corbeille en plein écran -->
+  <div id="corbeille-page" class="corbeille-fullscreen" style="display: none;">
+    <button class="close-btn" id="btnFermerCorbeille">✖</button>
+    <h2>Éléments supprimés</h2>
+    <button id="btnViderCorbeille">Vider la corbeille</button>
+    <div id="cartes-corbeille"></div>
+  </div>
+
+  <!-- 🍔 Menu hamburger -->
+  <div id="menuHamburger" class="hamburger-container">
+    <button id="btnHamburger">☰</button>
+    <div id="menuContent" class="menu-content">
+      <div class="menu-section">
+        <h4>Catégories</h4>
+        <button id="btnNouvelleCategorieMenu">➕ Créer une nouvelle catégorie</button>
+        <button id="btnGererCategoriesMenu">🛠 Gérer les catégories</button>
+      </div>
+      <div class="menu-section">
+        <h4>Outils</h4>
+        <button id="btnExporterCartes">Exporter les cartes</button>
+        <button id="btnImporterCartes">Importer des cartes</button>
+        <button id="btnAfficherCorbeilleMenu">Voir la corbeille</button>
+      </div>
+      <div class="menu-section">
+        <h4>Personnalisation</h4>
+        <button id="btnOuvrirPalette">Changer la palette</button>
+      </div>
+      <div class="menu-section">
+        <h4>À propos</h4>
+        <button id="btnAPropos">Tout savoir sur Bee Organized</button>
       </div>
     </div>
   </div>
-<!-- 🌈 Modale de sélection de palette -->
-<div id="modalPalette" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span class="close" onclick="fermerPalette()">×</span>
-    <h3>Choisir une palette de couleurs</h3>
-    <div id="listePalettes">
-      <!-- Palettes injectées dynamiquement ici -->
-    </div>
-  </div>
-</div>
-<script type="module" src="tests.js"></script>
+
+  <!-- 📁 Fichier d'import JSON -->
+  <input type="file" id="importFile" style="display: none;">
 </body>
 </html>

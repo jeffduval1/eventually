@@ -1,139 +1,104 @@
 /**
- * 🎛 ui.js
- * Gestion des éléments d'interface utilisateur (UI)
- * - Ouvre/ferme modales, corbeille, palettes
- * - Gère les menus (hamburger, dropdowns)
- * - Actions globales non liées aux cartes ou catégories
+ * 🖼️ ui.js
+ * Gestion de l’interface utilisateur (UI)
+ * - Événements DOM : clics, ouvertures/fermetures de modales
+ * - Mise à jour dynamique de l’interface
+ * - Liaison des boutons aux actions principales
  */
 
-import { afficherCartes } from './cartes.js';
+import { afficherCartes, ajouterCarte } from './cartes.js';
 import { afficherVueParCategories } from './categories.js';
-import { palettes, paletteActuelle, nomsCouleursParPalette } from './config.js';
-import { appliquerPaletteGlobale } from './palette.js';
+import { exporterCartes, importerCartes } from './db/indexedDB.js';
+import { ouvrirModalePalette } from './palette.js';
+import { reinitialiserFiltre } from './filters.js';
 
-// 🗑 CORBEILLE
-export function afficherCorbeille() {
-    const transaction = window.db.transaction("corbeille", "readonly");
-    const store = transaction.objectStore("corbeille");
+// 🎬 Initialisation des événements DOM
+export function setupUI() {
+    // Mode d'affichage
+    document.getElementById("btnModeCartes")?.addEventListener("click", () => {
+        changerModeAffichage("cartes");
+    });
 
-    store.getAll().onsuccess = function (event) {
-        const cartes = event.target.result;
-        const container = document.getElementById("cartes-corbeille");
+    document.getElementById("btnModeCategories")?.addEventListener("click", () => {
+        changerModeAffichage("categories");
+    });
 
-        container.innerHTML = cartes.length === 0
-            ? "<p>Aucune carte supprimée.</p>"
-            : cartes.map(carte => `
-                <div class="carte">
-                    <h3>${carte.titre}</h3>
-                    <span>Supprimé le : ${new Date(carte.dateSuppression).toLocaleDateString()}</span>
-                    <p>${carte.contenu}</p>
-                    <button onclick="restaurerCarte(${carte.id})">Restaurer</button>
-                </div>
-            `).join("");
+    // Ajout de carte
+    document.getElementById("ajoutCarteBtn")?.addEventListener("click", () => {
+        const titre = document.getElementById("titre").value.trim();
+        const contenu = document.getElementById("contenu").value.trim();
+        const tags = document.getElementById("tags").value.split(',').map(t => t.trim());
+        const categorie = document.getElementById("categorieChoisie").value;
+        const couleur = document.getElementById("categorieChoisie").dataset.couleur || "#ccc";
 
-        document.getElementById("corbeille-page").style.display = "flex";
-    };
+        if (titre && contenu) {
+            ajouterCarte({ titre, contenu, tags, categorie, couleurCategorie: couleur });
+        } else {
+            alert("Veuillez remplir le titre et le contenu.");
+        }
+    });
+
+    // Réinitialiser le filtre
+    document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
+
+    // Changer la palette
+    document.getElementById("btnChangerPalette")?.addEventListener("click", ouvrirModalePalette);
+
+    // Export / import
+    document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
+    document.getElementById("btnImporter")?.addEventListener("click", () => {
+        document.getElementById("importFile").click();
+    });
+
+    document.getElementById("importFile")?.addEventListener("change", (e) => {
+        if (e.target.files.length) {
+            importerCartes(e.target.files[0]);
+        }
+    });
+
+    // Vue initiale
+    changerModeAffichage("categories", true);
 }
 
+// 🔁 Bascule entre cartes et catégories
+export function changerModeAffichage(mode, initial = false) {
+    const cartesContainer = document.getElementById("cartes-container");
+    const vueCategories = document.getElementById("vue-par-categories");
+    const btnCartes = document.getElementById("btnModeCartes");
+    const btnCategories = document.getElementById("btnModeCategories");
+
+    if (mode === "cartes") {
+        cartesContainer.style.display = "block";
+        vueCategories.style.display = "none";
+        btnCartes.classList.add("active");
+        btnCategories.classList.remove("active");
+        if (!initial) afficherCartes();
+    } else {
+        cartesContainer.style.display = "none";
+        vueCategories.style.display = "flex";
+        btnCartes.classList.remove("active");
+        btnCategories.classList.add("active");
+        afficherVueParCategories();
+    }
+}
+
+// 🗑️ Corbeille – Voir
+export function afficherCorbeille() {
+    document.getElementById("corbeille-page").style.display = "block";
+}
+
+// 🗑️ Corbeille – Fermer
 export function fermerCorbeille() {
     document.getElementById("corbeille-page").style.display = "none";
 }
 
+// 🗑️ Corbeille – Vider
 export function viderCorbeille() {
-    if (confirm("Voulez-vous vraiment vider la corbeille ?")) {
-        const transaction = window.db.transaction("corbeille", "readwrite");
-        const store = transaction.objectStore("corbeille");
-
-        store.clear().onsuccess = afficherCorbeille;
-    }
-}
-
-// 🎨 PALETTES
-export function ouvrirModalePalette() {
-    const container = document.getElementById("listePalettes");
-    container.innerHTML = "";
-
-    palettes.forEach(palette => {
-        const btn = document.createElement("button");
-        btn.classList.add("palette-btn");
-        if (palette.id === paletteActuelle) btn.classList.add("active");
-
-        const preview = document.createElement("div");
-        preview.classList.add("palette-aperçu");
-
-        palette.couleurs.forEach(couleur => {
-            const rond = document.createElement("span");
-            rond.classList.add("couleur");
-            rond.style.backgroundColor = couleur;
-            preview.appendChild(rond);
-        });
-
-        btn.appendChild(preview);
-        btn.append(palette.nom);
-
-        btn.addEventListener("click", () => changerPalette(palette.id));
-        container.appendChild(btn);
-    });
-
-    document.getElementById("modalPalette").style.display = "block";
-}
-
-export function fermerPalette() {
-    document.getElementById("modalPalette").style.display = "none";
-}
-
-function changerPalette(id) {
-    if (Object.keys(nomsCouleursParPalette[paletteActuelle]).length !== Object.keys(nomsCouleursParPalette[id]).length) {
-        alert("Les palettes doivent avoir le même nombre de couleurs.");
-        return;
-    }
-
-    const ancienne = paletteActuelle;
-    paletteActuelle = id;
-
-    appliquerPaletteGlobale(ancienne);
-    fermerPalette();
-}
-
-// 🟦 MENU HAMBURGER
-export function setupHamburger() {
-    const btn = document.getElementById("btnHamburger");
-    const menu = document.getElementById("menuContent");
-
-    btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!menu.contains(e.target) && e.target !== btn) {
-            menu.style.display = "none";
-        }
-    });
-}
-
-// ⏹️ GLOBAL INIT UI
-export function setupUI() {
-    // Boutons d'ouverture de modales
-    document.getElementById("btnAfficherFormCategorie").addEventListener("click", () => {
-        document.getElementById("modalCategorie").style.display = "block";
-    });
-
-    document.getElementById("btnGererCategories").addEventListener("click", () => {
-        document.getElementById("modalGestionCategories").style.display = "block";
-    });
-
-    document.getElementById("btnRetourCategories").addEventListener("click", afficherVueParCategories);
-
-    document.getElementById("btnAfficherCorbeille")?.addEventListener("click", afficherCorbeille);
-
-    document.getElementById("closeGestionModal").addEventListener("click", () => {
-        document.getElementById("modalGestionCategories").style.display = "none";
-    });
-
-    document.getElementById("closeModal").addEventListener("click", () => {
-        document.getElementById("modalCategorie").style.display = "none";
-    });
-
-    setupHamburger();
+    const transaction = window.db.transaction("corbeille", "readwrite");
+    const store = transaction.objectStore("corbeille");
+    const request = store.clear();
+    request.onsuccess = () => {
+        console.log("🗑️ Corbeille vidée");
+        afficherCorbeille();
+    };
 }

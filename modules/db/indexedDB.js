@@ -7,7 +7,7 @@
  * - Utilitaires pour catégories et cartes
  */
 
-let db = null;
+let db;
 const DB_NAME = "MoteurDeRecherche";
 const DB_VERSION = 4;
 
@@ -33,7 +33,6 @@ export async function ouvrirDB() {
 
         request.onsuccess = function (event) {
             db = event.target.result;
-            window.db = db; // Pour accès global simplifié
             console.log("✅ IndexedDB prêt");
             resolve(db);
         };
@@ -47,100 +46,52 @@ export async function ouvrirDB() {
 
 // 🔎 Obtenir toutes les catégories
 export function getCategories() {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction("categories", "readonly");
-        const store = transaction.objectStore("categories");
-
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
+    return lireStore("categories");
 }
 
 // 🔎 Obtenir une catégorie par nom
 export function getCategorieByNom(nom) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction("categories", "readonly");
-        const store = transaction.objectStore("categories");
-
-        const request = store.get(nom);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
+    return lireParCle("categories", nom);
 }
 
 // 🔎 Obtenir toutes les cartes
 export function getCartes() {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction("regles", "readonly");
-        const store = transaction.objectStore("regles");
-
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
+    return lireStore("regles");
 }
 
 // 🔎 Obtenir une carte par ID
 export function getCarteById(id) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction("regles", "readonly");
-        const store = transaction.objectStore("regles");
-
-        const request = store.get(id);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
+    return lireParCle("regles", id);
 }
 
 // ➕ Ajouter une catégorie
 export function ajouterCategorie(categorie) {
-    const transaction = db.transaction("categories", "readwrite");
-    const store = transaction.objectStore("categories");
-
-    const request = store.add(categorie);
-    request.onerror = (e) => console.error("❌ Ajout catégorie échoué", e);
+    return ecrireDansStore("categories", categorie, "add");
 }
 
 // ➕ Ajouter une carte
 export function ajouterCarte(carte) {
-    const transaction = db.transaction("regles", "readwrite");
-    const store = transaction.objectStore("regles");
-
-    const request = store.add(carte);
-    request.onerror = (e) => console.error("❌ Ajout carte échoué", e);
+    return ecrireDansStore("regles", carte, "add");
 }
 
 // 🔄 Mettre à jour une catégorie
 export function modifierCategorie(categorie) {
-    const transaction = db.transaction("categories", "readwrite");
-    const store = transaction.objectStore("categories");
-
-    store.put(categorie);
+    return ecrireDansStore("categories", categorie, "put");
 }
 
 // 🔄 Mettre à jour une carte
 export function modifierCarte(carte) {
-    const transaction = db.transaction("regles", "readwrite");
-    const store = transaction.objectStore("regles");
-
-    store.put(carte);
+    return ecrireDansStore("regles", carte, "put");
 }
 
 // ❌ Supprimer une catégorie
 export function supprimerCategorie(nom) {
-    const transaction = db.transaction("categories", "readwrite");
-    const store = transaction.objectStore("categories");
-
-    store.delete(nom);
+    return supprimerDansStore("categories", nom);
 }
 
 // ❌ Supprimer une carte
 export function supprimerCarte(id) {
-    const transaction = db.transaction("regles", "readwrite");
-    const store = transaction.objectStore("regles");
-
-    store.delete(id);
+    return supprimerDansStore("regles", id);
 }
 
 // 📦 Exporter toutes les cartes
@@ -167,7 +118,52 @@ export function importerCartes(fichier) {
             resolve();
         };
         reader.onerror = () => reject(reader.error);
-
         reader.readAsText(fichier);
     });
 }
+
+// 🔧 Utilitaires internes
+function lireStore(nomStore) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(nomStore, "readonly");
+        const store = transaction.objectStore(nomStore);
+        const request = store.getAll();
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function lireParCle(nomStore, cle) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(nomStore, "readonly");
+        const store = transaction.objectStore(nomStore);
+        const request = store.get(cle);
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function ecrireDansStore(nomStore, objet, methode = "put") {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(nomStore, "readwrite");
+        const store = transaction.objectStore(nomStore);
+        const request = methode === "add" ? store.add(objet) : store.put(objet);
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function supprimerDansStore(nomStore, cle) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(nomStore, "readwrite");
+        const store = transaction.objectStore(nomStore);
+        const request = store.delete(cle);
+
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+export { db };
