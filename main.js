@@ -13,7 +13,8 @@ import { ouvrirDB } from './modules/db/indexedDB.js';
 import { afficherCartes, ajouterCarte } from './modules/cartes.js';
 import { afficherVueParCategories, creerNouvelleCategorie } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
-import { afficherCorbeille } from './modules/ui.js';
+import { afficherCorbeille, initialiserMenuHamburger } from './modules/ui.js';
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🟢 Initialisation Bee Organized');
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   appliquerPaletteGlobale(paletteActuelle);
   afficherVueParCategories();
+  initialiserMenuHamburger();
 
   // Écouteurs globaux
   document.getElementById("btnAfficherFormCategorie")?.addEventListener("click", () => {
@@ -44,9 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menu = document.getElementById("menuContent");
     menu.style.display = menu.style.display === "block" ? "none" : "block";
   });
-});
-  // 🔁 Liens du menu hamburger vers les actions existantes
-  document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
+   // 🔁 Liens du menu hamburger vers les actions existantes
+   document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
     document.getElementById("modalCategorie").style.display = "block";
   });
 
@@ -73,3 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('#menuContent button[onclick="ouvrirAPropos()"]')?.addEventListener("click", () => {
     document.getElementById("btnAPropos")?.click();
   });
+
+});
+ 

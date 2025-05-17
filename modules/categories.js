@@ -4,7 +4,6 @@
  * - afficherVueParCategories() : vue arborescente
  * - ajouter / modifier / supprimer une catégorie
  * - interactions pour sélection & gestion
- * Dépend : db (IndexedDB), helpers, config (palettes)
  */
 
 import {
@@ -13,12 +12,14 @@ import {
     ajouterCategorie,
     modifierCategorie
   } from './db/indexedDB.js';
-  import { getTextColor, getNomCouleur } from './utils/helpers.js';
+  
+  import { getTextColor } from './utils/helpers.js';
   import { paletteActuelle, nomsCouleursParPalette } from './config.js';
   import { afficherCartes } from './cartes.js';
   
   export let idCategorieActuelle = null;
   
+  // 🧭 Vue principale par catégories
   export function afficherVueParCategories() {
     const container = document.getElementById("vue-par-categories");
     const cartesContainer = document.getElementById("cartes-container");
@@ -53,6 +54,7 @@ import {
     });
   }
   
+  // 📁 Création récursive des blocs de catégories
   function creerBlocCategorie(categorie, niveau = 0) {
     const wrapper = document.createElement("div");
     wrapper.classList.add("bloc-categorie");
@@ -102,6 +104,7 @@ import {
     return wrapper;
   }
   
+  // 📌 Afficher les cartes d'une catégorie sélectionnée
   export function afficherCartesParCategorie(nomCategorie) {
     idCategorieActuelle = nomCategorie;
   
@@ -125,6 +128,7 @@ import {
     afficherCartes();
   }
   
+  // ➕ Création d'une nouvelle catégorie
   export function creerNouvelleCategorie() {
     const nom = document.getElementById("nouvelleCategorieNom").value.trim();
     const couleur = document.getElementById("nouvelleCouleur").value;
@@ -140,6 +144,7 @@ import {
     chargerMenuCategories();
   }
   
+  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
   export function chargerMenuCategories() {
     const menu = document.getElementById("listeCategories");
     const inputCategorie = document.getElementById("categorieChoisie");
@@ -158,9 +163,12 @@ import {
         div.addEventListener("click", () => {
           inputCategorie.value = cat.nom;
           inputCategorie.dataset.couleur = cat.couleur;
-          document.getElementById("categorieSelectionnee").textContent = cat.nom;
-          document.getElementById("categorieSelectionnee").style.backgroundColor = cat.couleur;
-          document.getElementById("categorieSelectionnee").style.color = getTextColor(cat.couleur);
+  
+          const resume = document.getElementById("categorieSelectionnee");
+          resume.textContent = cat.nom;
+          resume.style.backgroundColor = cat.couleur;
+          resume.style.color = getTextColor(cat.couleur);
+  
           menu.style.display = "none";
         });
   
