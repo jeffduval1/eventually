@@ -38,4 +38,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById("btnModeCartes")?.addEventListener("click", afficherCartes);
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
   document.getElementById("btnAfficherCorbeille")?.addEventListener("click", afficherCorbeille);
+
+  // Menu hamburger (version simple d’origine)
+  document.getElementById("btnHamburger")?.addEventListener("click", () => {
+    const menu = document.getElementById("menuContent");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  });
 });
+  // 🔁 Liens du menu hamburger vers les actions existantes
+  document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
+    document.getElementById("modalCategorie").style.display = "block";
+  });
+
+  document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {
+    document.getElementById("modalGestionCategories").style.display = "block";
+  });
+
+  document.querySelector('#menuContent button[onclick="exporterCartes()"]')?.addEventListener("click", () => {
+    document.getElementById("btnExporter")?.click();
+  });
+
+  document.querySelector('#menuContent button[onclick="importerCartes()"]')?.addEventListener("click", () => {
+    document.getElementById("btnImporter")?.click();
+  });
+
+  document.querySelector('#menuContent button[onclick="afficherCorbeille()"]')?.addEventListener("click", () => {
+    afficherCorbeille();
+  });
+
+  document.querySelector('#menuContent button[onclick="ouvrirModalePalette()"]')?.addEventListener("click", () => {
+    document.getElementById("btnChangerPalette")?.click();
+  });
+
+  document.querySelector('#menuContent button[onclick="ouvrirAPropos()"]')?.addEventListener("click", () => {
+    document.getElementById("btnAPropos")?.click();
+  });
