@@ -1,11 +1,8 @@
 /**
  * 🖼️ ui.js
  * Gestion de l’interface utilisateur (UI)
- * - Événements DOM : clics, modales, changement de vue
- * - Vue cartes vs catégories
- * - Menu hamburger
- * - Actions globales (import/export, filtres, palette)
  */
+console.log("🧩 ui.js chargé");
 
 import { afficherCartes, ajouterCarte } from './cartes.js';
 import { afficherVueParCategories } from './categories.js';
@@ -13,8 +10,28 @@ import { exporterCartes, importerCartes } from './db/indexedDB.js';
 import { ouvrirModalePalette } from './palette.js';
 import { reinitialiserFiltre } from './filters.js';
 
-// 🎬 Initialisation globale des événements
 export function setupUI() {
+  // Importer
+  document.getElementById("btnImporter")?.addEventListener("click", () => {
+    const input = document.getElementById("importFile");
+    input.value = ""; // permet de réimporter le même fichier
+    input.click();
+  });
+
+  document.getElementById("importFile")?.addEventListener("change", (e) => {
+    const fichier = e.target.files[0];
+    if (fichier instanceof Blob) {
+      importerCartes(fichier)
+        .then(() => {
+          alert("Importation réussie !");
+          afficherCartes(); // recharge l’affichage après import
+        })
+        .catch(err => alert("Erreur d'import : " + err.message));
+    } else {
+      alert("Aucun fichier valide sélectionné.");
+    }
+  });
+
   // Vue : par cartes
   document.getElementById("btnModeCartes")?.addEventListener("click", () => {
     changerModeAffichage("cartes");
@@ -40,31 +57,13 @@ export function setupUI() {
     }
   });
 
-  // Réinitialiser le filtre
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
-
-  // Changer la palette
   document.getElementById("btnChangerPalette")?.addEventListener("click", ouvrirModalePalette);
-
-  // Exporter
   document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
 
-  // Importer
-  document.getElementById("btnImporter")?.addEventListener("click", () => {
-    document.getElementById("importFile").click();
-  });
-
-  document.getElementById("importFile")?.addEventListener("change", (e) => {
-    if (e.target.files.length) {
-      importerCartes(e.target.files[0]);
-    }
-  });
-
-  // Vue initiale
   changerModeAffichage("categories", true);
 }
 
-// 🔁 Changement de vue entre cartes et catégories
 export function changerModeAffichage(mode, initial = false) {
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
@@ -86,17 +85,14 @@ export function changerModeAffichage(mode, initial = false) {
   }
 }
 
-// 🗑️ Corbeille – Voir
 export function afficherCorbeille() {
   document.getElementById("corbeille-page").style.display = "block";
 }
 
-// 🗑️ Corbeille – Fermer
 export function fermerCorbeille() {
   document.getElementById("corbeille-page").style.display = "none";
 }
 
-// 🗑️ Corbeille – Vider
 export function viderCorbeille() {
   const transaction = window.db.transaction("corbeille", "readwrite");
   const store = transaction.objectStore("corbeille");
@@ -108,7 +104,6 @@ export function viderCorbeille() {
   };
 }
 
-// 🍔 Menu hamburger – ouvrir/fermer
 export function initialiserMenuHamburger() {
   const btn = document.getElementById("btnHamburger");
   const menu = document.getElementById("menuContent");
@@ -120,14 +115,15 @@ export function initialiserMenuHamburger() {
 
   btn.addEventListener("click", (event) => {
     event.stopPropagation();
-    const isVisible = window.getComputedStyle(menu).display === "block";
     menu.classList.toggle("show");
   });
 
   document.addEventListener("click", (event) => {
     if (!menu.contains(event.target) && event.target !== btn) {
-      menu.style.display = "none";
+      menu.classList.remove("show");
     }
   });
 }
+
+// Réexport
 export { exporterCartes, importerCartes };

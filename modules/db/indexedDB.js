@@ -121,10 +121,15 @@ export function importerCartes(fichier) {
       }
     };
 
-    reader.onerror = () => reject(reader.error);
+    reader.onerror = function (e) {
+      reject(new Error("Erreur de lecture du fichier."));
+    };
+
+    // ✅ Ajoute cette ligne pour démarrer la lecture
     reader.readAsText(fichier);
   });
 }
+
 
 // 🛠 Fonctions internes génériques
 function lireStore(nomStore) {

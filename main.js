@@ -6,7 +6,12 @@ import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedD
 import { afficherCartes, ajouterCarte } from './modules/cartes.js';
 import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
-import { afficherCorbeille, initialiserMenuHamburger, exporterCartes, importerCartes } from './modules/ui.js';
+import {
+  afficherCorbeille,
+  initialiserMenuHamburger,
+  exporterCartes,
+  setupUI
+} from './modules/ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🟢 Initialisation Bee Organized');
@@ -16,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   appliquerPaletteGlobale(paletteActuelle);
   afficherVueParCategories();
   initialiserMenuHamburger();
+  setupUI();
 
   // Écouteurs globaux
   document.getElementById("btnAfficherFormCategorie")?.addEventListener("click", () => {
@@ -51,7 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
-  document.getElementById("btnImporter")?.addEventListener("click", importerCartes);
+
+  // 🟢 Ne PAS ré-attacher btnImporter ici — géré dans ui.js
 
   document.getElementById("btnChangerPalette")?.addEventListener("click", () => {
     const event = new CustomEvent('ouvrirModalePalette');
