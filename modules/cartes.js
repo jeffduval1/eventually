@@ -1,9 +1,6 @@
 /**
  * 🗃 cartes.js
  * Gère les cartes (affichage, ajout, modification, suppression)
- * - afficherCartes(modeTri) : vue par cartes
- * - afficherCartesFiltres(cartes) : affichage filtré
- * - ajouterCarte, modifierCarte, supprimerCarte
  */
 
 import { getTextColor } from './utils/helpers.js';
@@ -60,7 +57,7 @@ export function afficherCartesFiltres(cartes) {
 }
 
 // ➕ Ajoute une carte depuis le formulaire
-export function ajouterCarte() {
+export async function ajouterCarte() {
   const titre = document.getElementById("titre").value.trim();
   const contenu = document.getElementById("contenu").value.trim();
   const tags = document.getElementById("tags").value.split(",").map(t => t.trim()).filter(Boolean);
@@ -81,7 +78,7 @@ export function ajouterCarte() {
     dateCreation: Date.now()
   };
 
-  dbAjouterCarte(nouvelleCarte);
+  await dbAjouterCarte(nouvelleCarte);
   document.getElementById("modalAjoutCarte").style.display = "none";
   afficherCartes();
 
@@ -96,13 +93,13 @@ export function ajouterCarte() {
 }
 
 // ✏️ Met à jour une carte
-export function modifierCarte(carte) {
-  dbModifierCarte(carte);
+export async function modifierCarte(carte) {
+  await dbModifierCarte(carte);
   afficherCartes();
 }
 
 // ❌ Supprime une carte
-export function supprimerCarte(id) {
-  dbSupprimerCarte(id);
+export async function supprimerCarte(id) {
+  await dbSupprimerCarte(id);
   afficherCartes();
 }

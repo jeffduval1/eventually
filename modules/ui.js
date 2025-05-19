@@ -120,7 +120,8 @@ export function initialiserMenuHamburger() {
 
   btn.addEventListener("click", (event) => {
     event.stopPropagation();
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    const isVisible = window.getComputedStyle(menu).display === "block";
+    menu.classList.toggle("show");
   });
 
   document.addEventListener("click", (event) => {
@@ -129,3 +130,4 @@ export function initialiserMenuHamburger() {
     }
   });
 }
+export { exporterCartes, importerCartes };

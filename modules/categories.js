@@ -1,11 +1,3 @@
-/**
- * 🗂 categories.js
- * Gère les catégories (CRUD + affichage arborescence)
- * - afficherVueParCategories() : vue arborescente
- * - ajouter / modifier / supprimer une catégorie
- * - interactions pour sélection & gestion
- */
-
 import {
     getCategories,
     getCategorieByNom,
@@ -31,6 +23,15 @@ import {
     titreCategorie.style.display = "none";
   
     getCategories().then(categories => {
+      if (categories.length === 0) {
+        const info = document.createElement("p");
+        info.textContent = "Aucune catégorie trouvée. Cliquez sur + pour en créer une.";
+        info.style.padding = "20px";
+        info.style.color = "#666";
+        container.appendChild(info);
+        return;
+      }
+  
       const parNom = {};
       const racines = [];
   
@@ -139,41 +140,50 @@ import {
       return;
     }
   
-    ajouterCategorie({ nom, couleur, parent });
-    afficherVueParCategories();
-    chargerMenuCategories();
-  }
-  
-  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
-  export function chargerMenuCategories() {
-    const menu = document.getElementById("listeCategories");
-    const inputCategorie = document.getElementById("categorieChoisie");
-  
-    menu.innerHTML = "";
-  
-    getCategories().then(categories => {
-      categories.sort((a, b) => a.nom.localeCompare(b.nom));
-  
-      categories.forEach(cat => {
-        const div = document.createElement("div");
-        div.textContent = cat.nom;
-        div.style.backgroundColor = cat.couleur;
-        div.style.color = getTextColor(cat.couleur);
-  
-        div.addEventListener("click", () => {
-          inputCategorie.value = cat.nom;
-          inputCategorie.dataset.couleur = cat.couleur;
-  
-          const resume = document.getElementById("categorieSelectionnee");
-          resume.textContent = cat.nom;
-          resume.style.backgroundColor = cat.couleur;
-          resume.style.color = getTextColor(cat.couleur);
-  
-          menu.style.display = "none";
-        });
-  
-        menu.appendChild(div);
-      });
+    ajouterCategorie({ nom, couleur, parent }).then(() => {
+      afficherVueParCategories();
+      chargerMenuCategories();
     });
   }
   
+  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
+ // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
+export function chargerMenuCategories() {
+  const menu = document.getElementById("listeCategories");
+  const inputCategorie = document.getElementById("categorieChoisie");
+
+  // ✅ Sécurité : ne rien faire si les éléments ne sont pas encore dans le DOM
+  if (!menu || !inputCategorie) {
+    console.warn("🔶 Impossible de charger les catégories : éléments non trouvés dans le DOM.");
+    return;
+  }
+
+  menu.innerHTML = "";
+
+  getCategories().then(categories => {
+    categories.sort((a, b) => a.nom.localeCompare(b.nom));
+
+    categories.forEach(cat => {
+      const div = document.createElement("div");
+      div.textContent = cat.nom;
+      div.style.backgroundColor = cat.couleur;
+      div.style.color = getTextColor(cat.couleur);
+
+      div.addEventListener("click", () => {
+        inputCategorie.value = cat.nom;
+        inputCategorie.dataset.couleur = cat.couleur;
+
+        const resume = document.getElementById("categorieSelectionnee");
+        if (resume) {
+          resume.textContent = cat.nom;
+          resume.style.backgroundColor = cat.couleur;
+          resume.style.color = getTextColor(cat.couleur);
+        }
+
+        menu.style.display = "none";
+      });
+
+      menu.appendChild(div);
+    });
+  });
+}

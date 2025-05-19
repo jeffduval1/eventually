@@ -459,7 +459,7 @@ label {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 10px;
-  z-index: 1000;
+  z-index: 2000;
   min-width: 200px;
 }
 
@@ -611,4 +611,7 @@ label {
   width: 20px;
   height: 20px;
   border-radius: 50%;
+}
+.menu-content.show {
+  display: block !important;
 }
