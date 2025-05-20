@@ -12,12 +12,16 @@ import {
   exporterCartes,
   setupUI
 } from './modules/ui.js';
+import { restaurerCarte, viderCorbeille, fermerCorbeille } from './modules/corbeille.js';
+window.restaurerCarte = restaurerCarte;
+window.viderCorbeille = viderCorbeille;
+window.fermerCorbeille = fermerCorbeille;
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🟢 Initialisation Bee Organized');
   await ouvrirDB();
   await initialiserDonneesSiVides();
-
+  chargerMenuCategories();
   appliquerPaletteGlobale(paletteActuelle);
   afficherVueParCategories();
   initialiserMenuHamburger();
@@ -40,20 +44,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById("btnModeCartes")?.addEventListener("click", afficherCartes);
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
   document.getElementById("btnAfficherCorbeille")?.addEventListener("click", afficherCorbeille);
-
+  document.getElementById("btnFermerCorbeille")?.addEventListener("click", fermerCorbeille);
+  document.getElementById("btnViderCorbeille")?.addEventListener("click", viderCorbeille);
   // Menu hamburger
   document.getElementById("btnHamburger")?.addEventListener("click", () => {
     const menu = document.getElementById("menuContent");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    if (!menu) return;
+  
+    const current = window.getComputedStyle(menu).display;
+    if (current === "none") {
+      menu.style.display = "block";
+      console.log("✅ Menu affiché");
+    } else {
+      menu.style.display = "none";
+      console.log("✅ Menu caché");
+    }
   });
-
   document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
+    fermerMenuHamburger();
     chargerMenuCategories();
     document.getElementById("modalCategorie").style.display = "block";
+    console.log("🟢 Modale catégorie affichée");
   });
-
   document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {
     document.getElementById("modalGestionCategories").style.display = "block";
+    document.getElementById("menuContent").style.display = "none";
   });
 
   document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
@@ -75,5 +90,12 @@ async function initialiserDonneesSiVides() {
   if (categories.length === 0) {
     await ajouterCategorie({ nom: "Exemple", couleur: "#FF9800" });
     console.log("📦 Catégorie par défaut ajoutée");
+  }
+}
+function fermerMenuHamburger() {
+  const menu = document.getElementById("menuContent");
+  if (menu) {
+    menu.style.display = "none";
+    console.log("✔️ Menu hamburger fermé");
   }
 }
