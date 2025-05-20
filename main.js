@@ -36,7 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById("btnGererCategories")?.addEventListener("click", () => {
     document.getElementById("modalGestionCategories").style.display = "block";
   });
-
+  document.getElementById("closeModal")?.addEventListener("click", () => {
+    document.getElementById("modalCategorie").style.display = "none";
+  });
   document.getElementById("btnRetourCategories")?.addEventListener("click", afficherVueParCategories);
   document.getElementById("btnCreerCategorie")?.addEventListener("click", creerNouvelleCategorie);
   document.getElementById("ajoutCarteBtn")?.addEventListener("click", ajouterCarte);

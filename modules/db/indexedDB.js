@@ -42,7 +42,32 @@ export async function ouvrirDB() {
     };
   });
 }
+export function importerCategories(fichier) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
 
+    reader.onload = function (event) {
+      try {
+        const categories = JSON.parse(event.target.result);
+        if (!Array.isArray(categories)) throw new Error("Le fichier n’est pas une liste valide de catégories.");
+
+        const transaction = db.transaction("categories", "readwrite");
+        const store = transaction.objectStore("categories");
+
+        categories.forEach(categorie => store.put(categorie));
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    };
+
+    reader.onerror = function (e) {
+      reject(new Error("Erreur de lecture du fichier."));
+    };
+
+    reader.readAsText(fichier);
+  });
+}
 // 🔍 Lecture : catégories
 export function getCategories() {
   return lireStore("categories");

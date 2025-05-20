@@ -148,11 +148,10 @@ import {
   
   // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
-export function chargerMenuCategories() {
+ export function chargerMenuCategories() {
   const menu = document.getElementById("listeCategories");
   const inputCategorie = document.getElementById("categorieChoisie");
 
-  // ✅ Sécurité : ne rien faire si les éléments ne sont pas encore dans le DOM
   if (!menu || !inputCategorie) {
     console.warn("🔶 Impossible de charger les catégories : éléments non trouvés dans le DOM.");
     return;
@@ -163,6 +162,7 @@ export function chargerMenuCategories() {
   getCategories().then(categories => {
     categories.sort((a, b) => a.nom.localeCompare(b.nom));
 
+    // 🔁 Remplir le menu de sélection (formulaire de carte)
     categories.forEach(cat => {
       const div = document.createElement("div");
       div.textContent = cat.nom;
@@ -185,5 +185,32 @@ export function chargerMenuCategories() {
 
       menu.appendChild(div);
     });
+
+    // 🧩 Remplir le menu des parents
+    const parentSelect = document.getElementById("parentCategorie");
+    if (parentSelect) {
+      parentSelect.innerHTML = '<option value="">Aucune</option>';
+      categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat.nom;
+        option.textContent = cat.nom;
+        parentSelect.appendChild(option);
+      });
+    }
   });
+
+  // 🎨 Remplir le menu des couleurs
+  const couleurSelect = document.getElementById("nouvelleCouleur");
+  if (couleurSelect) {
+    couleurSelect.innerHTML = '';
+    const palette = nomsCouleursParPalette[paletteActuelle] || {};
+    Object.entries(palette).forEach(([hex, nom]) => {
+      const option = document.createElement("option");
+      option.value = hex;
+      option.textContent = nom;
+      option.style.backgroundColor = hex;
+      option.style.color = getTextColor(hex);
+      couleurSelect.appendChild(option);
+    });
+  }
 }
