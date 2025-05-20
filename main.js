@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Écouteurs globaux
   document.getElementById("btnAfficherFormCategorie")?.addEventListener("click", () => {
-    chargerMenuCategories();
     document.getElementById("modalCategorie").style.display = "block";
   });
 
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
     fermerMenuHamburger();
-    chargerMenuCategories();
     document.getElementById("modalCategorie").style.display = "block";
     console.log("🟢 Modale catégorie affichée");
   });
@@ -88,11 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function initialiserDonneesSiVides() {
-  const categories = await getCategories();
-  if (categories.length === 0) {
-    await ajouterCategorie({ nom: "Exemple", couleur: "#FF9800" });
-    console.log("📦 Catégorie par défaut ajoutée");
-  }
+  console.log("✅ Données initiales vérifiées – aucune catégorie ajoutée automatiquement");
 }
 function fermerMenuHamburger() {
   const menu = document.getElementById("menuContent");

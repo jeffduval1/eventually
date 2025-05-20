@@ -47,7 +47,7 @@ import {
           racines.push(cat);
         }
       });
-  
+
       racines.forEach(racine => {
         const wrapper = creerBlocCategorie(racine);
         container.appendChild(wrapper);
@@ -143,10 +143,25 @@ import {
     ajouterCategorie({ nom, couleur, parent }).then(() => {
       afficherVueParCategories();
       chargerMenuCategories();
+  
+      // Réinitialiser les champs
+      document.getElementById("nouvelleCategorieNom").value = "";
+      document.getElementById("nouvelleCouleur").selectedIndex = 0;
+      document.getElementById("parentCategorie").selectedIndex = 0;
+  
+      // Réinitialiser l'affichage résumé
+      const resume = document.getElementById("categorieSelectionnee");
+      if (resume) {
+        resume.textContent = "-- Choisir une catégorie --";
+        resume.style.backgroundColor = "";
+        resume.style.color = "";
+      }
+  
+      // Fermer la modale
+      document.getElementById("modalCategorie").style.display = "none";
     });
   }
   
-  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
  export function chargerMenuCategories() {
   const menu = document.getElementById("listeCategories");
@@ -158,11 +173,15 @@ import {
   }
 
   menu.innerHTML = "";
+  const parentSelect = document.getElementById("parentCategorie");
+  const couleurSelect = document.getElementById("nouvelleCouleur");
+  if (parentSelect) parentSelect.innerHTML = '<option value="">Aucune</option>';
+  if (couleurSelect) couleurSelect.innerHTML = '';
 
   getCategories().then(categories => {
     categories.sort((a, b) => a.nom.localeCompare(b.nom));
 
-    // 🔁 Remplir le menu de sélection (formulaire de carte)
+    // Remplir le menu personnalisé pour formulaire carte
     categories.forEach(cat => {
       const div = document.createElement("div");
       div.textContent = cat.nom;
@@ -184,25 +203,19 @@ import {
       });
 
       menu.appendChild(div);
-    });
 
-    // 🧩 Remplir le menu des parents
-    const parentSelect = document.getElementById("parentCategorie");
-    if (parentSelect) {
-      parentSelect.innerHTML = '<option value="">Aucune</option>';
-      categories.forEach(cat => {
+      // Remplir le select des parents
+      if (parentSelect) {
         const option = document.createElement("option");
         option.value = cat.nom;
         option.textContent = cat.nom;
         parentSelect.appendChild(option);
-      });
-    }
+      }
+    });
   });
 
   // 🎨 Remplir le menu des couleurs
-  const couleurSelect = document.getElementById("nouvelleCouleur");
   if (couleurSelect) {
-    couleurSelect.innerHTML = '';
     const palette = nomsCouleursParPalette[paletteActuelle] || {};
     Object.entries(palette).forEach(([hex, nom]) => {
       const option = document.createElement("option");
