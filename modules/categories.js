@@ -12,48 +12,58 @@ import {
   export let idCategorieActuelle = null;
   
   // 🧭 Vue principale par catégories
-  export function afficherVueParCategories() {
-    const container = document.getElementById("vue-par-categories");
-    const cartesContainer = document.getElementById("cartes-container");
-    const titreCategorie = document.getElementById("titreCategorieSelectionnee");
-  
-    container.innerHTML = "";
-    container.style.display = "flex";
-    cartesContainer.style.display = "none";
-    titreCategorie.style.display = "none";
-  
-    getCategories().then(categories => {
-      if (categories.length === 0) {
-        const info = document.createElement("p");
-        info.textContent = "Aucune catégorie trouvée. Cliquez sur + pour en créer une.";
-        info.style.padding = "20px";
-        info.style.color = "#666";
-        container.appendChild(info);
-        return;
-      }
-  
-      const parNom = {};
-      const racines = [];
-  
-      categories.forEach(cat => {
-        cat.enfants = [];
-        parNom[cat.nom] = cat;
-      });
-  
-      categories.forEach(cat => {
-        if (cat.parent && parNom[cat.parent]) {
-          parNom[cat.parent].enfants.push(cat);
-        } else {
-          racines.push(cat);
-        }
-      });
+ // 🧭 Vue principale par catégories
+export function afficherVueParCategories() {
+  const container = document.getElementById("vue-par-categories");
+  const cartesContainer = document.getElementById("cartes-container");
+  const titreCategorie = document.getElementById("titreCategorieSelectionnee");
 
-      racines.forEach(racine => {
-        const wrapper = creerBlocCategorie(racine);
-        container.appendChild(wrapper);
-      });
+  // Masquer les autres zones
+  container.style.display = "flex";
+  cartesContainer.style.display = "none";
+  titreCategorie.style.display = "none";
+
+  // Récupérer les catégories depuis IndexedDB
+  getCategories().then(categories => {
+    const parNom = {};
+    const racines = [];
+
+    // Réinitialiser les enfants
+    categories.forEach(cat => {
+      cat.enfants = [];
+      parNom[cat.nom] = cat;
     });
-  }
+
+    // Regrouper les enfants sous leur parent
+    categories.forEach(cat => {
+      if (cat.parent && parNom[cat.parent]) {
+        parNom[cat.parent].enfants.push(cat);
+      } else {
+        racines.push(cat);
+      }
+    });
+
+    // ✅ Nettoyer ici juste avant d’insérer les blocs
+    container.innerHTML = "";
+
+    // Cas où il n’y a aucune catégorie
+    if (racines.length === 0) {
+      const info = document.createElement("p");
+      info.textContent = "Aucune catégorie trouvée. Cliquez sur + pour en créer une.";
+      info.style.padding = "20px";
+      info.style.color = "#666";
+      container.appendChild(info);
+      return;
+    }
+
+    // Générer les blocs de catégories à partir des racines
+    racines.forEach(racine => {
+      const wrapper = creerBlocCategorie(racine);
+      container.appendChild(wrapper);
+    });
+  });
+}
+
   
   // 📁 Création récursive des blocs de catégories
   function creerBlocCategorie(categorie, niveau = 0) {

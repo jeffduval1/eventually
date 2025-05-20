@@ -84,7 +84,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     alert("Bee Organized – Version 1.0\nUn outil simple pour structurer vos idées 🐝");
   });
 });
+document.addEventListener("click", (event) => {
+  const menu = document.getElementById("menuContent");
+  const bouton = document.getElementById("btnHamburger");
 
+  if (!menu || !bouton) return;
+
+  // Vérifie si le menu est visible
+  const isMenuOpen = window.getComputedStyle(menu).display === "block";
+
+  // Si on clique en dehors du menu et du bouton, on le ferme
+  if (
+    isMenuOpen &&
+    !menu.contains(event.target) &&
+    !bouton.contains(event.target)
+  ) {
+    menu.style.display = "none";
+    console.log("🔒 Menu fermé car clic extérieur");
+  }
+});
 async function initialiserDonneesSiVides() {
   console.log("✅ Données initiales vérifiées – aucune catégorie ajoutée automatiquement");
 }
