@@ -150,27 +150,36 @@ export function afficherVueParCategories() {
       return;
     }
   
-    ajouterCategorie({ nom, couleur, parent }).then(() => {
-      afficherVueParCategories();
-      chargerMenuCategories();
+    // 🔍 Vérification si une catégorie avec ce nom existe déjà
+    getCategories().then(categories => {
+      const existe = categories.some(cat => cat.nom.toLowerCase() === nom.toLowerCase());
   
-      // Réinitialiser les champs
-      document.getElementById("nouvelleCategorieNom").value = "";
-      document.getElementById("nouvelleCouleur").selectedIndex = 0;
-      document.getElementById("parentCategorie").selectedIndex = 0;
-  
-      // Réinitialiser l'affichage résumé
-      const resume = document.getElementById("categorieSelectionnee");
-      if (resume) {
-        resume.textContent = "-- Choisir une catégorie --";
-        resume.style.backgroundColor = "";
-        resume.style.color = "";
+      if (existe) {
+        alert("Ce nom de catégorie existe déjà.");
+        return;
       }
   
-      // Fermer la modale
-      document.getElementById("modalCategorie").style.display = "none";
+      // ➕ Ajout si le nom est unique
+      ajouterCategorie({ nom, couleur, parent }).then(() => {
+        afficherVueParCategories();
+        chargerMenuCategories();
+  
+        // Réinitialisation du formulaire
+        document.getElementById("nouvelleCategorieNom").value = "";
+        document.getElementById("nouvelleCouleur").selectedIndex = 0;
+        document.getElementById("parentCategorie").selectedIndex = 0;
+        document.getElementById("modalCategorie").style.display = "none";
+  
+        const resume = document.getElementById("categorieSelectionnee");
+        if (resume) {
+          resume.textContent = "-- Choisir une catégorie --";
+          resume.style.backgroundColor = "";
+          resume.style.color = "";
+        }
+      });
     });
   }
+  
   
  // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
  export function chargerMenuCategories() {
