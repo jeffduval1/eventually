@@ -58,6 +58,7 @@ export function afficherCartesFiltres(cartes) {
 
 // ➕ Ajoute une carte depuis le formulaire
 export async function ajouterCarte() {
+  console.log("🟢 Fonction ajouterCarte appelée");
   const titre = document.getElementById("titre").value.trim();
   const contenu = document.getElementById("contenu").value.trim();
   const tags = document.getElementById("tags").value.split(",").map(t => t.trim()).filter(Boolean);

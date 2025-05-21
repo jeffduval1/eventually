@@ -4,6 +4,7 @@ import { paletteActuelle } from './modules/config.js';
 import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedDB.js';
 import { afficherCartes, ajouterCarte } from './modules/cartes.js';
+console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
 import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
 import {
@@ -113,3 +114,7 @@ function fermerMenuHamburger() {
     console.log("✔️ Menu hamburger fermé");
   }
 }
+document.getElementById("toggleFormBtn")?.addEventListener("click", () => {
+  console.log("🟡 Clic sur le bouton d’ajout de carte");
+  document.getElementById("modalAjoutCarte").style.display = "block";
+});
