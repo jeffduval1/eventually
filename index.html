@@ -74,7 +74,16 @@
 
       <!-- Résumé de la catégorie sélectionnée -->
       <div id="categorieSelectionnee" style="display: block;">-- Choisir une catégorie --</div>
+<!-- 🧭 Zone de sélection de type de catégorie -->
+<div id="zoneChoixCategorie" class="zone-categorie-options" style="display: none;">
 
+  <button id="choixCategorieExistanteBtn" class="btn-categorie-option">Choisir une catégorie existante</button>
+
+  <button id="choixParentCategorieBtn" class="btn-categorie-option">Choisir une catégorie parent</button>
+
+  <button id="creerNouvelleCategorieBtn" class="btn-categorie-option">Créer une nouvelle catégorie</button>
+
+</div>
       <!-- Menu déroulant des catégories -->
       <div id="listeCategories" class="liste-categories" style="display: none;"></div>
 
@@ -89,7 +98,17 @@
     </div>
   </div>
 </div>
-
+<!-- 📌 Nouvelle modale : Choix du type de catégorie -->
+<div id="modalChoixTypeCategorie" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" id="fermerChoixTypeCategorie">×</span>
+    <h3>Catégorie</h3>
+    <p>Que voulez-vous faire ?</p>
+    <button id="choisirCategorieExistante">Choisir une catégorie existante</button>
+    <button id="creerNouvelleCategorieCarte">Créer une nouvelle catégorie</button>
+    <button id="choisirCategorieParent">Choisir un parent de catégorie</button>
+  </div>
+</div>
   <!-- 📁 Modale pour gestion complète des catégories -->
   <div id="modalGestionCategories" class="modal" style="display: none;">
     <div class="modal-content">

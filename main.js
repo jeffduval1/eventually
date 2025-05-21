@@ -118,3 +118,70 @@ document.getElementById("toggleFormBtn")?.addEventListener("click", () => {
   console.log("🟡 Clic sur le bouton d’ajout de carte");
   document.getElementById("modalAjoutCarte").style.display = "block";
 });
+// 🔀 Gestion du choix de type de catégorie dans la modale d'ajout de carte
+document.getElementById("btnCategorieOptions")?.addEventListener("click", () => {
+  const zoneChoix = document.getElementById("zoneChoixCategorie");
+  if (zoneChoix) zoneChoix.style.display = "block"; // Affiche les 3 options si elles sont cachées
+});
+
+// ➕ Choisir une catégorie existante
+document.getElementById("choixCategorieExistanteBtn")?.addEventListener("click", () => {
+  document.getElementById("listeCategories").style.display = "block";
+  document.getElementById("parentCategorie").style.display = "none";
+  document.getElementById("nouvelleCategorieNom").style.display = "none";
+  document.getElementById("nouvelleCouleur").style.display = "none";
+});
+
+// 🧭 Choisir un parent de catégorie
+document.getElementById("choixParentCategorieBtn")?.addEventListener("click", () => {
+  document.getElementById("parentCategorie").style.display = "block";
+  document.getElementById("listeCategories").style.display = "none";
+  document.getElementById("nouvelleCategorieNom").style.display = "none";
+  document.getElementById("nouvelleCouleur").style.display = "none";
+});
+
+// 🆕 Créer une nouvelle catégorie
+document.getElementById("creerNouvelleCategorieBtn")?.addEventListener("click", () => {
+  document.getElementById("nouvelleCategorieNom").style.display = "block";
+  document.getElementById("nouvelleCouleur").style.display = "block";
+  document.getElementById("listeCategories").style.display = "none";
+  document.getElementById("parentCategorie").style.display = "none";
+});
+// Ouvrir la modale de choix au clic sur le bouton
+document.getElementById("btnCategorieOptions")?.addEventListener("click", () => {
+  document.getElementById("modalChoixTypeCategorie").style.display = "block";
+});
+
+// Fermer la modale
+document.getElementById("fermerChoixTypeCategorie")?.addEventListener("click", () => {
+  document.getElementById("modalChoixTypeCategorie").style.display = "none";
+});
+
+// Clic en dehors de la modale pour la fermer
+document.addEventListener("click", (event) => {
+  const modal = document.getElementById("modalChoixTypeCategorie");
+  const bouton = document.getElementById("btnCategorieOptions");
+  if (!modal || !bouton) return;
+
+  if (modal.style.display === "block" &&
+      !modal.contains(event.target) &&
+      !bouton.contains(event.target)) {
+    modal.style.display = "none";
+  }
+});
+
+// Actions des trois boutons de choix
+document.getElementById("choisirCategorieExistante")?.addEventListener("click", () => {
+  document.getElementById("listeCategories").style.display = "block";
+  document.getElementById("modalChoixTypeCategorie").style.display = "none";
+});
+
+document.getElementById("creerNouvelleCategorieCarte")?.addEventListener("click", () => {
+  document.getElementById("modalCategorie").style.display = "block";
+  document.getElementById("modalChoixTypeCategorie").style.display = "none";
+});
+
+document.getElementById("choisirCategorieParent")?.addEventListener("click", () => {
+  alert("Fonctionnalité à venir : choix de catégorie parent");
+  document.getElementById("modalChoixTypeCategorie").style.display = "none";
+});
