@@ -612,3 +612,108 @@ label {
   height: 20px;
   border-radius: 50%;
 }
+/* -----------------------------------------------------
+   🧩 MODALE DE CRÉATION DE CARTE – STRUCTURE GÉNÉRALE
+----------------------------------------------------- */
+
+.modal-container.colonne {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* -----------------------------------------------------
+   🟢 BOUTON DE CATÉGORIE (ouvrir le menu personnalisé)
+----------------------------------------------------- */
+#btnCategorieOptions {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+#btnCategorieOptions:hover {
+  background-color: #45a049;
+}
+
+/* -----------------------------------------------------
+   🟣 BOUTON AJOUTER UNE CARTE
+----------------------------------------------------- */
+#ajoutCarteBtn {
+  background-color: #2196F3;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+#ajoutCarteBtn:hover {
+  background-color: #1976D2;
+}
+
+/* -----------------------------------------------------
+   🔲 BOUTON ANNULER (visible en modification seulement)
+----------------------------------------------------- */
+#annulerModifBtn {
+  background-color: transparent;
+  color: #555;
+  padding: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-style: italic;
+  border-radius: 4px;
+}
+
+#annulerModifBtn:hover {
+  background-color: #eee;
+}
+
+/* -----------------------------------------------------
+   🟡 AFFICHAGE DU RÉSUMÉ DE CATÉGORIE SÉLECTIONNÉE
+----------------------------------------------------- */
+#categorieSelectionnee {
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* -----------------------------------------------------
+   📋 MENU DÉROULANT DES CATÉGORIES PERSONNALISÉES
+----------------------------------------------------- */
+.liste-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.liste-categories div {
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.liste-categories div:hover {
+  transform: scale(1.05);
+  background-color: rgba(0, 0, 0, 0.05);
+}
