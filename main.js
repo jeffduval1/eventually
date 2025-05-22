@@ -84,6 +84,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById("btnAPropos")?.addEventListener("click", () => {
     alert("Bee Organized – Version 1.0\nUn outil simple pour structurer vos idées 🐝");
   });
+  document.getElementById("btnSupprimerCategorie")?.addEventListener("click", () => {
+    document.getElementById("categorieChoisie").value = "";
+    document.getElementById("categorieChoisie").dataset.couleur = "";
+  
+    const resume = document.getElementById("categorieSelectionnee");
+    const texte = document.getElementById("texteCategorie");
+    const btn = document.getElementById("btnCategorieOptions");
+  
+    if (resume && texte && btn) {
+      texte.textContent = "-- Choisir une catégorie --";
+      resume.style.backgroundColor = "";
+      resume.style.color = "";
+      resume.style.display = "none";
+      btn.textContent = "Choisir une catégorie";
+    }
+  });
+  
 });
 document.addEventListener("click", (event) => {
   const menu = document.getElementById("menuContent");

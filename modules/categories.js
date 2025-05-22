@@ -210,15 +210,19 @@ export function afficherVueParCategories() {
       div.addEventListener("click", () => {
         inputCategorie.value = cat.nom;
         inputCategorie.dataset.couleur = cat.couleur;
-
+      
         const resume = document.getElementById("categorieSelectionnee");
-        if (resume) {
-          resume.textContent = cat.nom;
+        const texte = document.getElementById("texteCategorie");
+        const btn = document.getElementById("btnCategorieOptions");
+      
+        if (resume && texte && btn) {
+          texte.textContent = cat.nom;
           resume.style.backgroundColor = cat.couleur;
           resume.style.color = getTextColor(cat.couleur);
-          resume.style.display = "block";
+          resume.style.display = "flex";
+          btn.textContent = "Changer de catégorie";
         }
-
+      
         menu.style.display = "none";
       });
 

@@ -717,3 +717,25 @@ label {
   transform: scale(1.05);
   background-color: rgba(0, 0, 0, 0.05);
 }
+.categorie-resume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+}
+
+#btnSupprimerCategorie {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#btnSupprimerCategorie:hover {
+  color: red;
+}
