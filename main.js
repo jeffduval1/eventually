@@ -107,6 +107,31 @@ document.addEventListener("click", (event) => {
 async function initialiserDonneesSiVides() {
   console.log("✅ Données initiales vérifiées – aucune catégorie ajoutée automatiquement");
 }
+// 🔘 Gérer le clic sur "Choisir une catégorie existante"
+document.getElementById("btnChoisirExistante")?.addEventListener("click", () => {
+  const menu = document.getElementById("listeCategories");
+  const modalChoix = document.getElementById("modalChoixCategorie");
+
+  if (menu) menu.style.display = "block";      // Affiche le menu déroulant
+  if (modalChoix) modalChoix.style.display = "none"; // Cache la modale de choix
+});
+// 👆 Fermer le menu déroulant des catégories si on clique en dehors
+document.addEventListener("click", (event) => {
+  const menu = document.getElementById("listeCategories");
+  const bouton = document.getElementById("btnChoisirExistante");
+
+  // Si le menu est affiché
+  if (
+    menu &&
+    menu.style.display === "block" &&
+    !menu.contains(event.target) &&
+    !bouton.contains(event.target)
+  ) {
+    menu.style.display = "none";
+    console.log("🔒 Menu des catégories fermé (clic extérieur)");
+  }
+});
+
 function fermerMenuHamburger() {
   const menu = document.getElementById("menuContent");
   if (menu) {

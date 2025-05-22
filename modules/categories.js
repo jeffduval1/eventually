@@ -216,6 +216,7 @@ export function afficherVueParCategories() {
           resume.textContent = cat.nom;
           resume.style.backgroundColor = cat.couleur;
           resume.style.color = getTextColor(cat.couleur);
+          resume.style.display = "block";
         }
 
         menu.style.display = "none";
