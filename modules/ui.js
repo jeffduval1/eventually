@@ -124,6 +124,21 @@ export function initialiserMenuHamburger() {
     }
   });
 }
+export function reinitialiserFormulaireCategorie() {
+  const nomInput = document.getElementById("nouvelleCategorieNom");
+  const couleurSelect = document.getElementById("nouvelleCouleur");
+  const parentSelect = document.getElementById("parentCategorie");
+  const resumeParent = document.getElementById("resumeParentCategorie");
+
+  if (nomInput) nomInput.value = "";
+  if (couleurSelect) {
+    couleurSelect.selectedIndex = 0;
+    couleurSelect.disabled = false;
+    couleurSelect.title = "";
+  }
+  if (parentSelect) parentSelect.selectedIndex = 0;
+  if (resumeParent) resumeParent.style.display = "none";
+}
 
 // Réexport
 export { exporterCartes, importerCartes };

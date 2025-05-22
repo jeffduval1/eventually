@@ -14,6 +14,8 @@ import {
   setupUI
 } from './modules/ui.js';
 import { restaurerCarte, viderCorbeille, fermerCorbeille } from './modules/corbeille.js';
+import { reinitialiserFormulaireCategorie } from './modules/ui.js';
+
 window.restaurerCarte = restaurerCarte;
 window.viderCorbeille = viderCorbeille;
 window.fermerCorbeille = fermerCorbeille;
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Écouteurs globaux
   document.getElementById("btnAfficherFormCategorie")?.addEventListener("click", () => {
+    reinitialiserFormulaireCategorie();
     document.getElementById("modalCategorie").style.display = "block";
   });
 
@@ -64,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
     fermerMenuHamburger();
+    reinitialiserFormulaireCategorie();
     document.getElementById("modalCategorie").style.display = "block";
     console.log("🟢 Modale catégorie affichée");
   });
