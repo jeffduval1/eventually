@@ -72,26 +72,31 @@ export function afficherVueParCategories() {
     wrapper.style.marginLeft = `${niveau * 20}px`;
   
     const ligne = document.createElement("div");
-    ligne.classList.add("ligne-categorie");
-    ligne.style.backgroundColor = categorie.couleur;
-    ligne.style.color = getTextColor(categorie.couleur);
-    ligne.style.padding = "8px";
-    ligne.style.borderRadius = "6px";
-    ligne.style.display = "flex";
-    ligne.style.cursor = "pointer";
-    ligne.style.gap = "8px";
+    ligne.classList.add("ligne-categorie-liste");
+ligne.style.backgroundColor = categorie.couleur;
+ligne.style.color = getTextColor(categorie.couleur);
+ligne.style.padding = "8px 12px";
+ligne.style.borderRadius = "6px";
+ligne.style.display = "flex";
+ligne.style.alignItems = "center"; // ✅ Centre verticalement
+ligne.style.justifyContent = "space-between"; // ✅ Pousse le nom à gauche et flèche à droite
+ligne.style.cursor = "pointer";
+ligne.style.gap = "8px";
+
+const titre = document.createElement("span");
+titre.textContent = categorie.nom;
+titre.style.flexGrow = "1";
   
-    const fleche = document.createElement("span");
-    fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
-    fleche.style.width = "20px";
+const fleche = document.createElement("span");
+fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
+fleche.style.fontSize = "1rem"; // ou ajustable
+fleche.style.transition = "transform 0.2s";
   
-    const titre = document.createElement("span");
-    titre.textContent = categorie.nom;
-    titre.style.flexGrow = "1";
+   
   
-    ligne.appendChild(fleche);
-    ligne.appendChild(titre);
-    wrapper.appendChild(ligne);
+ligne.appendChild(titre);
+ligne.appendChild(fleche); // ✅ La flèche vient maintenant après le titre
+wrapper.appendChild(ligne);
   
     const sousContainer = document.createElement("div");
     sousContainer.style.display = "none";
@@ -191,16 +196,18 @@ export function afficherVueParCategories() {
     return;
   }
 
+  // Réinitialisation visuelle
   menu.innerHTML = "";
   const parentSelect = document.getElementById("parentCategorie");
   const couleurSelect = document.getElementById("nouvelleCouleur");
   if (parentSelect) parentSelect.innerHTML = '<option value="">Aucune</option>';
   if (couleurSelect) couleurSelect.innerHTML = '';
 
+  // Chargement des catégories
   getCategories().then(categories => {
     categories.sort((a, b) => a.nom.localeCompare(b.nom));
 
-    // Remplir le menu personnalisé pour formulaire carte
+    // 🔁 Menu des catégories pour formulaire carte
     categories.forEach(cat => {
       const div = document.createElement("div");
       div.textContent = cat.nom;
@@ -210,11 +217,11 @@ export function afficherVueParCategories() {
       div.addEventListener("click", () => {
         inputCategorie.value = cat.nom;
         inputCategorie.dataset.couleur = cat.couleur;
-      
+
         const resume = document.getElementById("categorieSelectionnee");
         const texte = document.getElementById("texteCategorie");
         const btn = document.getElementById("btnCategorieOptions");
-      
+
         if (resume && texte && btn) {
           texte.textContent = cat.nom;
           resume.style.backgroundColor = cat.couleur;
@@ -222,13 +229,13 @@ export function afficherVueParCategories() {
           resume.style.display = "flex";
           btn.textContent = "Changer de catégorie";
         }
-      
+
         menu.style.display = "none";
       });
 
       menu.appendChild(div);
 
-      // Remplir le select des parents
+      // 🧩 Select de catégories parent (formulaire de création de catégorie)
       if (parentSelect) {
         const option = document.createElement("option");
         option.value = cat.nom;
@@ -236,9 +243,49 @@ export function afficherVueParCategories() {
         parentSelect.appendChild(option);
       }
     });
+
+    // 🎯 Réagir au changement de parent sélectionné
+    if (parentSelect) {
+      parentSelect.addEventListener("change", () => {
+        const selectedNom = parentSelect.value;
+        const parent = categories.find(c => c.nom === selectedNom);
+        const resume = document.getElementById("resumeParentCategorie");
+        const nomResume = document.getElementById("nomParentResume");
+
+        if (parent) {
+          resume.style.display = "flex";
+          nomResume.textContent = parent.nom;
+          nomResume.style.backgroundColor = parent.couleur;
+          nomResume.style.color = getTextColor(parent.couleur);
+          nomResume.style.padding = "4px 8px";
+          nomResume.style.borderRadius = "6px";
+
+          couleurSelect.disabled = true;
+          couleurSelect.title = "La couleur est héritée du parent.";
+        } else {
+          resume.style.display = "none";
+          couleurSelect.disabled = false;
+          couleurSelect.title = "";
+        }
+      });
+    }
+
+    // ❌ Réinitialiser le choix du parent via bouton "X"
+    const retirerBtn = document.getElementById("retirerParentBtn");
+    if (retirerBtn) {
+      retirerBtn.addEventListener("click", () => {
+        parentSelect.value = "";
+        const resume = document.getElementById("resumeParentCategorie");
+        if (resume) resume.style.display = "none";
+        if (couleurSelect) {
+          couleurSelect.disabled = false;
+          couleurSelect.title = "";
+        }
+      });
+    }
   });
 
-  // 🎨 Remplir le menu des couleurs
+  // 🎨 Charger les couleurs disponibles
   if (couleurSelect) {
     const palette = nomsCouleursParPalette[paletteActuelle] || {};
     Object.entries(palette).forEach(([hex, nom]) => {
@@ -251,3 +298,4 @@ export function afficherVueParCategories() {
     });
   }
 }
+
