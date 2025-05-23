@@ -63,7 +63,27 @@ export function afficherVueParCategories() {
     });
   });
 }
+export function afficherGestionCategories() {
+  console.log("📂 Chargement des catégories dans la modale");
+  const conteneur = document.getElementById("listeGestionCategories");
+  if (!conteneur) return;
 
+  conteneur.innerHTML = ""; // Nettoyage
+
+  getCategories().then(categories => {
+    console.log("📦 Catégories récupérées :", categories);
+    categories.forEach(cat => {
+      const bloc = document.createElement("div");
+      bloc.textContent = cat.nom;
+      bloc.style.backgroundColor = cat.couleur;
+      bloc.style.color = getTextColor(cat.couleur);
+      bloc.style.padding = "8px";
+      bloc.style.margin = "4px 0";
+      bloc.style.borderRadius = "6px";
+      conteneur.appendChild(bloc);
+    });
+  });
+}
   
   // 📁 Création récursive des blocs de catégories
   function creerBlocCategorie(categorie, niveau = 0) {

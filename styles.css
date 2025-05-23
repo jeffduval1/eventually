@@ -266,11 +266,12 @@ textarea {
   color: #000;
   cursor: pointer;
 }
+
 /* Fond semi-transparent plein écran */
 .modal {
-    display: none; /* Masquée par défaut */
+ 
     position: fixed;
-    z-index: 999;
+    z-index: 3000;
     left: 0;
     top: 0;
     width: 100%;
@@ -771,4 +772,7 @@ label {
   border-radius: 6px;
   cursor: pointer;
   gap: 8px;
+}
+.modal.hidden {
+  display: none;
 }

@@ -5,7 +5,7 @@ import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedDB.js';
 import { afficherCartes, ajouterCarte } from './modules/cartes.js';
 console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
-import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories } from './modules/categories.js';
+import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
 import {
   afficherCorbeille,
@@ -36,8 +36,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("modalCategorie").style.display = "block";
   });
 
-  document.getElementById("btnGererCategories")?.addEventListener("click", () => {
+  /* document.getElementById("btnGererCategories")?.addEventListener("click", () => {
     document.getElementById("modalGestionCategories").style.display = "block";
+  }); */
+  document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {
+    const modal = document.getElementById("modalGestionCategories");
+  
+    console.log("➡️ Avant remove, classList:", [...modal.classList]);
+    
+    modal.classList.remove("hidden"); // Suppression directe
+  
+    console.log("➡️ Après remove, classList:", [...modal.classList]);
+  
+    // Pour forcer l’affichage même si autre style empêche
+    modal.style.display = "block"; // ← temporairement pour forcer visuellement
+  
+    afficherGestionCategories();
+    document.getElementById("menuContent").style.display = "none";
   });
   document.getElementById("closeModal")?.addEventListener("click", () => {
     document.getElementById("modalCategorie").style.display = "none";
@@ -71,11 +86,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("modalCategorie").style.display = "block";
     console.log("🟢 Modale catégorie affichée");
   });
-  document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {
-    document.getElementById("modalGestionCategories").style.display = "block";
-    document.getElementById("menuContent").style.display = "none";
-  });
 
+  document.getElementById("closeGestionModal")?.addEventListener("click", () => {
+    document.getElementById("modalGestionCategories").classList.add("hidden");
+  });
   document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
 
   // 🟢 Ne PAS ré-attacher btnImporter ici — géré dans ui.js
@@ -209,11 +223,11 @@ document.addEventListener("click", (event) => {
   const bouton = document.getElementById("btnCategorieOptions");
   if (!modal || !bouton) return;
 
-  if (modal.style.display === "block" &&
-      !modal.contains(event.target) &&
-      !bouton.contains(event.target)) {
-    modal.style.display = "none";
-  }
+  if (!modal.classList.contains("hidden") &&
+    !modal.contains(event.target) &&
+    !bouton.contains(event.target)) {
+  modal.classList.add("hidden");
+}
 });
 
 // Actions des trois boutons de choix
@@ -230,4 +244,16 @@ document.getElementById("creerNouvelleCategorieCarte")?.addEventListener("click"
 document.getElementById("choisirCategorieParent")?.addEventListener("click", () => {
   alert("Fonctionnalité à venir : choix de catégorie parent");
   document.getElementById("modalChoixTypeCategorie").style.display = "none";
+});
+window.addEventListener("click", (event) => {
+  const modale = document.getElementById("modalGestionCategories");
+  const contenu = document.querySelector("#modalGestionCategories .modal-content");
+  if (
+    modale &&
+    contenu &&
+    !modale.classList.contains("hidden") &&
+    !contenu.contains(event.target)
+  ) {
+    modale.classList.add("hidden");
+  }
 });
