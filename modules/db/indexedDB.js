@@ -32,7 +32,7 @@ export async function ouvrirDB() {
 
     request.onsuccess = function (event) {
       db = event.target.result;
-      console.log("✅ IndexedDB ouverte avec succès");
+      // console.log("✅ IndexedDB ouverte avec succès");
       resolve(db);
     };
 

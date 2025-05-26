@@ -4,13 +4,15 @@ import { paletteActuelle } from './modules/config.js';
 import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedDB.js';
 import { afficherCartes, ajouterCarte } from './modules/cartes.js';
-console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
+// console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
 import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
 import {
   afficherCorbeille,
   initialiserMenuHamburger,
   exporterCartes,
+  ouvrirModale,
+  fermerModale,
   setupUI
 } from './modules/ui.js';
 import { restaurerCarte, viderCorbeille, fermerCorbeille } from './modules/corbeille.js';
@@ -21,7 +23,7 @@ window.viderCorbeille = viderCorbeille;
 window.fermerCorbeille = fermerCorbeille;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🟢 Initialisation Bee Organized');
+  // console.log('🟢 Initialisation Bee Organized');
   await ouvrirDB();
   await initialiserDonneesSiVides();
   chargerMenuCategories();
@@ -40,20 +42,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("modalGestionCategories").style.display = "block";
   }); */
   document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {
-    const modal = document.getElementById("modalGestionCategories");
-  
-    console.log("➡️ Avant remove, classList:", [...modal.classList]);
-    
-    modal.classList.remove("hidden"); // Suppression directe
-  
-    console.log("➡️ Après remove, classList:", [...modal.classList]);
-  
-    // Pour forcer l’affichage même si autre style empêche
-    modal.style.display = "block"; // ← temporairement pour forcer visuellement
-  
+    console.log("🟢 Clic détecté : ouverture de la modale de gestion de catégories");
     afficherGestionCategories();
+    ouvrirModale("modalGestionCategories");
+    console.log("Classes avant suppression :", document.getElementById("modalGestionCategories").classList);
+document.getElementById("modalGestionCategories").classList.remove("hidden");
+console.log("Classes après suppression :", document.getElementById("modalGestionCategories").classList);
+
+    const modal = document.getElementById("modalGestionCategories");
+    console.log("📌 Affichage modal : ", {
+      classList: [...modal.classList],
+      display: getComputedStyle(modal).display
+    });
     document.getElementById("menuContent").style.display = "none";
   });
+  
+  document.getElementById("closeGestionModal")?.addEventListener("click", () => {
+    fermerModale("modalGestionCategories");
+  });
+ 
   document.getElementById("closeModal")?.addEventListener("click", () => {
     document.getElementById("modalCategorie").style.display = "none";
   });
@@ -256,4 +263,8 @@ window.addEventListener("click", (event) => {
   ) {
     modale.classList.add("hidden");
   }
+});
+document.getElementById("closeGestionModal")?.addEventListener("click", () => {
+  console.log("❌ Clic sur le bouton X de fermeture");
+  document.getElementById("modalGestionCategories").classList.add("hidden");
 });

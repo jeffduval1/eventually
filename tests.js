@@ -7,7 +7,7 @@
 
 import { getTextColor, rgbToHex } from './modules/utils/helpers.js';
 
-console.log("🧪 Lancement des tests helpers.js...");
+// console.log("🧪 Lancement des tests helpers.js...");
 
 let totalTests = 0;
 let totalFailures = 0;
@@ -18,7 +18,7 @@ function assert(label, result, expected) {
     totalFailures++;
     console.error(`❌ ${label} = ${result} (attendu : ${expected})`);
   } else {
-    console.log(`✅ ${label} = ${expected}`);
+    // console.log(`✅ ${label} = ${expected}`);
   }
 }
 
@@ -54,4 +54,4 @@ function testRgbToHex() {
 testGetTextColor();
 testRgbToHex();
 
-console.log(`🧾 Résumé : ${totalTests - totalFailures}/${totalTests} tests réussis.`);
+// console.log(`🧾 Résumé : ${totalTests - totalFailures}/${totalTests} tests réussis.`);

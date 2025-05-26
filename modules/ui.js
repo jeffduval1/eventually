@@ -2,7 +2,7 @@
  * 🖼️ ui.js
  * Gestion de l’interface utilisateur (UI)
  */
-console.log("🧩 ui.js chargé");
+// console.log("🧩 ui.js chargé");
 
 import { afficherCartes, ajouterCarte } from './cartes.js';
 import { afficherVueParCategories } from './categories.js';
@@ -10,7 +10,7 @@ import { exporterCartes, importerCartes } from './db/indexedDB.js';
 import { ouvrirModalePalette } from './palette.js';
 import { reinitialiserFiltre } from './filters.js';
 
-export function setupUI() {
+function setupUI() {
   // Importer
   document.getElementById("btnImporter")?.addEventListener("click", () => {
     const input = document.getElementById("importFile");
@@ -64,7 +64,7 @@ export function setupUI() {
   changerModeAffichage("categories", true);
 }
 
-export function changerModeAffichage(mode, initial = false) {
+function changerModeAffichage(mode, initial = false) {
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
   const btnCartes = document.getElementById("btnModeCartes");
@@ -85,15 +85,15 @@ export function changerModeAffichage(mode, initial = false) {
   }
 }
 
-export function afficherCorbeille() {
+function afficherCorbeille() {
   document.getElementById("corbeille-page").style.display = "block";
 }
 
-export function fermerCorbeille() {
+function fermerCorbeille() {
   document.getElementById("corbeille-page").style.display = "none";
 }
 
-export function viderCorbeille() {
+function viderCorbeille() {
   const transaction = window.db.transaction("corbeille", "readwrite");
   const store = transaction.objectStore("corbeille");
   const request = store.clear();
@@ -104,7 +104,7 @@ export function viderCorbeille() {
   };
 }
 
-export function initialiserMenuHamburger() {
+function initialiserMenuHamburger() {
   const btn = document.getElementById("btnHamburger");
   const menu = document.getElementById("menuContent");
 
@@ -124,7 +124,7 @@ export function initialiserMenuHamburger() {
     }
   });
 }
-export function reinitialiserFormulaireCategorie() {
+function reinitialiserFormulaireCategorie() {
   const nomInput = document.getElementById("nouvelleCategorieNom");
   const couleurSelect = document.getElementById("nouvelleCouleur");
   const parentSelect = document.getElementById("parentCategorie");
@@ -139,6 +139,34 @@ export function reinitialiserFormulaireCategorie() {
   if (parentSelect) parentSelect.selectedIndex = 0;
   if (resumeParent) resumeParent.style.display = "none";
 }
+function ouvrirModale(id) {
+  const modal = document.getElementById(id);
 
-// Réexport
-export { exporterCartes, importerCartes };
+  if (modal) {
+    modal.classList.remove("hidden");
+modal.style.display = "block";
+  }
+}
+
+function fermerModale(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.classList.add("hidden");
+modal.style.display = "none";
+  }
+}
+
+// ✅ Export unique propre et clair
+export {
+  setupUI,
+  changerModeAffichage,
+  afficherCorbeille,
+  fermerCorbeille,
+  viderCorbeille,
+  initialiserMenuHamburger,
+  reinitialiserFormulaireCategorie,
+  ouvrirModale,
+  fermerModale,
+  exporterCartes,
+  importerCartes
+};
