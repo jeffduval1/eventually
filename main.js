@@ -252,18 +252,19 @@ document.getElementById("choisirCategorieParent")?.addEventListener("click", () 
   alert("Fonctionnalité à venir : choix de catégorie parent");
   document.getElementById("modalChoixTypeCategorie").style.display = "none";
 });
-window.addEventListener("click", (event) => {
+/* window.addEventListener("click", (event) => {
   const modale = document.getElementById("modalGestionCategories");
   const contenu = document.querySelector("#modalGestionCategories .modal-content");
+
   if (
     modale &&
     contenu &&
     !modale.classList.contains("hidden") &&
     !contenu.contains(event.target)
   ) {
-    modale.classList.add("hidden");
+    modale.classList.add("hidden"); // Suffisant si `.hidden { display: none; }` est bien en CSS
   }
-});
+}); */
 document.getElementById("closeGestionModal")?.addEventListener("click", () => {
   console.log("❌ Clic sur le bouton X de fermeture");
   document.getElementById("modalGestionCategories").classList.add("hidden");

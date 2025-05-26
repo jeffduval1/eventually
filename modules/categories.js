@@ -8,7 +8,7 @@ import {
   import { getTextColor } from './utils/helpers.js';
   import { paletteActuelle, nomsCouleursParPalette } from './config.js';
   import { afficherCartes } from './cartes.js';
-  
+  import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
   export let idCategorieActuelle = null;
   
   // 🧭 Vue principale par catégories
@@ -64,24 +64,54 @@ export function afficherVueParCategories() {
   });
 }
 export function afficherGestionCategories() {
-  console.log("📂 Chargement des catégories dans la modale");
+  
   const conteneur = document.getElementById("listeGestionCategories");
   if (!conteneur) return;
 
-  conteneur.innerHTML = ""; // Nettoyage
+  conteneur.innerHTML = ""; 
 
   getCategories().then(categories => {
     console.log("📦 Catégories récupérées :", categories);
     categories.forEach(cat => {
       const bloc = document.createElement("div");
-      bloc.textContent = cat.nom;
-      bloc.style.backgroundColor = cat.couleur;
-      bloc.style.color = getTextColor(cat.couleur);
-      bloc.style.padding = "8px";
-      bloc.style.margin = "4px 0";
-      bloc.style.borderRadius = "6px";
+      bloc.classList.add("ligne-categorie");
+    
+      const ligne = document.createElement("div");
+      ligne.classList.add("nom-et-edition");
+    
+      const nom = document.createElement("span");
+      nom.classList.add("nom-categorie");
+      nom.textContent = cat.nom;
+      nom.style.backgroundColor = cat.couleur;
+      nom.style.color = getTextColor(cat.couleur);
+    
+      const actions = document.createElement("div");
+      actions.classList.add("actions-categorie");
+    
+      const btnModifier = document.createElement("button");
+      btnModifier.textContent = "✏️";
+      btnModifier.title = "Modifier cette catégorie";
+      btnModifier.addEventListener("click", () => {
+        lancerEditionCategorie(cat);
+      });
+    
+      const btnSupprimer = document.createElement("button");
+      btnSupprimer.textContent = "🗑️";
+      btnSupprimer.title = "Supprimer cette catégorie";
+      btnSupprimer.addEventListener("click", () => {
+        supprimerCategorie(cat.nom);
+      });
+    
+      actions.appendChild(btnModifier);
+      actions.appendChild(btnSupprimer);
+    
+      ligne.appendChild(nom);
+      ligne.appendChild(actions);
+      bloc.appendChild(ligne);
+    
       conteneur.appendChild(bloc);
     });
+    
   });
 }
   
@@ -318,4 +348,31 @@ wrapper.appendChild(ligne);
     });
   }
 }
+function lancerEditionCategorie(cat) {
+  const nouveauNom = prompt("Modifier le nom de la catégorie :", cat.nom);
+  if (nouveauNom && nouveauNom !== cat.nom) {
+    // 1. Créer une copie de la catégorie avec le nouveau nom
+    const nouvelleCategorie = {
+      ...cat,
+      nom: nouveauNom
+    };
 
+    // 2. Supprimer l'ancienne catégorie (ancienne clé primaire)
+    supprimerCategorieFromDB(cat.nom).then(() => {
+      // 3. Ajouter la nouvelle version
+      ajouterCategorie(nouvelleCategorie).then(() => {
+        afficherGestionCategories();
+        chargerMenuCategories();
+      });
+    });
+  }
+}
+function supprimerCategorie(nom) {
+  const confirmation = confirm(`Voulez-vous vraiment supprimer la catégorie « ${nom} » ?`);
+  if (confirmation) {
+    supprimerCategorieFromDB(nom).then(() => {
+      afficherGestionCategories(); // Rafraîchir la liste visible
+      chargerMenuCategories();     // Mettre à jour les menus
+    });
+  }
+}
