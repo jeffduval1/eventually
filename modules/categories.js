@@ -88,6 +88,13 @@ export function afficherGestionCategories() {
     
       const actions = document.createElement("div");
       actions.classList.add("actions-categorie");
+
+      const btnCouleur = document.createElement("button");
+btnCouleur.textContent = "🎨";
+btnCouleur.title = "Changer la couleur de cette catégorie";
+btnCouleur.addEventListener("click", () => {
+  lancerModificationCouleur(cat);
+});
     
       const btnModifier = document.createElement("button");
       btnModifier.textContent = "✏️";
@@ -102,10 +109,11 @@ export function afficherGestionCategories() {
       btnSupprimer.addEventListener("click", () => {
         supprimerCategorie(cat.nom);
       });
-    
+      actions.appendChild(btnCouleur);
       actions.appendChild(btnModifier);
       actions.appendChild(btnSupprimer);
-    
+
+
       ligne.appendChild(nom);
       ligne.appendChild(actions);
       bloc.appendChild(ligne);
@@ -354,6 +362,9 @@ function lancerEditionCategorie(cat) {
   document.getElementById("editCategorieNom").value = cat.nom;
   ouvrirModale("modalEditCategorie");
 }
+
+
+
 function supprimerCategorie(nom) {
   const confirmation = confirm(`Voulez-vous vraiment supprimer la catégorie « ${nom} » ?`);
   if (confirmation) {
@@ -400,6 +411,67 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
         fermerModale("modalEditCategorie");
         afficherGestionCategories();
         chargerMenuCategories();
+      
+        // Si la catégorie affichée est celle qu'on vient de modifier
+        if (idCategorieActuelle === categorieEnCoursDeModification.nom) {
+          idCategorieActuelle = nouveauNom;
+      
+          // ⚠️ Attendre que la modification soit bien visible avant d'afficher
+          setTimeout(() => {
+            afficherCartesParCategorie(nouveauNom);
+          }, 100); // petit délai pour éviter conflit d'affichage
+        }
       });
   });
 });
+let categorieEnCoursDeCouleur = null;
+
+document.getElementById("closeCouleurModal").addEventListener("click", () => {
+  fermerModale("modalChangerCouleur");
+});
+
+document.getElementById("btnValiderCouleur").addEventListener("click", () => {
+  const nouvelleCouleur = document.getElementById("selectNouvelleCouleur").value;
+  if (!categorieEnCoursDeCouleur) return;
+
+  const nouvelleCategorie = {
+    ...categorieEnCoursDeCouleur,
+    couleur: nouvelleCouleur
+  };
+
+  modifierCategorie(nouvelleCategorie).then(() => {
+    fermerModale("modalChangerCouleur");
+    afficherGestionCategories();
+    chargerMenuCategories();
+  });
+});
+function lancerModificationCouleur(cat) {
+  categorieEnCoursDeCouleur = cat;
+
+  const select = document.getElementById("selectNouvelleCouleur");
+  select.innerHTML = "";
+
+  const palette = nomsCouleursParPalette[paletteActuelle] || {};
+  Object.entries(palette).forEach(([hex, nom]) => {
+    const option = document.createElement("option");
+    option.value = hex;
+    option.textContent = nom;
+    option.style.backgroundColor = hex;
+    option.style.color = getTextColor(hex);
+    if (hex === cat.couleur) option.selected = true;
+    select.appendChild(option);
+  });
+
+  // 🟢 Appliquer la couleur actuelle au fond du <select>
+  select.style.backgroundColor = cat.couleur;
+  select.style.color = getTextColor(cat.couleur);
+
+  // 🟢 Mettre à jour la couleur en fonction du choix
+  select.addEventListener("change", () => {
+    const couleurChoisie = select.value;
+    select.style.backgroundColor = couleurChoisie;
+    select.style.color = getTextColor(couleurChoisie);
+  });
+
+  ouvrirModale("modalChangerCouleur");
+}
