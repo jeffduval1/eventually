@@ -9,6 +9,7 @@ import {
   import { paletteActuelle, nomsCouleursParPalette } from './config.js';
   import { afficherCartes } from './cartes.js';
   import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
+  import { ouvrirModale, fermerModale } from './ui.js';
   export let idCategorieActuelle = null;
   
   // 🧭 Vue principale par catégories
@@ -349,23 +350,9 @@ wrapper.appendChild(ligne);
   }
 }
 function lancerEditionCategorie(cat) {
-  const nouveauNom = prompt("Modifier le nom de la catégorie :", cat.nom);
-  if (nouveauNom && nouveauNom !== cat.nom) {
-    // 1. Créer une copie de la catégorie avec le nouveau nom
-    const nouvelleCategorie = {
-      ...cat,
-      nom: nouveauNom
-    };
-
-    // 2. Supprimer l'ancienne catégorie (ancienne clé primaire)
-    supprimerCategorieFromDB(cat.nom).then(() => {
-      // 3. Ajouter la nouvelle version
-      ajouterCategorie(nouvelleCategorie).then(() => {
-        afficherGestionCategories();
-        chargerMenuCategories();
-      });
-    });
-  }
+  categorieEnCoursDeModification = cat;
+  document.getElementById("editCategorieNom").value = cat.nom;
+  ouvrirModale("modalEditCategorie");
 }
 function supprimerCategorie(nom) {
   const confirmation = confirm(`Voulez-vous vraiment supprimer la catégorie « ${nom} » ?`);
@@ -376,3 +363,43 @@ function supprimerCategorie(nom) {
     });
   }
 }
+let categorieEnCoursDeModification = null;
+
+document.getElementById("closeEditModal").addEventListener("click", () => {
+  fermerModale("modalEditCategorie");
+});
+
+document.getElementById("btnEnregistrerModification").addEventListener("click", () => {
+  const nouveauNom = document.getElementById("editCategorieNom").value.trim();
+
+  if (!nouveauNom) {
+    alert("Le nom ne peut pas être vide.");
+    return;
+  }
+
+  if (nouveauNom === categorieEnCoursDeModification.nom) {
+    fermerModale("modalEditCategorie");
+    return;
+  }
+
+  getCategories().then(categories => {
+    const existe = categories.some(cat => cat.nom === nouveauNom);
+    if (existe) {
+      alert("Ce nom de catégorie existe déjà.");
+      return;
+    }
+
+    const nouvelleCategorie = {
+      ...categorieEnCoursDeModification,
+      nom: nouveauNom
+    };
+
+    supprimerCategorieFromDB(categorieEnCoursDeModification.nom)
+      .then(() => ajouterCategorie(nouvelleCategorie))
+      .then(() => {
+        fermerModale("modalEditCategorie");
+        afficherGestionCategories();
+        chargerMenuCategories();
+      });
+  });
+});

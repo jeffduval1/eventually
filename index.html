@@ -177,5 +177,17 @@
 
   <!-- 📁 Fichier d'import JSON -->
   <input type="file" id="importFile" style="display: none;" accept=".json">
+  <!-- ✏️ Modale de modification de catégorie -->
+<div id="modalEditCategorie" class="modal hidden">
+  <div class="modal-content">
+    <span class="close" id="closeEditModal">&times;</span>
+    <h3>Modifier la catégorie</h3>
+    
+    <label for="editCategorieNom">Nouveau nom :</label>
+    <input type="text" id="editCategorieNom">
+
+    <button id="btnEnregistrerModification">Enregistrer</button>
+  </div>
+</div>
 </body>
 </html>
