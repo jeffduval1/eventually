@@ -37,6 +37,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     reinitialiserFormulaireCategorie();
     document.getElementById("modalCategorie").style.display = "block";
   });
+  const boutonAjout = document.getElementById("ajoutCarteBtn");
+if (boutonAjout) {
+  boutonAjout.addEventListener("click", (event) => {
+    event.preventDefault(); // 👈 évite toute propagation inattendue
+    ajouterCarte();         // 👈 appelle ta fonction personnalisée
+  });
+}
 
   /* document.getElementById("btnGererCategories")?.addEventListener("click", () => {
     document.getElementById("modalGestionCategories").style.display = "block";
@@ -66,7 +73,7 @@ console.log("Classes après suppression :", document.getElementById("modalGestio
   });
   document.getElementById("btnRetourCategories")?.addEventListener("click", afficherVueParCategories);
   document.getElementById("btnCreerCategorie")?.addEventListener("click", creerNouvelleCategorie);
-  document.getElementById("ajoutCarteBtn")?.addEventListener("click", ajouterCarte);
+
   document.getElementById("btnModeCategories")?.addEventListener("click", afficherVueParCategories);
   document.getElementById("btnModeCartes")?.addEventListener("click", afficherCartes);
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
@@ -96,6 +103,11 @@ console.log("Classes après suppression :", document.getElementById("modalGestio
 
   document.getElementById("closeGestionModal")?.addEventListener("click", () => {
     document.getElementById("modalGestionCategories").classList.add("hidden");
+  });
+  document.getElementById("formAjoutCarte")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    console.log("✅ Formulaire soumis, appel de ajouterCarte()");
+    ajouterCarte();
   });
   document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
 
@@ -265,7 +277,11 @@ document.getElementById("choisirCategorieParent")?.addEventListener("click", () 
     modale.classList.add("hidden"); // Suffisant si `.hidden { display: none; }` est bien en CSS
   }
 }); */
+/* Fermeture de la modale de gestion des catégories */
 document.getElementById("closeGestionModal")?.addEventListener("click", () => {
-  console.log("❌ Clic sur le bouton X de fermeture");
   document.getElementById("modalGestionCategories").classList.add("hidden");
+});
+/* Fermeture de la modale de création de cartes */
+document.getElementById("closeAjoutCarteModal")?.addEventListener("click", () => {
+  document.getElementById("modalAjoutCarte").style.display = "none";
 });

@@ -59,14 +59,47 @@ export function afficherCartesFiltres(cartes) {
 // ➕ Ajoute une carte depuis le formulaire
 export async function ajouterCarte() {
   console.log("🟢 Fonction ajouterCarte appelée");
-  const titre = document.getElementById("titre").value.trim();
-  const contenu = document.getElementById("contenu").value.trim();
-  const tags = document.getElementById("tags").value.split(",").map(t => t.trim()).filter(Boolean);
-  const categorie = document.getElementById("categorieChoisie").value;
-  const couleurCategorie = document.getElementById("categorieChoisie").dataset.couleur || "#ccc";
 
-  if (!titre || !contenu) {
-    alert("Veuillez remplir tous les champs.");
+  const titreInput = document.getElementById("titre");
+  const contenuInput = document.getElementById("contenu");
+  const tagsInput = document.getElementById("tags");
+  const categorieInput = document.getElementById("categorieChoisie");
+
+  const titre = titreInput.value.trim();
+  const contenu = contenuInput.value.trim();
+  const tags = tagsInput.value.split(",").map(t => t.trim()).filter(Boolean);
+  const categorie = categorieInput.value;
+  const couleurCategorie = categorieInput.dataset.couleur || "#ccc";
+
+  // 🧼 Réinitialiser les messages d'erreur
+  document.getElementById("erreurTitre").textContent = "";
+  document.getElementById("erreurTitre").style.display = "none";
+  document.getElementById("erreurCategorie").textContent = "";
+  document.getElementById("erreurCategorie").style.display = "none";
+  document.getElementById("erreurContenu").textContent = "";
+  document.getElementById("erreurContenu").style.display = "none";
+
+  let erreur = false;
+
+  if (!titre) {
+    document.getElementById("erreurTitre").textContent = "Le titre est requis.";
+    document.getElementById("erreurTitre").style.display = "block";
+    erreur = true;
+  }
+
+  if (!categorie) {
+    document.getElementById("erreurCategorie").textContent = "Veuillez choisir une catégorie.";
+    document.getElementById("erreurCategorie").style.display = "block";
+    erreur = true;
+  }
+
+  if (!contenu) {
+    document.getElementById("erreurContenu").textContent = "Le contenu ne peut pas être vide.";
+    document.getElementById("erreurContenu").style.display = "block";
+    erreur = true;
+  }
+
+  if (erreur) {
     return;
   }
 
@@ -83,24 +116,16 @@ export async function ajouterCarte() {
   document.getElementById("modalAjoutCarte").style.display = "none";
   afficherCartes();
 
-  // Réinitialise les champs
-  document.getElementById("titre").value = "";
-  document.getElementById("contenu").value = "";
-  document.getElementById("tags").value = "";
-  document.getElementById("categorieChoisie").value = "";
-  document.getElementById("categorieChoisie").dataset.couleur = "";
-  document.getElementById("categorieSelectionnee").textContent = "-- Choisir une catégorie --";
-  document.getElementById("categorieSelectionnee").style = "";
-}
+  // 🧼 Réinitialise les champs du formulaire
+  titreInput.value = "";
+  contenuInput.value = "";
+  tagsInput.value = "";
+  categorieInput.value = "";
+  categorieInput.dataset.couleur = "";
 
-// ✏️ Met à jour une carte
-export async function modifierCarte(carte) {
-  await dbModifierCarte(carte);
-  afficherCartes();
-}
-
-// ❌ Supprime une carte
-export async function supprimerCarte(id) {
-  await dbSupprimerCarte(id);
-  afficherCartes();
+  const resume = document.getElementById("categorieSelectionnee");
+  if (resume) {
+    resume.textContent = "-- Choisir une catégorie --";
+    resume.style = "";
+  }
 }

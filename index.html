@@ -59,13 +59,15 @@
 <div id="modalAjoutCarte" class="modal" style="display: none;">
   <input type="hidden" id="categorieChoisie">
   <div class="modal-content">
-    <span class="close" id="closeModalAjoutCarte">×</span>
+    <span class="close" id="closeAjoutCarteModal">×</span>
     <h3>Créer une nouvelle carte</h3>
-
+    
+    <form id="formAjoutCarte">
     <div class="modal-container colonne">
       <!-- Champ Titre -->
       <input type="text" id="titre" placeholder="Titre">
 
+<div id="erreurTitre" class="message-erreur"></div>
       <!-- Champ Tags -->
       <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
 
@@ -80,16 +82,18 @@
 
       <!-- Menu déroulant des catégories -->
       <div id="listeCategories" class="liste-categories" style="display: none;"></div>
-
+      <div id="erreurCategorie" class="message-erreur"></div>
       <!-- Champ Contenu -->
       <textarea id="contenu" placeholder="Contenu"></textarea>
-
+      <div id="erreurContenu" class="message-erreur"></div>
       <!-- Bouton Ajouter -->
-      <button id="ajoutCarteBtn" class="btn-ajouter">Ajouter</button>
-
+      <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
+      
       <!-- Bouton Annuler (modification de carte existante uniquement) -->
-      <button id="annulerModifBtn" style="display: none;">Annuler</button>
+      <button id="annulerModifBtn" style="display: none;" type="button">Annuler</button>
+      <input type="submit" style="display: none;">
     </div>
+  </form>
   </div>
 </div>
 <!-- 📌 Nouvelle modale : Choix du type de catégorie -->
