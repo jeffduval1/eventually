@@ -371,8 +371,30 @@ function supprimerCategorie(nom) {
   const confirmation = confirm(`Voulez-vous vraiment supprimer la catégorie « ${nom} » ?`);
   if (confirmation) {
     supprimerCategorieFromDB(nom).then(() => {
-      afficherGestionCategories(); // Rafraîchir la liste visible
-      chargerMenuCategories();     // Mettre à jour les menus
+      console.log("🗑️ Catégorie supprimée :", nom);
+      afficherGestionCategories();
+      chargerMenuCategories();
+
+      // 🟢 Rafraîchir la vue par catégories complète
+      afficherVueParCategories();
+
+      // 🟢 Si c’est la catégorie actuellement affichée, on vide l’affichage
+      if (idCategorieActuelle === nom) {
+        idCategorieActuelle = null;
+
+        const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+        const cartesContainer = document.getElementById("cartes-container");
+        const vueCategories = document.getElementById("vue-par-categories");
+
+        if (titreCategorie) titreCategorie.style.display = "none";
+        if (cartesContainer) {
+          cartesContainer.innerHTML = "";
+          cartesContainer.style.display = "none";
+        }
+        if (vueCategories) vueCategories.style.display = "flex";
+
+        console.log("🟢 Rafraîchissement complet après suppression de la catégorie affichée");
+      }
     });
   }
 }
@@ -461,10 +483,35 @@ document.getElementById("btnValiderCouleur").addEventListener("click", () => {
   };
 
   modifierCategorie(nouvelleCategorie).then(() => {
+    console.log("🎨 Couleur modifiée dans IndexedDB");
+    console.log("idCategorieActuelle :", idCategorieActuelle);
+    console.log("catégorie modifiée :", nouvelleCategorie.nom);
+  
     fermerModale("modalChangerCouleur");
     afficherGestionCategories();
     chargerMenuCategories();
+  
+    // 🟢 Forcer le rafraîchissement de la vue par catégories complète
+    afficherVueParCategories();
+  
+    // 🟢 Si la catégorie affichée est celle qu'on vient de modifier
+    if (idCategorieActuelle === nouvelleCategorie.nom) {
+      getCategorieByNom(nouvelleCategorie.nom).then(categorie => {
+        if (categorie) {
+          const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+          if (titreCategorie) {
+            titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
+            titreCategorie.style.backgroundColor = categorie.couleur;
+            titreCategorie.style.color = getTextColor(categorie.couleur);
+            titreCategorie.style.display = "block";
+          }
+          afficherCartesParCategorie(nouvelleCategorie.nom);
+          console.log("🟢 Rafraîchissement complet de la catégorie :", nouvelleCategorie.nom);
+        }
+      });
+    }
   });
+  
 });
 function lancerModificationCouleur(cat) {
   categorieEnCoursDeCouleur = cat;
