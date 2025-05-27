@@ -1,3 +1,4 @@
+console.log("🧩 categories.js chargé");
 import {
     getCategories,
     getCategorieByNom,
@@ -181,6 +182,7 @@ wrapper.appendChild(ligne);
   
   // 📌 Afficher les cartes d'une catégorie sélectionnée
   export function afficherCartesParCategorie(nomCategorie) {
+    console.log("🟢 afficherCartesParCategorie appelé avec :", nomCategorie);
     idCategorieActuelle = nomCategorie;
   
     const cartesContainer = document.getElementById("cartes-container");
@@ -381,6 +383,7 @@ document.getElementById("closeEditModal").addEventListener("click", () => {
 });
 
 document.getElementById("btnEnregistrerModification").addEventListener("click", () => {
+  console.log("✅ BOUTON MODIFICATION ENCLENCHÉ");
   const nouveauNom = document.getElementById("editCategorieNom").value.trim();
 
   if (!nouveauNom) {
@@ -407,21 +410,39 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
 
     supprimerCategorieFromDB(categorieEnCoursDeModification.nom)
       .then(() => ajouterCategorie(nouvelleCategorie))
+      
       .then(() => {
+        console.log("✅ Modification enregistrée dans IndexedDB");
+        console.log("idCategorieActuelle :", idCategorieActuelle);
+        console.log("ancienne :", categorieEnCoursDeModification.nom);
+        console.log("nouveauNom :", nouveauNom);
+      
         fermerModale("modalEditCategorie");
         afficherGestionCategories();
         chargerMenuCategories();
       
-        // Si la catégorie affichée est celle qu'on vient de modifier
+        // 🟢 Forcer le rafraîchissement de la vue par catégories complète
+        afficherVueParCategories();
+      
+        // 🟢 Si une catégorie était sélectionnée, on tente de réafficher ses cartes
         if (idCategorieActuelle === categorieEnCoursDeModification.nom) {
           idCategorieActuelle = nouveauNom;
-      
-          // ⚠️ Attendre que la modification soit bien visible avant d'afficher
-          setTimeout(() => {
-            afficherCartesParCategorie(nouveauNom);
-          }, 100); // petit délai pour éviter conflit d'affichage
+          getCategorieByNom(nouveauNom).then(categorie => {
+            if (categorie) {
+              const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+              if (titreCategorie) {
+                titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
+                titreCategorie.style.backgroundColor = categorie.couleur;
+                titreCategorie.style.color = getTextColor(categorie.couleur);
+                titreCategorie.style.display = "block";
+              }
+              afficherCartesParCategorie(nouveauNom);
+              console.log("🟢 Rafraîchissement complet de la catégorie :", nouveauNom);
+            }
+          });
         }
       });
+      
   });
 });
 let categorieEnCoursDeCouleur = null;
