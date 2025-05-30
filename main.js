@@ -261,23 +261,19 @@ document.getElementById("creerNouvelleCategorieCarte")?.addEventListener("click"
 });
 
 document.getElementById("choisirCategorieParent")?.addEventListener("click", () => {
-  alert("Fonctionnalité à venir : choix de catégorie parent");
-  document.getElementById("modalChoixTypeCategorie").style.display = "none";
+  console.log("🧭 Clic sur 'Choisir un parent de catégorie'"); // ← AJOUT TEMPORAIRE
+   // Affiche seulement la section du parent
+   document.getElementById("parentCategorie").style.display = "block";
+  
+   // Cache les autres
+   document.getElementById("listeCategories").style.display = "none";
+   document.getElementById("nouvelleCategorieNom").style.display = "none";
+   document.getElementById("nouvelleCouleur").style.display = "none";
+ 
+   // Ferme la modale de choix
+   document.getElementById("modalChoixTypeCategorie").style.display = "none";
 });
-/* window.addEventListener("click", (event) => {
-  const modale = document.getElementById("modalGestionCategories");
-  const contenu = document.querySelector("#modalGestionCategories .modal-content");
 
-  if (
-    modale &&
-    contenu &&
-    !modale.classList.contains("hidden") &&
-    !contenu.contains(event.target)
-  ) {
-    modale.classList.add("hidden"); // Suffisant si `.hidden { display: none; }` est bien en CSS
-  }
-}); */
-/* Fermeture de la modale de gestion des catégories */
 document.getElementById("closeGestionModal")?.addEventListener("click", () => {
   document.getElementById("modalGestionCategories").classList.add("hidden");
 });

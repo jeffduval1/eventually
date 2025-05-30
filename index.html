@@ -104,7 +104,14 @@
     <p>Que voulez-vous faire ?</p>
     <button id="choisirCategorieExistante">Choisir une catégorie existante</button>
     <button id="creerNouvelleCategorieCarte">Créer une nouvelle catégorie</button>
-    <button id="choisirCategorieParent">Choisir un parent de catégorie</button>
+    <button id="choisirCategorieParent">Choisir une catégorie parent</button>
+    <div id="zoneChoixParentCategorie" style="display: none;">
+      <label for="selectParentTemporaire">Choisir un parent :</label>
+      <select id="selectParentTemporaire">
+        <option value="">Aucune</option>
+        <!-- Ajouter dynamiquement des options ici -->
+      </select>
+    </div>
   </div>
 </div>
   <!-- 📁 Modale pour gestion complète des catégories -->
@@ -202,6 +209,18 @@
     <button id="btnValiderCouleur">Valider</button>
   </div>
 </div>
+<!-- Modale de modification d'une carte -->
+<div id="modalChoisirParent" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h3>Choisir une catégorie parent</h3>
+    <select id="selectCategorieParent">
+      <!-- Rempli dynamiquement -->
+    </select>
+    <button id="confirmerParent">Utiliser cette catégorie</button>
+  </div>
+</div>
+</body>
+</html>
 
 </body>
 </html>

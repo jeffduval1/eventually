@@ -786,3 +786,55 @@ label {
   margin-top: 4px;
   display: none;
 }
+/* CARTES */
+.carte {
+  width: 280px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.carte .modifier-carte {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #555;
+}
+
+.carte .titre-carte {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.carte .tags-carte {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.carte .contenu-carte {
+  font-size: 14px;
+  color: #333;
+}
+#cartes-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px;
+}
+
+#cartes-container .carte {
+  width: 280px;
+  /* ... les autres styles déjà définis pour .carte ... */
+
+}

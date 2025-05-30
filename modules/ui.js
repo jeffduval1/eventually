@@ -71,7 +71,7 @@ function changerModeAffichage(mode, initial = false) {
   const btnCategories = document.getElementById("btnModeCategories");
 
   if (mode === "cartes") {
-    cartesContainer.style.display = "block";
+    cartesContainer.style.display = "flex";
     vueCategories.style.display = "none";
     btnCartes.classList.add("active");
     btnCategories.classList.remove("active");
