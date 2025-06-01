@@ -72,12 +72,12 @@ function changerModeAffichage(mode, initial = false) {
 
   if (mode === "cartes") {
     cartesContainer.style.display = "flex";
-    vueCategories.style.display = "none";
+    vueCategories.classList.add("hidden");
     btnCartes.classList.add("active");
     btnCategories.classList.remove("active");
     if (!initial) afficherCartes();
   } else {
-    cartesContainer.style.display = "none";
+    cartesContainer.classList.add("hidden");
     vueCategories.style.display = "flex";
     btnCartes.classList.remove("active");
     btnCategories.classList.add("active");
@@ -86,11 +86,11 @@ function changerModeAffichage(mode, initial = false) {
 }
 
 function afficherCorbeille() {
-  document.getElementById("corbeille-page").style.display = "block";
+  document.getElementById("corbeille-page").classList.remove("hidden");
 }
 
 function fermerCorbeille() {
-  document.getElementById("corbeille-page").style.display = "none";
+  document.getElementById("corbeille-page").classList.add("hidden");
 }
 
 function viderCorbeille() {
@@ -137,14 +137,14 @@ function reinitialiserFormulaireCategorie() {
     couleurSelect.title = "";
   }
   if (parentSelect) parentSelect.selectedIndex = 0;
-  if (resumeParent) resumeParent.style.display = "none";
+  if (resumeParent) resumeParent.classList.add("hidden");
 }
 function ouvrirModale(id) {
   const modal = document.getElementById(id);
 
   if (modal) {
     modal.classList.remove("hidden");
-modal.style.display = "block";
+    modal.classList.remove("hidden");
   }
 }
 
@@ -152,9 +152,54 @@ function fermerModale(id) {
   const modal = document.getElementById(id);
   if (modal) {
     modal.classList.add("hidden");
-modal.style.display = "none";
+    modal.classList.add("hidden");
   }
 }
+
+function ouvrirModaleAjoutCarte() {
+  const modale = document.getElementById("modalAjoutCarte");
+  const form = document.getElementById("formAjoutCarte");
+  const resume = document.getElementById("categorieSelectionnee");
+  const titre = document.getElementById("titreModaleCarte");
+
+  modale.classList.remove("hidden");
+  form.reset();
+
+  document.getElementById("carteId").value = "";
+  document.getElementById("categorieChoisie").value = "";
+  document.getElementById("categorieChoisie").dataset.couleur = "";
+
+  // 🔴 🔽 AJOUT ICI : refermer tous les menus de catégories s'ils sont restés ouverts
+  const menuExistantes = document.getElementById("listeCategories");
+  if (menuExistantes) menuExistantes.classList.add("hidden");
+
+  const zoneParent = document.getElementById("zoneChoixParent");
+  if (zoneParent) zoneParent.classList.add("hidden");
+
+  // Nettoyage visuel du résumé
+  if (resume) {
+    resume.textContent = "-- Choisir une catégorie --";
+    resume.style.backgroundColor = "";
+    resume.style.color = "";
+    resume.classList.add("hidden");
+  }
+
+  // Titre de la modale
+  if (titre) titre.textContent = "Créer une nouvelle carte";
+
+  // Masquer bouton "Annuler"
+  document.getElementById("annulerModifBtn").classList.add("hidden");
+
+  // 🔵 Facultatif mais recommandé : nettoyer messages d’erreur
+  ["erreurTitre", "erreurCategorie", "erreurContenu"].forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = "";
+      element.classList.add("hidden")
+    }
+  });
+}
+
 
 // ✅ Export unique propre et clair
 export {
@@ -166,6 +211,7 @@ export {
   initialiserMenuHamburger,
   reinitialiserFormulaireCategorie,
   ouvrirModale,
+  ouvrirModaleAjoutCarte,
   fermerModale,
   exporterCartes,
   importerCartes

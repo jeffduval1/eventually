@@ -77,7 +77,7 @@ export function appliquerPaletteGlobale(anciennePaletteId) {
 }
 export function ouvrirModalePalette() {
   const menu = document.getElementById("menuContent");
-  if (menu) menu.style.display = "none";
+  if (menu) menu.classList.add("hidden");
 
   const container = document.getElementById("listePalettes");
   if (!container) return;
@@ -105,7 +105,7 @@ export function ouvrirModalePalette() {
     container.appendChild(btn);
   });
 
-  document.getElementById("modalPalette").style.display = "block";
+  document.getElementById("modalPalette").classList.remove("hidden");
 }
 
 // 🧼 Corriger les couleurs existantes qui ne font pas partie de la palette active

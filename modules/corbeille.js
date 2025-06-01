@@ -15,7 +15,7 @@ ouvrirDB().then(database => {
 
 export function afficherCorbeille() {
   const menu = document.getElementById("menuContent");
-  if (menu) menu.style.display = "none";
+  if (menu) menu.classList.add("hidden");
 
   const transaction = db.transaction("corbeille", "readonly");
   const store = transaction.objectStore("corbeille");
@@ -86,7 +86,7 @@ export function viderCorbeille() {
 }
 
 export function fermerCorbeille() {
-  document.getElementById("corbeille-page").style.display = "none";
+  document.getElementById("corbeille-page").classList.add("hidden");
 }
 
 // Pour rendre accessibles depuis le HTML

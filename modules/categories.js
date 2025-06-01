@@ -1,20 +1,20 @@
 console.log("🧩 categories.js chargé");
 import {
-    getCategories,
-    getCategorieByNom,
-    ajouterCategorie,
-    modifierCategorie
-  } from './db/indexedDB.js';
-  
-  import { getTextColor } from './utils/helpers.js';
-  import { paletteActuelle, nomsCouleursParPalette } from './config.js';
-  import { afficherCartes } from './cartes.js';
-  import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
-  import { ouvrirModale, fermerModale } from './ui.js';
-  export let idCategorieActuelle = null;
-  
-  // 🧭 Vue principale par catégories
- // 🧭 Vue principale par catégories
+  getCategories,
+  getCategorieByNom,
+  ajouterCategorie,
+  modifierCategorie
+} from './db/indexedDB.js';
+
+import { getTextColor } from './utils/helpers.js';
+import { paletteActuelle, nomsCouleursParPalette } from './config.js';
+import { afficherCartes } from './cartes.js';
+import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
+import { ouvrirModale, fermerModale } from './ui.js';
+export let idCategorieActuelle = null;
+
+// 🧭 Vue principale par catégories
+// 🧭 Vue principale par catégories
 export function afficherVueParCategories() {
   const container = document.getElementById("vue-par-categories");
   const cartesContainer = document.getElementById("cartes-container");
@@ -22,8 +22,10 @@ export function afficherVueParCategories() {
 
   // Masquer les autres zones
   container.style.display = "flex";
-  cartesContainer.style.display = "none";
-  titreCategorie.style.display = "none";
+  cartesContainer.classList.add("hidden");
+
+  titreCategorie.classList.add("hidden");
+
 
   // Récupérer les catégories depuis IndexedDB
   getCategories().then(categories => {
@@ -66,44 +68,44 @@ export function afficherVueParCategories() {
   });
 }
 export function afficherGestionCategories() {
-  
+
   const conteneur = document.getElementById("listeGestionCategories");
   if (!conteneur) return;
 
-  conteneur.innerHTML = ""; 
+  conteneur.innerHTML = "";
 
   getCategories().then(categories => {
     console.log("📦 Catégories récupérées :", categories);
     categories.forEach(cat => {
       const bloc = document.createElement("div");
       bloc.classList.add("ligne-categorie");
-    
+
       const ligne = document.createElement("div");
       ligne.classList.add("nom-et-edition");
-    
+
       const nom = document.createElement("span");
       nom.classList.add("nom-categorie");
       nom.textContent = cat.nom;
       nom.style.backgroundColor = cat.couleur;
       nom.style.color = getTextColor(cat.couleur);
-    
+
       const actions = document.createElement("div");
       actions.classList.add("actions-categorie");
 
       const btnCouleur = document.createElement("button");
-btnCouleur.textContent = "🎨";
-btnCouleur.title = "Changer la couleur de cette catégorie";
-btnCouleur.addEventListener("click", () => {
-  lancerModificationCouleur(cat);
-});
-    
+      btnCouleur.textContent = "🎨";
+      btnCouleur.title = "Changer la couleur de cette catégorie";
+      btnCouleur.addEventListener("click", () => {
+        lancerModificationCouleur(cat);
+      });
+
       const btnModifier = document.createElement("button");
       btnModifier.textContent = "✏️";
       btnModifier.title = "Modifier cette catégorie";
       btnModifier.addEventListener("click", () => {
         lancerEditionCategorie(cat);
       });
-    
+
       const btnSupprimer = document.createElement("button");
       btnSupprimer.textContent = "🗑️";
       btnSupprimer.title = "Supprimer cette catégorie";
@@ -118,137 +120,140 @@ btnCouleur.addEventListener("click", () => {
       ligne.appendChild(nom);
       ligne.appendChild(actions);
       bloc.appendChild(ligne);
-    
+
       conteneur.appendChild(bloc);
     });
-    
+
   });
 }
-  
-  // 📁 Création récursive des blocs de catégories
-  function creerBlocCategorie(categorie, niveau = 0) {
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("bloc-categorie");
-    wrapper.style.marginLeft = `${niveau * 20}px`;
-  
-    const ligne = document.createElement("div");
-    ligne.classList.add("ligne-categorie-liste");
-ligne.style.backgroundColor = categorie.couleur;
-ligne.style.color = getTextColor(categorie.couleur);
-ligne.style.padding = "8px 12px";
-ligne.style.borderRadius = "6px";
-ligne.style.display = "flex";
-ligne.style.alignItems = "center"; // ✅ Centre verticalement
-ligne.style.justifyContent = "space-between"; // ✅ Pousse le nom à gauche et flèche à droite
-ligne.style.cursor = "pointer";
-ligne.style.gap = "8px";
 
-const titre = document.createElement("span");
-titre.textContent = categorie.nom;
-titre.style.flexGrow = "1";
-  
-const fleche = document.createElement("span");
-fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
-fleche.style.fontSize = "1rem"; // ou ajustable
-fleche.style.transition = "transform 0.2s";
-  
-   
-  
-ligne.appendChild(titre);
-ligne.appendChild(fleche); // ✅ La flèche vient maintenant après le titre
-wrapper.appendChild(ligne);
-  
-    const sousContainer = document.createElement("div");
-    sousContainer.style.display = "none";
-    wrapper.appendChild(sousContainer);
-  
-    ligne.addEventListener("click", () => {
-      if (categorie.enfants.length > 0) {
-        const ouvert = sousContainer.style.display === "block";
-        sousContainer.style.display = ouvert ? "none" : "block";
-        fleche.textContent = ouvert ? "➤" : "⬇";
-      } else {
-        afficherCartesParCategorie(categorie.nom);
-      }
-    });
-  
-    categorie.enfants.forEach(enfant => {
-      const enfantDiv = creerBlocCategorie(enfant, niveau + 1);
-      sousContainer.appendChild(enfantDiv);
-    });
-  
-    return wrapper;
+// 📁 Création récursive des blocs de catégories
+function creerBlocCategorie(categorie, niveau = 0) {
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("bloc-categorie");
+  wrapper.style.marginLeft = `${niveau * 20}px`;
+
+  const ligne = document.createElement("div");
+  ligne.classList.add("ligne-categorie-liste");
+  ligne.style.backgroundColor = categorie.couleur;
+  ligne.style.color = getTextColor(categorie.couleur);
+  ligne.style.padding = "8px 12px";
+  ligne.style.borderRadius = "6px";
+  ligne.style.display = "flex";
+  ligne.style.alignItems = "center"; // ✅ Centre verticalement
+  ligne.style.justifyContent = "space-between"; // ✅ Pousse le nom à gauche et flèche à droite
+  ligne.style.cursor = "pointer";
+  ligne.style.gap = "8px";
+
+  const titre = document.createElement("span");
+  titre.textContent = categorie.nom;
+  titre.style.flexGrow = "1";
+
+  const fleche = document.createElement("span");
+  fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
+  fleche.style.fontSize = "1rem"; // ou ajustable
+  fleche.style.transition = "transform 0.2s";
+
+
+
+  ligne.appendChild(titre);
+  ligne.appendChild(fleche); // ✅ La flèche vient maintenant après le titre
+  wrapper.appendChild(ligne);
+
+  const sousContainer = document.createElement("div");
+  sousContainer.classList.add("hidden");
+
+  wrapper.appendChild(sousContainer);
+
+  ligne.addEventListener("click", () => {
+    if (categorie.enfants.length > 0) {
+      const ouvert = sousContainer.style.display === "block";
+      sousContainer.style.display = ouvert ? "none" : "block";
+      fleche.textContent = ouvert ? "➤" : "⬇";
+    } else {
+      afficherCartesParCategorie(categorie.nom);
+    }
+  });
+
+  categorie.enfants.forEach(enfant => {
+    const enfantDiv = creerBlocCategorie(enfant, niveau + 1);
+    sousContainer.appendChild(enfantDiv);
+  });
+
+  return wrapper;
+}
+
+// 📌 Afficher les cartes d'une catégorie sélectionnée
+export function afficherCartesParCategorie(nomCategorie) {
+  console.log("🟢 afficherCartesParCategorie appelé avec :", nomCategorie);
+  idCategorieActuelle = nomCategorie;
+
+  const cartesContainer = document.getElementById("cartes-container");
+  const vueCategories = document.getElementById("vue-par-categories");
+  const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+
+  cartesContainer.innerHTML = "";
+  cartesContainer.classList.remove("hidden");
+  vueCategories.classList.add("hidden");
+
+
+  getCategorieByNom(nomCategorie).then(categorie => {
+    if (categorie) {
+      titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
+      titreCategorie.style.backgroundColor = categorie.couleur;
+      titreCategorie.style.color = getTextColor(categorie.couleur);
+      titreCategorie.classList.remove("hidden");
+    }
+  });
+
+  afficherCartes();
+}
+
+// ➕ Création d'une nouvelle catégorie
+export function creerNouvelleCategorie() {
+  const nom = document.getElementById("nouvelleCategorieNom").value.trim();
+  const couleur = document.getElementById("nouvelleCouleur").value;
+  const parent = document.getElementById("parentCategorie").value || null;
+
+  if (!nom || !couleur) {
+    alert("Veuillez renseigner le nom et la couleur.");
+    return;
   }
-  
-  // 📌 Afficher les cartes d'une catégorie sélectionnée
-  export function afficherCartesParCategorie(nomCategorie) {
-    console.log("🟢 afficherCartesParCategorie appelé avec :", nomCategorie);
-    idCategorieActuelle = nomCategorie;
-  
-    const cartesContainer = document.getElementById("cartes-container");
-    const vueCategories = document.getElementById("vue-par-categories");
-    const titreCategorie = document.getElementById("titreCategorieSelectionnee");
-  
-    cartesContainer.innerHTML = "";
-    cartesContainer.style.display = "block";
-    vueCategories.style.display = "none";
-  
-    getCategorieByNom(nomCategorie).then(categorie => {
-      if (categorie) {
-        titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
-        titreCategorie.style.backgroundColor = categorie.couleur;
-        titreCategorie.style.color = getTextColor(categorie.couleur);
-        titreCategorie.style.display = "block";
-      }
-    });
-  
-    afficherCartes();
-  }
-  
-  // ➕ Création d'une nouvelle catégorie
-  export function creerNouvelleCategorie() {
-    const nom = document.getElementById("nouvelleCategorieNom").value.trim();
-    const couleur = document.getElementById("nouvelleCouleur").value;
-    const parent = document.getElementById("parentCategorie").value || null;
-  
-    if (!nom || !couleur) {
-      alert("Veuillez renseigner le nom et la couleur.");
+
+  // 🔍 Vérification si une catégorie avec ce nom existe déjà
+  getCategories().then(categories => {
+    const existe = categories.some(cat => cat.nom.toLowerCase() === nom.toLowerCase());
+
+    if (existe) {
+      alert("Ce nom de catégorie existe déjà.");
       return;
     }
-  
-    // 🔍 Vérification si une catégorie avec ce nom existe déjà
-    getCategories().then(categories => {
-      const existe = categories.some(cat => cat.nom.toLowerCase() === nom.toLowerCase());
-  
-      if (existe) {
-        alert("Ce nom de catégorie existe déjà.");
-        return;
+
+    // ➕ Ajout si le nom est unique
+    ajouterCategorie({ nom, couleur, parent }).then(() => {
+      afficherVueParCategories();
+      chargerMenuCategories();
+
+      // Réinitialisation du formulaire
+      document.getElementById("nouvelleCategorieNom").value = "";
+      document.getElementById("nouvelleCouleur").selectedIndex = 0;
+      document.getElementById("parentCategorie").selectedIndex = 0;
+      document.getElementById("modalCategorie").classList.add("hidden");
+
+
+      const resume = document.getElementById("categorieSelectionnee");
+      if (resume) {
+        resume.textContent = "-- Choisir une catégorie --";
+        resume.style.backgroundColor = "";
+        resume.style.color = "";
       }
-  
-      // ➕ Ajout si le nom est unique
-      ajouterCategorie({ nom, couleur, parent }).then(() => {
-        afficherVueParCategories();
-        chargerMenuCategories();
-  
-        // Réinitialisation du formulaire
-        document.getElementById("nouvelleCategorieNom").value = "";
-        document.getElementById("nouvelleCouleur").selectedIndex = 0;
-        document.getElementById("parentCategorie").selectedIndex = 0;
-        document.getElementById("modalCategorie").style.display = "none";
-  
-        const resume = document.getElementById("categorieSelectionnee");
-        if (resume) {
-          resume.textContent = "-- Choisir une catégorie --";
-          resume.style.backgroundColor = "";
-          resume.style.color = "";
-        }
-      });
     });
-  }
-  
-  
- // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
- export function chargerMenuCategories() {
+  });
+}
+
+
+// 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
+export function chargerMenuCategories() {
   const menu = document.getElementById("listeCategories");
   const inputCategorie = document.getElementById("categorieChoisie");
 
@@ -291,7 +296,8 @@ wrapper.appendChild(ligne);
           btn.textContent = "Changer de catégorie";
         }
 
-        menu.style.display = "none";
+        menu.classList.add("hidden");
+
       });
 
       menu.appendChild(div);
@@ -324,7 +330,8 @@ wrapper.appendChild(ligne);
           couleurSelect.disabled = true;
           couleurSelect.title = "La couleur est héritée du parent.";
         } else {
-          resume.style.display = "none";
+          resume.classList.add("hidden");
+
           couleurSelect.disabled = false;
           couleurSelect.title = "";
         }
@@ -337,7 +344,8 @@ wrapper.appendChild(ligne);
       retirerBtn.addEventListener("click", () => {
         parentSelect.value = "";
         const resume = document.getElementById("resumeParentCategorie");
-        if (resume) resume.style.display = "none";
+        if (resume) resume.classList.add("hidden");
+
         if (couleurSelect) {
           couleurSelect.disabled = false;
           couleurSelect.title = "";
@@ -386,10 +394,12 @@ function supprimerCategorie(nom) {
         const cartesContainer = document.getElementById("cartes-container");
         const vueCategories = document.getElementById("vue-par-categories");
 
-        if (titreCategorie) titreCategorie.style.display = "none";
+        if (titreCategorie) titreCategorie.classList.add("hidden");
+
         if (cartesContainer) {
           cartesContainer.innerHTML = "";
-          cartesContainer.style.display = "none";
+          cartesContainer.classList.add("hidden");
+
         }
         if (vueCategories) vueCategories.style.display = "flex";
 
@@ -432,20 +442,20 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
 
     supprimerCategorieFromDB(categorieEnCoursDeModification.nom)
       .then(() => ajouterCategorie(nouvelleCategorie))
-      
+
       .then(() => {
         console.log("✅ Modification enregistrée dans IndexedDB");
         console.log("idCategorieActuelle :", idCategorieActuelle);
         console.log("ancienne :", categorieEnCoursDeModification.nom);
         console.log("nouveauNom :", nouveauNom);
-      
+
         fermerModale("modalEditCategorie");
         afficherGestionCategories();
         chargerMenuCategories();
-      
+
         // 🟢 Forcer le rafraîchissement de la vue par catégories complète
         afficherVueParCategories();
-      
+
         // 🟢 Si une catégorie était sélectionnée, on tente de réafficher ses cartes
         if (idCategorieActuelle === categorieEnCoursDeModification.nom) {
           idCategorieActuelle = nouveauNom;
@@ -456,7 +466,7 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
                 titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
                 titreCategorie.style.backgroundColor = categorie.couleur;
                 titreCategorie.style.color = getTextColor(categorie.couleur);
-                titreCategorie.style.display = "block";
+                titreCategorie.classList.remove("hidden");
               }
               afficherCartesParCategorie(nouveauNom);
               console.log("🟢 Rafraîchissement complet de la catégorie :", nouveauNom);
@@ -464,7 +474,7 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
           });
         }
       });
-      
+
   });
 });
 let categorieEnCoursDeCouleur = null;
@@ -486,14 +496,14 @@ document.getElementById("btnValiderCouleur").addEventListener("click", () => {
     console.log("🎨 Couleur modifiée dans IndexedDB");
     console.log("idCategorieActuelle :", idCategorieActuelle);
     console.log("catégorie modifiée :", nouvelleCategorie.nom);
-  
+
     fermerModale("modalChangerCouleur");
     afficherGestionCategories();
     chargerMenuCategories();
-  
+
     // 🟢 Forcer le rafraîchissement de la vue par catégories complète
     afficherVueParCategories();
-  
+
     // 🟢 Si la catégorie affichée est celle qu'on vient de modifier
     if (idCategorieActuelle === nouvelleCategorie.nom) {
       getCategorieByNom(nouvelleCategorie.nom).then(categorie => {
@@ -503,7 +513,7 @@ document.getElementById("btnValiderCouleur").addEventListener("click", () => {
             titreCategorie.textContent = `Catégorie : ${categorie.nom}`;
             titreCategorie.style.backgroundColor = categorie.couleur;
             titreCategorie.style.color = getTextColor(categorie.couleur);
-            titreCategorie.style.display = "block";
+            titreCategorie.classList.remove("hidden");
           }
           afficherCartesParCategorie(nouvelleCategorie.nom);
           console.log("🟢 Rafraîchissement complet de la catégorie :", nouvelleCategorie.nom);
@@ -511,7 +521,7 @@ document.getElementById("btnValiderCouleur").addEventListener("click", () => {
       });
     }
   });
-  
+
 });
 function lancerModificationCouleur(cat) {
   categorieEnCoursDeCouleur = cat;

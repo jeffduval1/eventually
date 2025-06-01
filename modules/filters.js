@@ -62,7 +62,7 @@ export function reinitialiserFiltre() {
   checkboxes.forEach(cb => cb.checked = false);
 
   document.getElementById("etiquettes-container").innerHTML = "";
-  document.getElementById("resetFilterBtn").style.display = "none";
+  document.getElementById("resetFilterBtn").classList.add("hidden");
 
   afficherCartes(modeTri);
 }

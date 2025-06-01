@@ -161,6 +161,7 @@ function lireStore(nomStore) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(nomStore, "readonly");
     const store = transaction.objectStore(nomStore);
+
     const request = store.getAll();
 
     request.onsuccess = () => resolve(request.result);
