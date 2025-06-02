@@ -156,14 +156,13 @@ document.addEventListener("click", (event) => {
 async function initialiserDonneesSiVides() {
   console.log("✅ Données initiales vérifiées – aucune catégorie ajoutée automatiquement");
 }
-// 🔘 Gérer le clic sur "Choisir une catégorie existante"
+/* // 🔘 Gérer le clic sur "Choisir une catégorie existante"
 document.getElementById("btnChoisirExistante")?.addEventListener("click", () => {
   const menu = document.getElementById("listeCategories");
   const modalChoix = document.getElementById("modalChoixCategorie");
-
   menu?.classList.remove("hidden");
   modalChoix?.classList.add("hidden");
-});
+}); */
 // 👆 Fermer le menu déroulant des catégories si on clique en dehors
 document.addEventListener("click", (event) => {
   const menu = document.getElementById("listeCategories");

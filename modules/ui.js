@@ -199,7 +199,12 @@ function ouvrirModaleAjoutCarte() {
       element.classList.add("hidden")
     }
   });
+  const boutonAjout = document.getElementById("ajoutCarteBtn");
+  if (boutonAjout) {
+    boutonAjout.textContent = "Ajouter";
+  }
 }
+
 
 
 // ✅ Export unique propre et clair

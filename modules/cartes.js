@@ -73,8 +73,9 @@ export function afficherCartesFiltres(cartes) {
 
 // ➕ Ajoute une carte depuis le formulaire
 export async function ajouterCarte() {
-  console.log("🟢 Fonction ajouterCarte appelée");
-
+  document.getElementById("carteId").value = "";
+  document.getElementById("ajoutCarteBtn").textContent = "Ajouter";
+ 
   const titreInput = document.getElementById("titre");
   const contenuInput = document.getElementById("contenu");
   const tagsInput = document.getElementById("tags");
@@ -145,6 +146,11 @@ export async function ajouterCarte() {
   }
 }
 function ouvrirModaleModification(carte) {
+  const boutonAjout = document.getElementById("ajoutCarteBtn");
+  document.getElementById("carteId").value = carte.id;
+if (boutonAjout) {
+  boutonAjout.textContent = "Enregistrer les modifications";
+}
   document.getElementById("modalAjoutCarte").classList.remove("hidden");
   document.getElementById("titre").value = carte.titre;
   document.getElementById("contenu").value = carte.contenu;
