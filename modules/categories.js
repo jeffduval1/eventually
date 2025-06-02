@@ -16,14 +16,15 @@ export let idCategorieActuelle = null;
 // 🧭 Vue principale par catégories
 // 🧭 Vue principale par catégories
 export function afficherVueParCategories() {
+  console.log("✅ afficherVueParCategories appelée");
+
   const container = document.getElementById("vue-par-categories");
   const cartesContainer = document.getElementById("cartes-container");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
 
-  // Masquer les autres zones
-  container.style.display = "flex";
+  // 🔧 Afficher la zone des catégories et masquer les autres
+  container.classList.remove("hidden");
   cartesContainer.classList.add("hidden");
-
   titreCategorie.classList.add("hidden");
 
 

@@ -28,17 +28,17 @@
 
   <!-- Étiquettes & réinitialisation -->
   <div id="etiquettes-container"></div>
-  <button id="resetFilterBtn" style="display: none;">Réinitialiser le filtre</button>
+  <button id="resetFilterBtn" class="hidden">Réinitialiser le filtre</button>
 
   <!-- Zone de retour et titre de catégorie -->
   <div id="zoneRetourSimple">
-    <button id="btnRetourCategories" style="display: none;">Retour aux catégories</button>
+    <button id="btnRetourCategories" class="hidden">Retour aux catégories</button>
   </div>
-  <h2 id="titreCategorieSelectionnee" style="display: none;"></h2>
+  <h2 id="titreCategorieSelectionnee" class="hidden"></h2>
   <button id="btnAjouterSousCategorie" class="btn-action">+ Ajouter une sous-catégorie</button>
 
   <!-- Conteneur des vues -->
-  <div id="vue-par-categories" style="display: none;"></div>
+  <div id="vue-par-categories" class="hidden"></div>
   <div id="cartes-container"></div>
 
   <!-- 🔍 Zone de tri et filtres -->
@@ -84,7 +84,7 @@
 
 
           <!-- Menu déroulant des catégories -->
-          <div id="listeCategories" class="liste-categories" style="display: none;"></div>
+          <div id="listeCategories" class="liste-categories" class="hidden"></div>
           <div id="erreurCategorie" class="message-erreur"></div>
           <!-- Champ Contenu -->
           <textarea id="contenu" placeholder="Contenu"></textarea>
@@ -93,8 +93,8 @@
           <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
 
           <!-- Bouton Annuler (modification de carte existante uniquement) -->
-          <button id="annulerModifBtn" style="display: none;" type="button">Annuler</button>
-          <input type="submit" style="display: none;">
+          <button id="annulerModifBtn" class="hidden" type="button">Annuler</button>
+          <input type="submit" class="hidden">
         </div>
       </form>
     </div>
@@ -108,7 +108,7 @@
       <button id="choisirCategorieExistante">Choisir une catégorie existante</button>
       <button id="creerNouvelleCategorieCarte">Créer une nouvelle catégorie</button>
       <button id="choisirCategorieParent">Choisir une catégorie parent</button>
-      <div id="zoneChoixParentCategorie" style="display: none;">
+      <div id="zoneChoixParentCategorie" class="hidden">
         <label for="selectParentTemporaire">Choisir un parent :</label>
         <select id="selectParentTemporaire">
           <option value="">Aucune</option>
@@ -138,7 +138,7 @@
         <option value="">Aucune</option>
       </select>
       <!-- Résumé visuel du parent choisi -->
-      <div id="resumeParentCategorie" style="display: none;" class="resume-parent">
+      <div id="resumeParentCategorie" class="hidden" class="resume-parent">
         <span id="nomParentResume"></span>
         <button id="retirerParentBtn" title="Retirer la catégorie parent sélectionnée">×</button>
       </div>
@@ -158,7 +158,7 @@
   </div>
 
   <!-- 🧺 Corbeille en plein écran -->
-  <div id="corbeille-page" class="corbeille-fullscreen" style="display: none;">
+  <div id="corbeille-page" class="corbeille-fullscreen hidden" >
     <button class="close-btn" id="btnFermerCorbeille">✖</button>
     <h2>Éléments supprimés</h2>
     <button id="btnViderCorbeille">Vider la corbeille</button>
@@ -192,7 +192,7 @@
   </div>
 
   <!-- 📁 Fichier d'import JSON -->
-  <input type="file" id="importFile" style="display: none;" accept=".json">
+  <input type="file" id="importFile" class="hidden" accept=".json">
   <!-- ✏️ Modale de modification de catégorie -->
   <div id="modalEditCategorie" class="modal hidden">
     <div class="modal-content">

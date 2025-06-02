@@ -13,9 +13,13 @@ import {
 
 // 📌 Affiche toutes les cartes
 export function afficherCartes(modeTri = "date-desc") {
-  const container = document.getElementById("cartes-container");
-  container.innerHTML = "";
+  const cartesContainer = document.getElementById("cartes-container");
+  const vueCategories = document.getElementById("vue-par-categories");
+  const titreCategorie = document.getElementById("titreCategorieSelectionnee");
 
+  cartesContainer.classList.remove("hidden");
+  vueCategories.classList.add("hidden");
+  titreCategorie.classList.add("hidden");
   getCartes().then(cartes => {
     cartes.sort((a, b) => {
       if (modeTri === "titre-asc") return a.titre.localeCompare(b.titre);
@@ -34,7 +38,7 @@ export function afficherCartes(modeTri = "date-desc") {
         <p>${carte.contenu}</p>
         <small class="tags">Tags : ${carte.tags.join(", ")}</small>
       `;
-      container.appendChild(div);
+      cartesContainer.appendChild(div);
       const boutonModifier = div.querySelector('.modifier-carte');
       if (boutonModifier) {
         boutonModifier.addEventListener('click', () => {

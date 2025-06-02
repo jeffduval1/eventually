@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Écouteurs globaux
   document.getElementById("btnAfficherFormCategorie")?.addEventListener("click", () => {
     reinitialiserFormulaireCategorie();
-    document.getElementById("modalCategorie").classList.remove("hidden");
+    ouvrirModale("modalCategorie");
   });
   const boutonAjout = document.getElementById("ajoutCarteBtn");
   if (boutonAjout) {
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     afficherGestionCategories();
     ouvrirModale("modalGestionCategories");
     console.log("Classes avant suppression :", document.getElementById("modalGestionCategories").classList);
-    document.getElementById("modalGestionCategories").classList.remove("hidden");
     console.log("Classes après suppression :", document.getElementById("modalGestionCategories").classList);
 
     const modal = document.getElementById("modalGestionCategories");
@@ -96,13 +95,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
     fermerMenuHamburger();
     reinitialiserFormulaireCategorie();
-    document.getElementById("modalCategorie").classList.remove("hidden");
+    ouvrirModale("modalCategorie");
     console.log("🟢 Modale catégorie affichée");
   });
 
-  document.getElementById("closeGestionModal")?.addEventListener("click", () => {
-    document.getElementById("modalGestionCategories").classList.add("hidden");
-  });
   document.getElementById("formAjoutCarte")?.addEventListener("submit", (event) => {
     event.preventDefault();
     console.log("✅ Formulaire soumis, appel de ajouterCarte()");
@@ -165,8 +161,8 @@ document.getElementById("btnChoisirExistante")?.addEventListener("click", () => 
   const menu = document.getElementById("listeCategories");
   const modalChoix = document.getElementById("modalChoixCategorie");
 
-  if (menu) menu.style.display = "block";      // Affiche le menu déroulant
-  if (modalChoix) modalChoix.style.display = "none"; // Cache la modale de choix
+  menu?.classList.remove("hidden");
+  modalChoix?.classList.add("hidden");
 });
 // 👆 Fermer le menu déroulant des catégories si on clique en dehors
 document.addEventListener("click", (event) => {
@@ -176,7 +172,7 @@ document.addEventListener("click", (event) => {
   // Si le menu est affiché
   if (
     menu &&
-    menu.style.display === "block" &&
+    !menu.classList.contains("hidden")&&
     !menu.contains(event.target) &&
     !bouton.contains(event.target)
   ) {
@@ -252,7 +248,7 @@ document.getElementById("choisirCategorieExistante")?.addEventListener("click", 
 });
 
 document.getElementById("creerNouvelleCategorieCarte")?.addEventListener("click", () => {
-  document.getElementById("modalCategorie").classList.remove("hidden");
+  ouvrirModale("modalCategorie");
   document.getElementById("modalChoixTypeCategorie").classList.add("hidden");
 });
 
@@ -270,9 +266,6 @@ document.getElementById("choisirCategorieParent")?.addEventListener("click", () 
   document.getElementById("modalChoixTypeCategorie").classList.add("hidden");
 });
 
-document.getElementById("closeGestionModal")?.addEventListener("click", () => {
-  document.getElementById("modalGestionCategories").classList.add("hidden");
-});
 /* Fermeture de la modale de création de cartes */
 document.getElementById("closeAjoutCarteModal")?.addEventListener("click", () => {
   document.getElementById("modalAjoutCarte").classList.add("hidden");
