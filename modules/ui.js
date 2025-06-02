@@ -5,7 +5,7 @@
 // console.log("🧩 ui.js chargé");
 
 import { afficherCartes, ajouterCarte } from './cartes.js';
-import { afficherVueParCategories } from './categories.js';
+import { afficherVueParCategories, setIdCategorieActuelle } from './categories.js';
 import { exporterCartes, importerCartes } from './db/indexedDB.js';
 import { ouvrirModalePalette } from './palette.js';
 import { reinitialiserFiltre } from './filters.js';
@@ -71,6 +71,7 @@ function changerModeAffichage(mode, initial = false) {
   const btnCategories = document.getElementById("btnModeCategories");
 
   if (mode === "cartes") {
+    setIdCategorieActuelle(null);
     cartesContainer.style.display = "flex";
     vueCategories.classList.add("hidden");
     btnCartes.classList.add("active");

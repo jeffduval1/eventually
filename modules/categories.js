@@ -3,20 +3,27 @@ import {
   getCategories,
   getCategorieByNom,
   ajouterCategorie,
-  modifierCategorie
+  modifierCategorie,
+  getCartes
 } from './db/indexedDB.js';
 
 import { getTextColor } from './utils/helpers.js';
 import { paletteActuelle, nomsCouleursParPalette } from './config.js';
-import { afficherCartes } from './cartes.js';
+import { afficherCartes, afficherCartesFiltres } from './cartes.js';
 import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
 import { ouvrirModale, fermerModale } from './ui.js';
 export let idCategorieActuelle = null;
+export function getIdCategorieActuelle() {
+  return idCategorieActuelle;
+}
 
+export function setIdCategorieActuelle(id) {
+  idCategorieActuelle = id;
+}
 // 🧭 Vue principale par catégories
 // 🧭 Vue principale par catégories
 export function afficherVueParCategories() {
- 
+  document.getElementById("btnAjouterSousCategorie").classList.add("hidden");
   const container = document.getElementById("vue-par-categories");
   const cartesContainer = document.getElementById("cartes-container");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
@@ -187,6 +194,7 @@ function creerBlocCategorie(categorie, niveau = 0) {
 
 // 📌 Afficher les cartes d'une catégorie sélectionnée
 export function afficherCartesParCategorie(nomCategorie) {
+  document.getElementById("btnAjouterSousCategorie").classList.remove("hidden");
   idCategorieActuelle = nomCategorie;
 
   const cartesContainer = document.getElementById("cartes-container");
@@ -216,7 +224,10 @@ export function afficherCartesParCategorie(nomCategorie) {
     }
   });
 
-  afficherCartes();
+  getCartes().then(cartes => {
+    const cartesFiltrees = cartes.filter(carte => carte.categorie === nomCategorie);
+    afficherCartesFiltres(cartesFiltrees);
+  });
 }
 
 // ➕ Création d'une nouvelle catégorie

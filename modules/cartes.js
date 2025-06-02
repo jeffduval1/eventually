@@ -13,6 +13,9 @@ import {
 
 // 📌 Affiche toutes les cartes
 export function afficherCartes(modeTri = "date-desc") {
+  const boutonRetour = document.getElementById("btnRetourCategories");
+  document.getElementById("btnAjouterSousCategorie").classList.add("hidden");
+  boutonRetour.classList.add("hidden");
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
@@ -21,6 +24,7 @@ export function afficherCartes(modeTri = "date-desc") {
   vueCategories.classList.add("hidden");
   titreCategorie.classList.add("hidden");
   getCartes().then(cartes => {
+    
     cartes.sort((a, b) => {
       if (modeTri === "titre-asc") return a.titre.localeCompare(b.titre);
       if (modeTri === "titre-desc") return b.titre.localeCompare(a.titre);
