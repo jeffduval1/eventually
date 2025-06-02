@@ -16,16 +16,17 @@ export let idCategorieActuelle = null;
 // 🧭 Vue principale par catégories
 // 🧭 Vue principale par catégories
 export function afficherVueParCategories() {
-  console.log("✅ afficherVueParCategories appelée");
-
+ 
   const container = document.getElementById("vue-par-categories");
   const cartesContainer = document.getElementById("cartes-container");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
+  const boutonRetour = document.getElementById("btnRetourCategories");
 
   // 🔧 Afficher la zone des catégories et masquer les autres
   container.classList.remove("hidden");
   cartesContainer.classList.add("hidden");
   titreCategorie.classList.add("hidden");
+  boutonRetour.classList.add("hidden");
 
 
   // Récupérer les catégories depuis IndexedDB
@@ -186,16 +187,24 @@ function creerBlocCategorie(categorie, niveau = 0) {
 
 // 📌 Afficher les cartes d'une catégorie sélectionnée
 export function afficherCartesParCategorie(nomCategorie) {
-  console.log("🟢 afficherCartesParCategorie appelé avec :", nomCategorie);
   idCategorieActuelle = nomCategorie;
 
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
 
+  // Montrer les bons éléments
+  document.getElementById("btnRetourCategories").classList.remove("hidden");
+  titreCategorie.classList.remove("hidden");
+  document.getElementById("btnAjouterSousCategorie").classList.remove("hidden"); // optionnel
+
+  // Mise à jour du contenu
   cartesContainer.innerHTML = "";
   cartesContainer.classList.remove("hidden");
   vueCategories.classList.add("hidden");
+
+  // Afficher le nom de la catégorie dans le titre
+  titreCategorie.textContent = nomCategorie;
 
 
   getCategorieByNom(nomCategorie).then(categorie => {

@@ -36,7 +36,7 @@ export function afficherCartes(modeTri = "date-desc") {
       <button class="modifier-carte" data-id="${carte.id}" title="Modifier cette carte">✏️</button>
         <h3>${carte.titre}</h3>
         <p>${carte.contenu}</p>
-        <small class="tags">Tags : ${carte.tags.join(", ")}</small>
+        <small class="tags">Tags : ${(carte.tags || []).join(", ")}</small>
       `;
       cartesContainer.appendChild(div);
       const boutonModifier = div.querySelector('.modifier-carte');
@@ -51,8 +51,8 @@ export function afficherCartes(modeTri = "date-desc") {
 
 // 📌 Affiche des cartes filtrées (ex. par tag)
 export function afficherCartesFiltres(cartes) {
-  const container = document.getElementById("cartes-container");
-  container.innerHTML = "";
+  const cartesContainer = document.getElementById("cartes-container");
+  cartesContainer.innerHTML = "";
 
   cartes.forEach(carte => {
     const div = document.createElement("div");
@@ -61,9 +61,9 @@ export function afficherCartesFiltres(cartes) {
     div.innerHTML = `
       <h3>${carte.titre}</h3>
       <p>${carte.contenu}</p>
-      <small class="tags">Tags : ${carte.tags.join(", ")}</small>
+      <small class="tags">Tags : ${(carte.tags || []).join(", ")}</small>
     `;
-    container.appendChild(div);
+    cartesContainer.appendChild(div);
   });
 }
 
