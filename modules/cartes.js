@@ -10,7 +10,7 @@ import {
   modifierCarte as dbModifierCarte,
   deplacerCarteDansCorbeille, db
 } from './db/indexedDB.js';
-
+let idCarteASupprimer = null;
 // 📌 Affiche toutes les cartes
 export function afficherCartes(modeTri = "date-desc") {
   const boutonRetour = document.getElementById("btnRetourCategories");
@@ -144,6 +144,8 @@ export async function ajouterCarte() {
   }
 }
 function ouvrirModaleModification(carte) {
+  idCarteASupprimer = carte.id;
+document.getElementById("btnConfirmerSuppressionCarte").classList.remove("hidden");
   const boutonAjout = document.getElementById("ajoutCarteBtn");
   const boutonSupprimer = document.getElementById("supprimerCarteBtn");
   document.getElementById("carteId").value = carte.id;
@@ -174,7 +176,8 @@ if (boutonAjout) {
     
       nouveauBtn.classList.remove("hidden");
       nouveauBtn.addEventListener("click", () => {
-        supprimerCarteDansCorbeille(carte.id);
+        idCarteASupprimer = carte.id;
+    document.getElementById("modalConfirmationSuppression").classList.remove("hidden");
       });
     }
 }
@@ -207,3 +210,4 @@ function supprimerCarteDansCorbeille(idCarte) {
     }
   };
 }
+export { supprimerCarteDansCorbeille };

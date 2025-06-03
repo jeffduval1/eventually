@@ -3,7 +3,7 @@
 import { paletteActuelle } from './modules/config.js';
 import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedDB.js';
-import { afficherCartes, ajouterCarte } from './modules/cartes.js';
+import { afficherCartes, ajouterCarte, supprimerCarteDansCorbeille } from './modules/cartes.js';
 // console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
 import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
@@ -268,4 +268,19 @@ document.getElementById("choisirCategorieParent")?.addEventListener("click", () 
 /* Fermeture de la modale de création de cartes */
 document.getElementById("closeAjoutCarteModal")?.addEventListener("click", () => {
   document.getElementById("modalAjoutCarte").classList.add("hidden");
+});
+const annulerSuppressionBtn = document.getElementById('annulerSuppressionBtn');
+const confirmerSuppressionBtn = document.getElementById('confirmerSuppressionBtn');
+const modalConfirmationSuppression = document.getElementById('modalConfirmationSuppression');
+
+annulerSuppressionBtn?.addEventListener('click', () => {
+  modalConfirmationSuppression.classList.add('hidden');
+});
+
+confirmerSuppressionBtn?.addEventListener('click', () => {
+  if (window.idCarteASupprimer) {
+    supprimerCarteDansCorbeille(window.idCarteASupprimer);
+    modalConfirmationSuppression.classList.add('hidden');
+    window.idCarteASupprimer = null;
+  }
 });

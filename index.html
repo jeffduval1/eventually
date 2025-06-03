@@ -100,6 +100,9 @@
           <button id="annulerModifBtn" class="hidden" type="button">Annuler</button>
           <input type="submit" class="hidden">
         </div>
+        <!-- Bouton supprimer (visible uniquement en modification) -->
+<button id="btnConfirmerSuppressionCarte" class="btn-danger hidden">Supprimer cette carte</button>
+
       </form>
     </div>
   </div>
@@ -228,10 +231,30 @@
       <button id="confirmerParent">Utiliser cette catégorie</button>
     </div>
   </div>
+  <!-- 🔴 Modale de confirmation de suppression -->
+<div id="confirmSuppressionModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Confirmer la suppression</h2>
+    <p>Voulez-vous vraiment supprimer cette carte&nbsp;? Cette action déplacera la carte dans la corbeille.</p>
+    
+    <div class="actions">
+      <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
+      <button id="confirmerSuppressionBtn" class="btn-danger">Supprimer</button>
+    </div>
+  </div>
+</div>
+<div id="modalConfirmationSuppression" class="modal hidden">
+  <div class="modal-content">
+    <h3>Supprimer cette carte ?</h3>
+    <p>Cette action est irréversible. Voulez-vous vraiment supprimer cette carte ?</p>
+    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+      <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
+      <button id="confirmerSuppressionBtn" class="btn-danger">Supprimer</button>
+    </div>
+  </div>
+</div>
+
 </body>
 
 </html>
 
-</body>
-
-</html>

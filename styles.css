@@ -855,3 +855,28 @@ label {
   justify-content: flex-end;
   margin-top: 1rem;
 }
+.btn-secondary {
+  background-color: #cccccc;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-secondary:hover {
+  background-color: #b3b3b3;
+}
+
+.btn-danger {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-danger:hover {
+  background-color: #d32f2f;
+}
