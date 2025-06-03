@@ -12,7 +12,7 @@ import {
 } from './db/indexedDB.js';
 let idCarteASupprimer = null;
 // 📌 Affiche toutes les cartes
-export function afficherCartes(modeTri = "date-desc") {
+function afficherCartes(modeTri = "date-desc") {
   const boutonRetour = document.getElementById("btnRetourCategories");
   document.getElementById("btnAjouterSousCategorie").classList.add("hidden");
   boutonRetour.classList.add("hidden");
@@ -54,7 +54,7 @@ export function afficherCartes(modeTri = "date-desc") {
 }
 
 // 📌 Affiche des cartes filtrées (ex. par tag)
-export function afficherCartesFiltres(cartes) {
+function afficherCartesFiltres(cartes) {
   const cartesContainer = document.getElementById("cartes-container");
   cartesContainer.innerHTML = "";
 
@@ -72,7 +72,7 @@ export function afficherCartesFiltres(cartes) {
 }
 
 // ➕ Ajoute une carte depuis le formulaire
-export async function ajouterCarte() {
+async function ajouterCarte() {
  
   const titreInput = document.getElementById("titre");
   const contenuInput = document.getElementById("contenu");
@@ -144,10 +144,21 @@ export async function ajouterCarte() {
   }
 }
 function ouvrirModaleModification(carte) {
-  idCarteASupprimer = carte.id;
-document.getElementById("btnConfirmerSuppressionCarte").classList.remove("hidden");
+  setCarteASupprimer(carte.id);
+  const boutonSuppression = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
+  if (boutonSuppression) {
+    boutonSuppression.classList.remove("hidden");
+  
+    const nouveauBtn = boutonSuppression.cloneNode(true);
+    boutonSuppression.replaceWith(nouveauBtn);
+  
+    nouveauBtn.addEventListener("click", () => {
+      setCarteASupprimer(carte.id);
+      document.getElementById("modalConfirmationSuppression").classList.remove("hidden");
+    });
+  }
   const boutonAjout = document.getElementById("ajoutCarteBtn");
-  const boutonSupprimer = document.getElementById("supprimerCarteBtn");
+  const boutonSupprimer = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
   document.getElementById("carteId").value = carte.id;
 if (boutonAjout) {
   boutonAjout.textContent = "Enregistrer les modifications";
@@ -170,18 +181,9 @@ if (boutonAjout) {
 
   document.getElementById("annulerModifBtn").style.display = "inline-block";
     // ✅ Affiche le bouton de suppression
-    if (boutonSupprimer) {
-      const nouveauBtn = boutonSupprimer.cloneNode(true);
-      boutonSupprimer.parentNode.replaceChild(nouveauBtn, boutonSupprimer);
-    
-      nouveauBtn.classList.remove("hidden");
-      nouveauBtn.addEventListener("click", () => {
-        idCarteASupprimer = carte.id;
-    document.getElementById("modalConfirmationSuppression").classList.remove("hidden");
-      });
-    }
+   
 }
-function supprimerCarteDansCorbeille(idCarte) {
+function supprimerCarteDansCorbeille(id) {
   if (!db) {
     console.error("❌ La base de données n'est pas encore prête.");
     return;
@@ -192,13 +194,13 @@ function supprimerCarteDansCorbeille(idCarte) {
   const storeCartes = transaction.objectStore("regles");
   const storeCorbeille = transaction.objectStore("corbeille");
 
-  const request = storeCartes.get(idCarte);
+  const request = storeCartes.get(id);
 
   request.onsuccess = function () {
     const carte = request.result;
     if (carte) {
       // Supprimer de la store principale
-      storeCartes.delete(idCarte);
+      storeCartes.delete(id);
 
       // Ajouter à la corbeille avec une date de suppression
       carte.dateSuppression = Date.now();
@@ -210,4 +212,16 @@ function supprimerCarteDansCorbeille(idCarte) {
     }
   };
 }
-export { supprimerCarteDansCorbeille };
+function setCarteASupprimer(id) {
+  idCarteASupprimer = id;
+}
+
+function getCarteASupprimer() {
+  return idCarteASupprimer;
+}
+export {   afficherCartes,
+  afficherCartesFiltres,
+  ajouterCarte,
+  supprimerCarteDansCorbeille,
+  setCarteASupprimer,
+  getCarteASupprimer };

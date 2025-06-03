@@ -3,7 +3,7 @@
 import { paletteActuelle } from './modules/config.js';
 import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedDB.js';
-import { afficherCartes, ajouterCarte, supprimerCarteDansCorbeille } from './modules/cartes.js';
+import { afficherCartes, ajouterCarte, supprimerCarteDansCorbeille, getCarteASupprimer } from './modules/cartes.js';
 // console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
 import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
@@ -269,18 +269,30 @@ document.getElementById("choisirCategorieParent")?.addEventListener("click", () 
 document.getElementById("closeAjoutCarteModal")?.addEventListener("click", () => {
   document.getElementById("modalAjoutCarte").classList.add("hidden");
 });
-const annulerSuppressionBtn = document.getElementById('annulerSuppressionBtn');
-const confirmerSuppressionBtn = document.getElementById('confirmerSuppressionBtn');
+const ouvrirConfirmationSuppressionCarteBtn = document.getElementById('ouvrirConfirmationSuppressionCarteBtn');
 const modalConfirmationSuppression = document.getElementById('modalConfirmationSuppression');
+const annulerSuppressionCarteBtn = document.getElementById('annulerSuppressionCarteBtn');
+const confirmerSuppressionCarteBtn = document.getElementById('confirmerSuppressionCarteBtn');
 
-annulerSuppressionBtn?.addEventListener('click', () => {
+ouvrirConfirmationSuppressionCarteBtn?.addEventListener('click', () => {
+  console.log("🟥 Bouton suppression dans modale de carte cliqué");
+  modalConfirmationSuppression.classList.remove('hidden');
+});
+
+annulerSuppressionCarteBtn?.addEventListener('click', () => {
+  console.log("↩️ Annulation suppression");
   modalConfirmationSuppression.classList.add('hidden');
 });
 
-confirmerSuppressionBtn?.addEventListener('click', () => {
-  if (window.idCarteASupprimer) {
-    supprimerCarteDansCorbeille(window.idCarteASupprimer);
+confirmerSuppressionCarteBtn?.addEventListener('click', () => {
+  const id = getCarteASupprimer?.();
+  console.log("✅ Suppression confirmée. ID à supprimer :", id);
+  if (id) {
+    supprimerCarteDansCorbeille(id);
     modalConfirmationSuppression.classList.add('hidden');
-    window.idCarteASupprimer = null;
+    document.getElementById("modalAjoutCarte").classList.add("hidden");
+    afficherCartes();
+  } else {
+    console.warn("⚠️ Aucun ID de carte à supprimer.");
   }
 });
