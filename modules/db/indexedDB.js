@@ -201,5 +201,30 @@ function supprimerDansStore(nomStore, cle) {
     request.onerror = () => reject(request.error);
   });
 }
+export function deplacerCarteDansCorbeille(id) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["regles", "corbeille"], "readwrite");
+    const storeCartes = transaction.objectStore("regles");
+    const storeCorbeille = transaction.objectStore("corbeille");
+
+    const request = storeCartes.get(id);
+
+    request.onsuccess = function () {
+      const carte = request.result;
+      if (carte) {
+        carte.dateSuppression = Date.now(); // ⏳ Marquer la date de suppression
+        storeCorbeille.put(carte);          // 🗑️ Ajouter à la corbeille
+        storeCartes.delete(id);             // ❌ Supprimer des cartes
+        resolve();
+      } else {
+        reject(new Error("Carte introuvable"));
+      }
+    };
+
+    request.onerror = function () {
+      reject(request.error);
+    };
+  });
+}
 
 export { db };

@@ -15,7 +15,6 @@
 
 <body>
   <h1>MindStance</h1>
-  <input type="hidden" id="carteId">
 <h2>Organize your things</h2>
   <!-- Boutons principaux -->
   <div class="mode-toggle">
@@ -92,7 +91,11 @@
           <!-- Bouton Ajouter -->
           <input type="hidden" id="carteId" value="">
           <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
-
+          <div class="btn-supprimer-wrapper">
+            <button id="supprimerCarteBtn" class="btn-supprimer hidden" title="Supprimer cette carte">
+              🗑 Supprimer
+            </button>
+          </div>
           <!-- Bouton Annuler (modification de carte existante uniquement) -->
           <button id="annulerModifBtn" class="hidden" type="button">Annuler</button>
           <input type="submit" class="hidden">

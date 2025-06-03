@@ -834,3 +834,24 @@ label {
   /* ... les autres styles déjà définis pour .carte ... */
 
 }
+.btn-supprimer {
+  background-color: #f44336; /* rouge */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-supprimer:hover {
+  background-color: #d32f2f;
+}
+.btn-supprimer-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
