@@ -231,7 +231,7 @@ export function afficherCartesParCategorie(nomCategorie) {
 }
 
 // ➕ Création d'une nouvelle catégorie
-export function creerNouvelleCategorie() {
+export function creerNouvelleCategorie(depuisCarte = false) {
   const nom = document.getElementById("nouvelleCategorieNom").value.trim();
   const couleur = document.getElementById("nouvelleCouleur").value;
   const parent = document.getElementById("parentCategorie").value || null;
@@ -261,20 +261,50 @@ export function creerNouvelleCategorie() {
       document.getElementById("parentCategorie").selectedIndex = 0;
       document.getElementById("modalCategorie").classList.add("hidden");
 
+   // Si c'est dans le contexte de création de carte :
+   if (depuisCarte && nouvelleCategorie) {
+    // Met à jour le champ masqué et le résumé visuel
+    const champ = document.getElementById("categorieChoisie");
+    champ.value = nouvelleCategorie.id;
+    champ.dataset.couleur = nouvelleCategorie.couleur;
 
-      const resume = document.getElementById("categorieSelectionnee");
-      if (resume) {
-        resume.textContent = "-- Choisir une catégorie --";
-        resume.style.backgroundColor = "";
-        resume.style.color = "";
-      }
-    });
-  });
+    const resume = document.getElementById("categorieSelectionnee");
+    const texte = document.getElementById("texteCategorieCarte");
+
+    if (resume && texte) {
+      console.log("👉 Résumé affiché via sélection existante");
+      resume.classList.remove("hidden");
+      resume.style.setProperty("display", "flex", "important");
+      console.log("✅ Style appliqué :", resume.style.cssText);
+      setTimeout(() => {
+        console.log("⏱️ Après suppression de .hidden :",
+          resume.classList.value,
+          getComputedStyle(resume).display
+        );
+      }, 10);
+      
+      // Et ajoute ce traceur
+      console.trace("🔍 Qui a touché à resume ?");
+      setTimeout(() => {
+        const resumeEl = document.getElementById("categorieSelectionnee");
+        console.log("🕵️ Vérification après 100ms :", {
+          visible: resumeEl && resumeEl.offsetParent !== null,
+          classList: resumeEl?.classList.value,
+          display: getComputedStyle(resumeEl).display
+        });
+      }, 100);
+      resume.style.backgroundColor = nouvelleCategorie.couleur;
+      resume.style.color = getTextColor(nouvelleCategorie.couleur);
+      texte.textContent = nouvelleCategorie.nom;
+    }
+  }
+});
+});
 }
-
 
 // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
 export function chargerMenuCategories() {
+  console.log("⚡ chargerMenuCategories() appelée !");
   const menu = document.getElementById("listeCategories");
   const inputCategorie = document.getElementById("categorieChoisie");
 
@@ -304,21 +334,46 @@ export function chargerMenuCategories() {
       div.addEventListener("click", () => {
         inputCategorie.value = cat.nom;
         inputCategorie.dataset.couleur = cat.couleur;
-
-        const resume = document.getElementById("categorieSelectionnee");
-        const texte = document.getElementById("texteCategorie");
-        const btn = document.getElementById("btnCategorieOptions");
-
-        if (resume && texte && btn) {
-          texte.textContent = cat.nom;
-          resume.style.backgroundColor = cat.couleur;
-          resume.style.color = getTextColor(cat.couleur);
-          resume.style.display = "flex";
-          btn.textContent = "Changer de catégorie";
-        }
-
-        menu.classList.add("hidden");
-
+      
+        setTimeout(() => {
+          const resume = document.getElementById("categorieSelectionnee");
+          const texte = document.querySelector("#categorieSelectionnee #texteCategorieCarte");
+          const btn = document.getElementById("btnCategorieOptions");
+          console.log("🕵️ Visible ?", texte, texte?.offsetParent !== null);
+          console.log("✅ Catégorie sélectionnée :", cat.nom);
+          console.log("🎨 Couleur :", cat.couleur);
+          console.log("📌 Résumé :", resume, texte, btn);
+      
+          if (resume && texte && btn) {
+            console.log("👉 Résumé affiché via nouvelle catégorie créée");
+            texte.textContent = cat.nom;
+            resume.style.backgroundColor = cat.couleur;
+            resume.style.color = getTextColor(cat.couleur);
+            resume.classList.remove("hidden");
+            resume.style.setProperty("display", "flex", "important");
+            console.log("✅ Style appliqué :", resume.style.cssText);
+            setTimeout(() => {
+              console.log("⏱️ Après suppression de .hidden :",
+                resume.classList.value,
+                getComputedStyle(resume).display
+              );
+            }, 10);
+            
+            // Et ajoute ce traceur
+            console.trace("🔍 Qui a touché à resume ?");
+            setTimeout(() => {
+              const resumeEl = document.getElementById("categorieSelectionnee");
+              console.log("🕵️ Vérification après 100ms :", {
+                visible: resumeEl && resumeEl.offsetParent !== null,
+                classList: resumeEl?.classList.value,
+                display: getComputedStyle(resumeEl).display
+              });
+            }, 100);
+            btn.classList.add("hidden");
+          }
+      
+          menu.classList.add("hidden");
+        }, 50);
       });
 
       menu.appendChild(div);
@@ -341,7 +396,8 @@ export function chargerMenuCategories() {
         const nomResume = document.getElementById("nomParentResume");
 
         if (parent) {
-          resume.style.display = "flex";
+          resume.style.setProperty("display", "flex", "important");
+          console.log("✅ Style appliqué :", resume.style.cssText);
           nomResume.textContent = parent.nom;
           nomResume.style.backgroundColor = parent.couleur;
           nomResume.style.color = getTextColor(parent.couleur);

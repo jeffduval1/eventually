@@ -176,7 +176,7 @@ if (boutonAjout) {
     champCategorie.dataset.couleur = carte.couleurCategorie;
 
     document.getElementById("categorieSelectionnee").style.display = "flex";
-    document.getElementById("texteCategorie").textContent = carte.nomCategorie || "Catégorie sélectionnée";
+    document.getElementById("texteCategorieCarte").textContent = carte.nomCategorie || "Catégorie sélectionnée";
   }
 
   document.getElementById("annulerModifBtn").style.display = "inline-block";

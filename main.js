@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // console.log('🟢 Initialisation Bee Organized');
   await ouvrirDB();
   await initialiserDonneesSiVides();
-  chargerMenuCategories();
   appliquerPaletteGlobale(paletteActuelle);
   afficherVueParCategories();
   initialiserMenuHamburger();
@@ -70,7 +69,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("modalCategorie").classList.add("hidden");
   });
   document.getElementById("btnRetourCategories")?.addEventListener("click", afficherVueParCategories);
-  document.getElementById("btnCreerCategorie")?.addEventListener("click", creerNouvelleCategorie);
+  document.getElementById("btnCreerCategorie")?.addEventListener("click", () => {
+    // Vérifie si on vient de la modale de création de carte (présence du champ caché)
+    const depuisCarte = !!document.getElementById("categorieChoisie");
+    creerNouvelleCategorie(depuisCarte);
+  });
+  
 
   document.getElementById("btnModeCategories")?.addEventListener("click", afficherVueParCategories);
   document.getElementById("btnModeCartes")?.addEventListener("click", afficherCartes);
@@ -121,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("categorieChoisie").dataset.couleur = "";
 
     const resume = document.getElementById("categorieSelectionnee");
-    const texte = document.getElementById("texteCategorie");
+    const texte = document.getElementById("texteCategorieCarte");
     const btn = document.getElementById("btnCategorieOptions");
 
     if (resume && texte && btn) {
@@ -187,7 +191,10 @@ function fermerMenuHamburger() {
     console.log("✔️ Menu hamburger fermé");
   }
 }
-document.getElementById("toggleFormBtn")?.addEventListener("click", ouvrirModaleAjoutCarte);
+document.getElementById("toggleFormBtn").addEventListener("click", () => {
+  ouvrirModale("modalAjoutCarte");
+  chargerMenuCategories(); // ← ✅ Ajout essentiel
+});
 // 🔀 Gestion du choix de type de catégorie dans la modale d'ajout de carte
 document.getElementById("btnCategorieOptions")?.addEventListener("click", () => {
   const zoneChoix = document.getElementById("zoneChoixCategorie");
@@ -219,7 +226,7 @@ document.getElementById("creerNouvelleCategorieBtn")?.addEventListener("click", 
 });
 // Ouvrir la modale de choix au clic sur le bouton
 document.getElementById("btnCategorieOptions")?.addEventListener("click", () => {
-  document.getElementById("modalChoixTypeCategorie").classList.remove("hidden");
+  document.getElementById("modalChoixTypeCategorie").classList.remove("hidden"); 
 });
 
 // Fermer la modale
@@ -244,6 +251,8 @@ document.addEventListener("click", (event) => {
 document.getElementById("choisirCategorieExistante")?.addEventListener("click", () => {
   document.getElementById("listeCategories").classList.remove("hidden");
   document.getElementById("modalChoixTypeCategorie").classList.add("hidden");
+
+  chargerMenuCategories();  // ✅ Appel placé au bon moment
 });
 
 document.getElementById("creerNouvelleCategorieCarte")?.addEventListener("click", () => {
