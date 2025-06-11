@@ -251,7 +251,8 @@ export function creerNouvelleCategorie(depuisCarte = false) {
     }
 
     // ➕ Ajout si le nom est unique
-    ajouterCategorie({ nom, couleur, parent }).then(() => {
+    const nouvelleCategorie = { nom, couleur, parent };
+ajouterCategorie(nouvelleCategorie).then(() => {
       afficherVueParCategories();
       chargerMenuCategories();
 
