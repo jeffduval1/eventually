@@ -17,7 +17,7 @@ import {
   setupUI
 } from './modules/ui.js';
 import { restaurerCarte, viderCorbeille, fermerCorbeille } from './modules/corbeille.js';
-import { reinitialiserFormulaireCategorie } from './modules/ui.js';
+import { reinitialiserFormulaireCategorie, preparerModalePourNouvelleCarte } from './modules/ui.js';
 
 window.restaurerCarte = restaurerCarte;
 window.viderCorbeille = viderCorbeille;
@@ -192,8 +192,8 @@ function fermerMenuHamburger() {
   }
 }
 document.getElementById("toggleFormBtn").addEventListener("click", () => {
-  ouvrirModale("modalAjoutCarte");
-  chargerMenuCategories(); // ← ✅ Ajout essentiel
+  preparerModalePourNouvelleCarte();
+  chargerMenuCategories(); 
 });
 // 🔀 Gestion du choix de type de catégorie dans la modale d'ajout de carte
 document.getElementById("btnCategorieOptions")?.addEventListener("click", () => {

@@ -4,7 +4,7 @@
  */
 // console.log("🧩 ui.js chargé");
 
-import { afficherCartes, ajouterCarte } from './cartes.js';
+import { afficherCartes, ajouterCarte} from './cartes.js';
 import { afficherVueParCategories, setIdCategorieActuelle } from './categories.js';
 import { exporterCartes, importerCartes } from './db/indexedDB.js';
 import { ouvrirModalePalette } from './palette.js';
@@ -158,6 +158,7 @@ function fermerModale(id) {
 }
 
 function ouvrirModaleAjoutCarte() {
+  preparerModalePourNouvelleCarte();
   const modale = document.getElementById("modalAjoutCarte");
   const form = document.getElementById("formAjoutCarte");
   const resume = document.getElementById("categorieSelectionnee");
@@ -204,6 +205,55 @@ function ouvrirModaleAjoutCarte() {
     boutonAjout.textContent = "Ajouter";
   }
 }
+function preparerModalePourNouvelleCarte() {
+  const modale = document.getElementById("modalAjoutCarte");
+  const form = document.getElementById("formAjoutCarte");
+
+  if (!modale || !form) return;
+
+  // Réinitialisation du formulaire HTML
+  form.reset();
+
+  // Réinitialisation manuelle (au cas où form.reset() ne suffit pas)
+  document.getElementById("carteId").value = "";
+
+  const champCategorie = document.getElementById("categorieChoisie");
+  champCategorie.value = "";
+  champCategorie.dataset.couleur = "";
+
+  const texteResume = document.getElementById("texteCategorieCarte");
+  const resume = document.getElementById("categorieSelectionnee");
+
+  if (texteResume) texteResume.textContent = "-- Choisir une catégorie --";
+  if (resume) {
+    resume.classList.add("hidden");
+    resume.removeAttribute("style"); // Nettoyage du style inline
+  }
+
+  // Masquer bouton "Annuler"
+  const annulerBtn = document.getElementById("annulerModifBtn");
+  if (annulerBtn) {
+    annulerBtn.classList.add("hidden");
+    annulerBtn.style.display = "none";
+  }
+
+  // Réinitialiser le bouton d’envoi
+  const boutonAjout = document.getElementById("ajoutCarteBtn");
+  if (boutonAjout) {
+    boutonAjout.textContent = "Ajouter";
+  }
+
+  // Nettoyage des messages d’erreur
+  ["erreurTitre", "erreurCategorie", "erreurContenu"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = "";
+      el.classList.add("hidden");
+    }
+  });
+  ouvrirModale("modalAjoutCarte");
+}
+
 
 
 
@@ -220,5 +270,6 @@ export {
   ouvrirModaleAjoutCarte,
   fermerModale,
   exporterCartes,
-  importerCartes
+  importerCartes,
+  preparerModalePourNouvelleCarte
 };
