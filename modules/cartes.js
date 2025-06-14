@@ -179,7 +179,7 @@ if (boutonAjout) {
     // ✅ Affiche le bouton de suppression
    
 }
-function supprimerCarteDansCorbeille(id) {
+/* function supprimerCarteDansCorbeille(id) {
   if (!db) {
     console.error("❌ La base de données n'est pas encore prête.");
     return;
@@ -207,7 +207,7 @@ function supprimerCarteDansCorbeille(id) {
       afficherCartes();
     }
   };
-}
+} */
 function setCarteASupprimer(id) {
   idCarteASupprimer = id;
 }
@@ -218,6 +218,6 @@ function getCarteASupprimer() {
 export {   afficherCartes,
   afficherCartesFiltres,
   ajouterCarte,
-  supprimerCarteDansCorbeille,
+
   setCarteASupprimer,
   getCarteASupprimer };

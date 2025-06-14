@@ -2,13 +2,13 @@
 
 import { paletteActuelle } from './modules/config.js';
 import { appliquerPaletteGlobale } from './modules/palette.js';
-import { ouvrirDB, getCategories, ajouterCategorie } from './modules/db/indexedDB.js';
-import { afficherCartes, ajouterCarte, supprimerCarteDansCorbeille, getCarteASupprimer } from './modules/cartes.js';
+import { ouvrirDB, getCategories, ajouterCategorie, deplacerCarteDansCorbeille } from './modules/db/indexedDB.js';
+import { afficherCartes, ajouterCarte, getCarteASupprimer } from './modules/cartes.js';
 // console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
 import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
 import {
-  afficherCorbeille,
+
   initialiserMenuHamburger,
   exporterCartes,
   ouvrirModale,
@@ -16,7 +16,7 @@ import {
   fermerModale,
   setupUI
 } from './modules/ui.js';
-import { restaurerCarte, viderCorbeille, fermerCorbeille } from './modules/corbeille.js';
+import { afficherCorbeille, restaurerCarte, viderCorbeille, fermerCorbeille  } from './modules/corbeille.js';
 import { reinitialiserFormulaireCategorie, preparerModalePourNouvelleCarte } from './modules/ui.js';
 
 window.restaurerCarte = restaurerCarte;
@@ -293,15 +293,33 @@ annulerSuppressionCarteBtn?.addEventListener('click', () => {
   modalConfirmationSuppression.classList.add('hidden');
 });
 
-confirmerSuppressionBtn?.addEventListener('click', () => {
-  const id = getCarteASupprimer?.();
-  console.log("✅ Suppression confirmée. ID à supprimer :", id);
-  if (id) {
-    supprimerCarteDansCorbeille(id);
-    modalConfirmationSuppression.classList.add('hidden');
-    document.getElementById("modalAjoutCarte").classList.add("hidden");
+document.getElementById("confirmerSuppressionBtn")?.addEventListener("click", () => {
+  const id = getCarteASupprimer();
+
+  if (!id) return;
+
+  // 👇 C’est ICI que tu appelles la bonne fonction
+  deplacerCarteDansCorbeille(id).then(() => {
+    console.log("fonction de déplacement dans la corbeille activée");
+    // 1. Fermer les modales
+    document.getElementById("modalConfirmationSuppression")?.classList.add("hidden");
+    document.getElementById("modalAjoutCarte")?.classList.add("hidden");
+
+    // 2. Réinitialiser le formulaire
+    document.getElementById("formAjoutCarte")?.reset();
+
+    // 3. Vider les champs manuellement
+    ["titre", "contenu", "tags"].forEach(id => {
+      const champ = document.getElementById(id);
+      if (champ) champ.value = "";
+    });
+
+    // 4. Mettre à jour l’interface
     afficherCartes();
-  } else {
-    console.warn("⚠️ Aucun ID de carte à supprimer.");
-  }
+    // Si la page corbeille est visible → rafraîchir
+
+  }).catch(error => {
+    console.error("❌ Erreur lors de la suppression :", error);
+  });
 });
+

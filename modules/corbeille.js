@@ -5,15 +5,10 @@
 
 import { getTextColor } from './utils/helpers.js';
 import { getCartes, getCategorieByNom } from './db/indexedDB.js';
-import { ouvrirDB } from './db/indexedDB.js';
-
-let db;
-
-ouvrirDB().then(database => {
-  db = database;
-});
+import { db } from './db/indexedDB.js';
 
 export function afficherCorbeille() {
+  console.log("la fonction afficher corbeille est appelée");
   const menu = document.getElementById("menuContent");
   if (menu) menu.classList.add("hidden");
 
@@ -21,6 +16,7 @@ export function afficherCorbeille() {
   const store = transaction.objectStore("corbeille");
 
   const request = store.getAll();
+
   request.onsuccess = function () {
     const cartes = request.result;
     cartes.sort((a, b) => new Date(b.dateSuppression) - new Date(a.dateSuppression));
@@ -36,22 +32,34 @@ export function afficherCorbeille() {
           ? new Date(carte.dateSuppression).toLocaleDateString()
           : "Date inconnue";
 
+        const tagsTxt = Array.isArray(carte.tags) ? carte.tags.join(", ") : "";
+        const couleur = carte.couleurCategorie || "#ccc";
+
         const div = document.createElement("div");
         div.classList.add("carte");
         div.innerHTML = `
           <h3>${carte.titre}</h3>
-          <span style="font-size: 12px; color: gray;">Supprimée le : ${dateAffichee}</span>
+          <span style="font-size:12px;color:gray;">Supprimée le : ${dateAffichee}</span>
           <p>${carte.contenu}</p>
-          <p class="tags">Tags : ${carte.tags.join(", ")}</p>
-          <button onclick="window.restaurerCarte(${carte.id})">Restaurer</button>
+          <p class="tags">Tags : ${tagsTxt}</p>
+          <button class="btn-restaurer" data-id="${carte.id}">Restaurer</button>
         `;
-
-        div.style.borderLeft = `8px solid ${carte.couleurCategorie || '#ccc'}`;
+        div.style.borderLeft = `8px solid ${couleur}`;
         container.appendChild(div);
       });
-    }
 
-    document.getElementById("corbeille-page").style.display = "flex";
+      container.addEventListener("click", e => {
+        if (e.target.matches(".btn-restaurer")) {
+          const id = Number(e.target.dataset.id);
+          restaurerCarte(id);
+        }
+      });
+    }
+    const page = document.getElementById("corbeille-page");
+    if (page) {
+      page.classList.remove("hidden");
+      page.style.display = "flex"; // Ou "block", selon ton design
+    }
   };
 }
 
