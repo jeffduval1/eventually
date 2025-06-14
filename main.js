@@ -300,7 +300,9 @@ document.getElementById("confirmerSuppressionBtn")?.addEventListener("click", ()
 
   // 👇 C’est ICI que tu appelles la bonne fonction
   deplacerCarteDansCorbeille(id).then(() => {
-    console.log("fonction de déplacement dans la corbeille activée");
+ // ✅ Retirer la carte supprimée de l'interface sans tout recharger
+ const carteDOM = document.querySelector(`[data-carte-id="${id}"]`);
+ if (carteDOM) carteDOM.remove();
     // 1. Fermer les modales
     document.getElementById("modalConfirmationSuppression")?.classList.add("hidden");
     document.getElementById("modalAjoutCarte")?.classList.add("hidden");
@@ -313,10 +315,6 @@ document.getElementById("confirmerSuppressionBtn")?.addEventListener("click", ()
       const champ = document.getElementById(id);
       if (champ) champ.value = "";
     });
-
-    // 4. Mettre à jour l’interface
-    afficherCartes();
-    // Si la page corbeille est visible → rafraîchir
 
   }).catch(error => {
     console.error("❌ Erreur lors de la suppression :", error);

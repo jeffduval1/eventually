@@ -35,6 +35,7 @@ function afficherCartes(modeTri = "date-desc") {
     cartes.forEach(carte => {
       const div = document.createElement("div");
       div.classList.add("carte");
+      div.dataset.carteId = carte.id;
       div.style.borderLeft = `6px solid ${carte.couleurCategorie || "#ccc"}`;
       div.innerHTML = `
       <button class="modifier-carte" data-id="${carte.id}" title="Modifier cette carte">✏️</button>
@@ -218,6 +219,5 @@ function getCarteASupprimer() {
 export {   afficherCartes,
   afficherCartesFiltres,
   ajouterCarte,
-
   setCarteASupprimer,
   getCarteASupprimer };
