@@ -23,7 +23,10 @@
   </div>
 
   <!-- 🟢 Bouton global d’ajout de carte -->
-  <button id="toggleFormBtn"></button>
+  <button id="toggleFormBtn">
+    <span class="icone">➕</span>
+    <span class="texte hidden">Ajouter une carte</span>
+  </button>
 
   <!-- Étiquettes & réinitialisation -->
   <div id="etiquettes-container"></div>
@@ -91,7 +94,7 @@
           <input type="hidden" id="carteId" value="">
           <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
           <div class="btn-supprimer-wrapper">
-            <button id="ouvrirConfirmationSuppressionCarteBtn" class="btn-supprimer hidden" title="Supprimer cette carte">
+            <button id="ouvrirConfirmationSuppressionCarteBtn" type="button" class="btn-supprimer hidden" title="Supprimer cette carte">
               🗑 Supprimer
             </button>
           </div>
@@ -203,7 +206,7 @@
   <div id="modalEditCategorie" class="modal hidden">
     <div class="modal-content">
       <span class="close" id="closeEditModal">&times;</span>
-      <h3>Modifier la catégorie</h3>
+      <h3 id="titreModaleModification">Modifier la catégorie</h3>
 
       <label for="editCategorieNom">Nouveau nom :</label>
       <input type="text" id="editCategorieNom">
@@ -238,7 +241,7 @@
     
     <div class="actions">
       <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
-      <button id="confirmerSuppressionBtn" class="btn-danger">Supprimer</button>
+      <button id="confirmerSuppressionCarteBtn" type="button" class="btn-danger">Supprimer</button>
     </div>
   </div>
 </div>

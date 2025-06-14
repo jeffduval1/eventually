@@ -206,6 +206,8 @@ function ouvrirModaleAjoutCarte() {
   }
 }
 function preparerModalePourNouvelleCarte() {
+
+  document.querySelector("#titreModaleCarte").textContent = "Créer une nouvelle carte";
   const modale = document.getElementById("modalAjoutCarte");
   const form = document.getElementById("formAjoutCarte");
 

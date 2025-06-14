@@ -278,12 +278,12 @@ document.getElementById("choisirCategorieParent")?.addEventListener("click", () 
 document.getElementById("closeAjoutCarteModal")?.addEventListener("click", () => {
   document.getElementById("modalAjoutCarte").classList.add("hidden");
 });
-const ouvrirConfirmationSuppressionCarteBtn = document.getElementById('ouvrirConfirmationSuppressionCarteBtn');
+const boutonOuvrirConfirmation  = document.getElementById('ouvrirConfirmationSuppressionCarteBtn');
 const modalConfirmationSuppression = document.getElementById('modalConfirmationSuppression');
 const annulerSuppressionCarteBtn = document.getElementById('annulerSuppressionCarteBtn');
-const confirmerSuppressionCarteBtn = document.getElementById('confirmerSuppressionCarteBtn');
+const confirmerSuppressionBtn = document.getElementById('confirmerSuppressionBtn');
 
-ouvrirConfirmationSuppressionCarteBtn?.addEventListener('click', () => {
+boutonOuvrirConfirmation ?.addEventListener('click', () => {
   console.log("🟥 Bouton suppression dans modale de carte cliqué");
   modalConfirmationSuppression.classList.remove('hidden');
 });
@@ -293,7 +293,7 @@ annulerSuppressionCarteBtn?.addEventListener('click', () => {
   modalConfirmationSuppression.classList.add('hidden');
 });
 
-confirmerSuppressionCarteBtn?.addEventListener('click', () => {
+confirmerSuppressionBtn?.addEventListener('click', () => {
   const id = getCarteASupprimer?.();
   console.log("✅ Suppression confirmée. ID à supprimer :", id);
   if (id) {

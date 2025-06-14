@@ -511,15 +511,20 @@ label {
   transition: background-color 0.3s, transform 0.2s;
   z-index: 1000;
 }
-#toggleFormBtn::before {
-  content: "➕"; /* Affiche le + par défaut (mobile) */
+/* #toggleFormBtn::before {
+  content: "➕"; 
   font-size: 20px;
 }
 
 @media (min-width: 768px) {
   #toggleFormBtn::before {
-    content: "➕ Ajouter une carte"; /* Texte complet sur bureau */
+    content: "➕ Ajouter une carte"; 
     font-size: 16px;
+  }
+} */
+@media (min-width: 768px) {
+  #toggleFormBtn .texte.hidden {
+    display: inline !important; /* annule le display: none de .hidden */
   }
 }
 #toggleFormBtn:hover {

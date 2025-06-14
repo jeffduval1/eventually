@@ -145,17 +145,13 @@ async function ajouterCarte() {
 }
 function ouvrirModaleModification(carte) {
   setCarteASupprimer(carte.id);
+    // 🆕 Mise à jour du titre de la modale
+    document.querySelector("#titreModaleCarte").textContent = "Modifier la carte";
   const boutonSuppression = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
   if (boutonSuppression) {
     boutonSuppression.classList.remove("hidden");
   
-    const nouveauBtn = boutonSuppression.cloneNode(true);
-    boutonSuppression.replaceWith(nouveauBtn);
-  
-    nouveauBtn.addEventListener("click", () => {
-      setCarteASupprimer(carte.id);
-      document.getElementById("modalConfirmationSuppression").classList.remove("hidden");
-    });
+
   }
   const boutonAjout = document.getElementById("ajoutCarteBtn");
   const boutonSupprimer = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
