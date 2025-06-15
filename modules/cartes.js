@@ -24,7 +24,7 @@ function afficherCartes(modeTri = "date-desc") {
   vueCategories.classList.add("hidden");
   titreCategorie.classList.add("hidden");
   getCartes().then(cartes => {
-    
+
     cartes.sort((a, b) => {
       if (modeTri === "titre-asc") return a.titre.localeCompare(b.titre);
       if (modeTri === "titre-desc") return b.titre.localeCompare(a.titre);
@@ -74,7 +74,7 @@ function afficherCartesFiltres(cartes) {
 
 // ➕ Ajoute une carte depuis le formulaire
 async function ajouterCarte() {
- 
+
   const titreInput = document.getElementById("titre");
   const contenuInput = document.getElementById("contenu");
   const tagsInput = document.getElementById("tags");
@@ -146,20 +146,30 @@ async function ajouterCarte() {
 }
 function ouvrirModaleModification(carte) {
   setCarteASupprimer(carte.id);
-    // 🆕 Mise à jour du titre de la modale
-    document.querySelector("#titreModaleCarte").textContent = "Modifier la carte";
+  // 🆕 Mise à jour du titre de la modale
+  document.querySelector("#titreModaleCarte").textContent = "Modifier la carte";
+  // 🛠 Forcer l'affichage du champ de sélection de catégorie
+  const champCategorie = document.getElementById("categorieChoisie");
+  champCategorie.classList.remove("hidden");       // Affiche le <select>
+  champCategorie.disabled = false;                 // Active le champ (au cas où)
+  champCategorie.style.display = "block";          // S’assure qu’il est visible
   const boutonSuppression = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
+  document.getElementById("categorieSelectionnee").style.display = "flex";
+  const texteCategorie = document.getElementById("texteCategorieCarte");
+if (texteCategorie) {
+  texteCategorie.textContent = carte.categorie || "-- Choisir une catégorie --";
+}
   if (boutonSuppression) {
     boutonSuppression.classList.remove("hidden");
-  
+
 
   }
   const boutonAjout = document.getElementById("ajoutCarteBtn");
   const boutonSupprimer = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
   document.getElementById("carteId").value = carte.id;
-if (boutonAjout) {
-  boutonAjout.textContent = "Enregistrer les modifications";
-}
+  if (boutonAjout) {
+    boutonAjout.textContent = "Enregistrer les modifications";
+  }
   document.getElementById("modalAjoutCarte").classList.remove("hidden");
   document.getElementById("titre").value = carte.titre;
   document.getElementById("contenu").value = carte.contenu;
@@ -177,8 +187,8 @@ if (boutonAjout) {
   }
 
   document.getElementById("annulerModifBtn").style.display = "inline-block";
-    // ✅ Affiche le bouton de suppression
-   
+  // ✅ Affiche le bouton de suppression
+
 }
 /* function supprimerCarteDansCorbeille(id) {
   if (!db) {
@@ -216,8 +226,10 @@ function setCarteASupprimer(id) {
 function getCarteASupprimer() {
   return idCarteASupprimer;
 }
-export {   afficherCartes,
+export {
+  afficherCartes,
   afficherCartesFiltres,
   ajouterCarte,
   setCarteASupprimer,
-  getCarteASupprimer };
+  getCarteASupprimer
+};
