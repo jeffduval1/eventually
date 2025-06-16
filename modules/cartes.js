@@ -8,7 +8,7 @@ import {
   getCartes,
   ajouterCarte as dbAjouterCarte,
   modifierCarte as dbModifierCarte,
-  deplacerCarteDansCorbeille, db
+  deplacerCarteDansCorbeille, db, 
 } from './db/indexedDB.js';
 let idCarteASupprimer = null;
 // 📌 Affiche toutes les cartes
@@ -175,7 +175,8 @@ if (texteCategorie) {
   document.getElementById("contenu").value = carte.contenu;
   document.getElementById("tags").value = carte.tags.join(", ");
   document.getElementById("carteId").value = carte.id;
-
+// 🛑 Cacher le bouton "Choisir une catégorie"
+document.getElementById("btnCategorieOptions").classList.add("hidden");
   // Affiche la catégorie visuellement si existante
   if (carte.categorie) {
     const champCategorie = document.getElementById("categorieChoisie");
@@ -187,7 +188,23 @@ if (texteCategorie) {
   }
 
   document.getElementById("annulerModifBtn").style.display = "inline-block";
-  // ✅ Affiche le bouton de suppression
+  if (carte.categorie) {
+    getCategorieByNom(carte.categorie).then(categorie => {
+      if (!categorie) return;
+  
+      const resume = document.getElementById("categorieSelectionnee");
+      const texte = document.getElementById("texteCategorieCarte");
+  
+      if (resume && texte) {
+        resume.classList.remove("hidden");
+        resume.style.display = "flex";
+  
+        texte.textContent = categorie.nom;
+        resume.style.backgroundColor = categorie.couleur;
+        resume.style.color = getTextColor(categorie.couleur);
+      }
+    });
+  }
 
 }
 /* function supprimerCarteDansCorbeille(id) {

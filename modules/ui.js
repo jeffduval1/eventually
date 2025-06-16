@@ -206,7 +206,8 @@ function ouvrirModaleAjoutCarte() {
   }
 }
 function preparerModalePourNouvelleCarte() {
-
+  document.getElementById("btnCategorieOptions").classList.remove("hidden");
+  document.getElementById("categorieSelectionnee").classList.add("hidden");
   document.querySelector("#titreModaleCarte").textContent = "Créer une nouvelle carte";
   const modale = document.getElementById("modalAjoutCarte");
   const form = document.getElementById("formAjoutCarte");
