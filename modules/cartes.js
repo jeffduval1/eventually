@@ -143,11 +143,8 @@ async function ajouterCarte() {
   categorieInput.value = "";
   categorieInput.dataset.couleur = "";
 
-  const resume = document.getElementById("categorieSelectionnee");
-  if (resume) {
-    resume.textContent = "-- Choisir une catégorie --";
-    resume.style = "";
-  }
+  mettreAJourResumeCategorie({ nom: "-- Choisir une catégorie --", couleur: "#ccc" });
+  document.getElementById("categorieSelectionnee").classList.add("hidden"); // (facultatif)
 }
 function ouvrirModaleModification(carte) {
   console.log("📝 Données de la carte à modifier :", carte);
@@ -164,24 +161,30 @@ function ouvrirModaleModification(carte) {
 
   /* ─── 3. Résumé visuel : première mise à jour rapide depuis la carte ──── */
   mettreAJourResumeCategorie({
+    nom    : carte.nomCategorie || carte.categorie || "-- Aucune catégorie --",
+    couleur: carte.couleurCategorie || "#ccc"
+  });
+  document.getElementById("ouvrirConfirmationSuppressionCarteBtn").classList.remove("hidden");
+document.getElementById("ouvrirConfirmationSuppressionCarteBtn").style.display = "inline-block";
+  console.log("🧩 Mise à jour visuelle avec :", {
     nom    : carte.nomCategorie || carte.categorie,
     couleur: carte.couleurCategorie
   });
-
   /* ─── 4. Optionnel : re-valider avec la base si la catégorie existe ───── */
   if (carte.categorie) {
     getCategorieByNom(carte.categorie).then(cat => {
       if (cat) {
         mettreAJourResumeCategorie({ nom: cat.nom, couleur: cat.couleur });
+       
       }
     });
   }
 
-  /* ─── 5. UI des boutons ───────────────────────────────────────────────── */
-  document.getElementById("btnCategorieOptions").classList.add("hidden");     // « Choisir » → caché
-  document.getElementById("ouvrirConfirmationSuppressionCarteBtn").classList.remove("hidden");
-  document.getElementById("ajoutCarteBtn").textContent = "Enregistrer les modifications";
-  document.getElementById("annulerModifBtn").style.display = "inline-block";
+ /* ─── 5. Gérer le bouton "Changer de catégorie" ─────────────────────────── */
+const btnCategorie = document.getElementById("btnCategorieOptions");
+btnCategorie.textContent = "Changer de catégorie";
+btnCategorie.classList.remove("hidden");
+  
 
   /* ─── 6. Pré-remplir les champs texte/tags ────────────────────────────── */
   document.getElementById("titre").value   = carte.titre;
@@ -190,6 +193,10 @@ function ouvrirModaleModification(carte) {
   document.getElementById("carteId").value = carte.id;
 
   /* ─── 7. Afficher la modale ───────────────────────────────────────────── */
+  const boutonAjout = document.getElementById("ajoutCarteBtn");
+if (boutonAjout) {
+  boutonAjout.textContent = "Enregistrer les modifications";
+}
   document.getElementById("modalAjoutCarte").classList.remove("hidden");
 }
 
