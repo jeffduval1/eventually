@@ -11,7 +11,9 @@ import { getTextColor } from './utils/helpers.js';
 import { paletteActuelle, nomsCouleursParPalette } from './config.js';
 import { afficherCartes, afficherCartesFiltres } from './cartes.js';
 import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
+import { mettreAJourResumeCategorie } from './uiCategories.js';
 import { ouvrirModale, fermerModale } from './ui.js';
+
 export let idCategorieActuelle = null;
 export function getIdCategorieActuelle() {
   return idCategorieActuelle;
@@ -252,7 +254,7 @@ export function creerNouvelleCategorie(depuisCarte = false) {
 
     // ➕ Ajout si le nom est unique
     const nouvelleCategorie = { nom, couleur, parent };
-ajouterCategorie(nouvelleCategorie).then(() => {
+    ajouterCategorie(nouvelleCategorie).then(() => {
       afficherVueParCategories();
       chargerMenuCategories();
 
@@ -262,45 +264,40 @@ ajouterCategorie(nouvelleCategorie).then(() => {
       document.getElementById("parentCategorie").selectedIndex = 0;
       document.getElementById("modalCategorie").classList.add("hidden");
 
-   // Si c'est dans le contexte de création de carte :
-   if (depuisCarte && nouvelleCategorie) {
-    // Met à jour le champ masqué et le résumé visuel
-    const champ = document.getElementById("categorieChoisie");
-    champ.value = nouvelleCategorie.id;
-    champ.dataset.couleur = nouvelleCategorie.couleur;
+      // Si c'est dans le contexte de création de carte :
+      if (depuisCarte && nouvelleCategorie) {
+        // Met à jour le champ masqué et le résumé visuel
+        const champ = document.getElementById("categorieChoisie");
+        champ.value = nouvelleCategorie.nom;
+        champ.dataset.couleur = nouvelleCategorie.couleur;
 
-    const resume = document.getElementById("categorieSelectionnee");
-    const texte = document.getElementById("texteCategorieCarte");
+        const resume = document.getElementById("categorieSelectionnee");
+        const texte = document.getElementById("texteCategorieCarte");
 
-    if (resume && texte) {
-      console.log("👉 Résumé affiché via sélection existante");
-      resume.classList.remove("hidden");
-      resume.style.setProperty("display", "flex", "important");
-      console.log("✅ Style appliqué :", resume.style.cssText);
-      setTimeout(() => {
-        console.log("⏱️ Après suppression de .hidden :",
-          resume.classList.value,
-          getComputedStyle(resume).display
-        );
-      }, 10);
+        if (depuisCarte) {
+          mettreAJourResumeCategorie({
+            nom: nouvelleCategorie.nom,
+            couleur: nouvelleCategorie.couleur
+          });
       
-      // Et ajoute ce traceur
-      console.trace("🔍 Qui a touché à resume ?");
-      setTimeout(() => {
-        const resumeEl = document.getElementById("categorieSelectionnee");
-        console.log("🕵️ Vérification après 100ms :", {
-          visible: resumeEl && resumeEl.offsetParent !== null,
-          classList: resumeEl?.classList.value,
-          display: getComputedStyle(resumeEl).display
-        });
-      }, 100);
-      resume.style.backgroundColor = nouvelleCategorie.couleur;
-      resume.style.color = getTextColor(nouvelleCategorie.couleur);
-      texte.textContent = nouvelleCategorie.nom;
-    }
-  }
-});
-});
+
+          // Et ajoute ce traceur
+          console.trace("🔍 Qui a touché à resume ?");
+          setTimeout(() => {
+            const resumeEl = document.getElementById("categorieSelectionnee");
+            console.log("🕵️ Vérification après 100ms :", {
+              visible: resumeEl && resumeEl.offsetParent !== null,
+              classList: resumeEl?.classList.value,
+              display: getComputedStyle(resumeEl).display
+            });
+          }, 100);
+          resume.style.backgroundColor = nouvelleCategorie.couleur;
+          resume.style.color = getTextColor(nouvelleCategorie.couleur);
+          texte.textContent = nouvelleCategorie.nom;
+        }
+      }
+    });
+  });
 }
 
 // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
@@ -335,7 +332,7 @@ export function chargerMenuCategories() {
       div.addEventListener("click", () => {
         inputCategorie.value = cat.nom;
         inputCategorie.dataset.couleur = cat.couleur;
-      
+
         setTimeout(() => {
           const resume = document.getElementById("categorieSelectionnee");
           const texte = document.querySelector("#categorieSelectionnee #texteCategorieCarte");
@@ -344,35 +341,13 @@ export function chargerMenuCategories() {
           console.log("✅ Catégorie sélectionnée :", cat.nom);
           console.log("🎨 Couleur :", cat.couleur);
           console.log("📌 Résumé :", resume, texte, btn);
-      
+
           if (resume && texte && btn) {
             console.log("👉 Résumé affiché via nouvelle catégorie créée");
-            texte.textContent = cat.nom;
-            resume.style.backgroundColor = cat.couleur;
-            resume.style.color = getTextColor(cat.couleur);
-            resume.classList.remove("hidden");
-            resume.style.setProperty("display", "flex", "important");
-            console.log("✅ Style appliqué :", resume.style.cssText);
-            setTimeout(() => {
-              console.log("⏱️ Après suppression de .hidden :",
-                resume.classList.value,
-                getComputedStyle(resume).display
-              );
-            }, 10);
-            
-            // Et ajoute ce traceur
-            console.trace("🔍 Qui a touché à resume ?");
-            setTimeout(() => {
-              const resumeEl = document.getElementById("categorieSelectionnee");
-              console.log("🕵️ Vérification après 100ms :", {
-                visible: resumeEl && resumeEl.offsetParent !== null,
-                classList: resumeEl?.classList.value,
-                display: getComputedStyle(resumeEl).display
-              });
-            }, 100);
-            btn.classList.add("hidden");
+            mettreAJourResumeCategorie({ nom: cat.nom, couleur: cat.couleur });
+            menu.classList.add("hidden");
           }
-      
+
           menu.classList.add("hidden");
         }, 50);
       });

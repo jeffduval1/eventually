@@ -8,9 +8,12 @@ import {
   getCartes,
   ajouterCarte as dbAjouterCarte,
   modifierCarte as dbModifierCarte,
-  deplacerCarteDansCorbeille, db, getCategorieByNom 
-} from './db/indexedDB.js';
+  deplacerCarteDansCorbeille, db, getCategorieByNom } 
+  from './db/indexedDB.js';
+import { mettreAJourResumeCategorie } from "./uiCategories.js";
+
 let idCarteASupprimer = null;
+
 // 📌 Affiche toutes les cartes
 function afficherCartes(modeTri = "date-desc") {
   const boutonRetour = document.getElementById("btnRetourCategories");
@@ -150,92 +153,47 @@ function ouvrirModaleModification(carte) {
   console.log("📝 Données de la carte à modifier :", carte);
   setCarteASupprimer(carte.id);
 
-  /* --- Titre de la modale --- */
+  /* ─── 1. Titre de la modale ───────────────────────────────────────────── */
   document.getElementById("titreModaleCarte").textContent = "Modifier la carte";
 
-  /* --- Champ catégorie (select caché) --- */
+  /* ─── 2. Champ caché de la catégorie (toujours visible en modification) ─ */
   const champCategorie = document.getElementById("categorieChoisie");
   champCategorie.classList.remove("hidden");
   champCategorie.disabled = false;
   champCategorie.style.display = "block";
-  champCategorie.value = carte.categorie;
-  champCategorie.dataset.couleur = carte.couleurCategorie;
 
-  /* --- Résumé visuel de catégorie --- */
-  const resume = document.getElementById("categorieSelectionnee");
-  const texte  = document.getElementById("texteCategorieCarte");
-  resume.classList.remove("hidden");
-  resume.style.display = "flex";
+  /* ─── 3. Résumé visuel : première mise à jour rapide depuis la carte ──── */
+  mettreAJourResumeCategorie({
+    nom    : carte.nomCategorie || carte.categorie,
+    couleur: carte.couleurCategorie
+  });
 
-  /* --- Si tu as déjà stocké le nom & couleur dans la carte --------------- */
-  texte.textContent        = carte.nomCategorie || carte.categorie || "-- Choisir une catégorie --";
-  resume.style.background  = carte.couleurCategorie || "#ccc";
-  resume.style.color       = getTextColor(carte.couleurCategorie || "#ccc");
-
-  /* --- OU, en plus propre : récupère la catégorie complète --------------- */
+  /* ─── 4. Optionnel : re-valider avec la base si la catégorie existe ───── */
   if (carte.categorie) {
     getCategorieByNom(carte.categorie).then(cat => {
-      if (!cat) return;
-      const resume = document.getElementById('categorieSelectionnee');
-      const texte  = document.getElementById('texteCategorieCarte');
-      if (!resume || !texte) return;
-  
-      resume.classList.remove('hidden');
-      resume.style.display = 'flex';
-      texte.textContent        = cat.nom;
-      resume.style.background  = cat.couleur;
-      resume.style.color       = getTextColor(cat.couleur);
+      if (cat) {
+        mettreAJourResumeCategorie({ nom: cat.nom, couleur: cat.couleur });
+      }
     });
   }
 
-  /* --- Cache le bouton “Choisir une catégorie” --- */
-  document.getElementById("btnCategorieOptions").classList.add("hidden");
-
-  /* --- Bouton de suppression --- */
+  /* ─── 5. UI des boutons ───────────────────────────────────────────────── */
+  document.getElementById("btnCategorieOptions").classList.add("hidden");     // « Choisir » → caché
   document.getElementById("ouvrirConfirmationSuppressionCarteBtn").classList.remove("hidden");
-
-  /* --- Bouton d’action principal --- */
   document.getElementById("ajoutCarteBtn").textContent = "Enregistrer les modifications";
+  document.getElementById("annulerModifBtn").style.display = "inline-block";
 
-  /* --- Champs de formulaire --- */
+  /* ─── 6. Pré-remplir les champs texte/tags ────────────────────────────── */
   document.getElementById("titre").value   = carte.titre;
   document.getElementById("contenu").value = carte.contenu;
-  document.getElementById("tags").value    = carte.tags.join(", ");
+  document.getElementById("tags").value    = (carte.tags || []).join(", ");
   document.getElementById("carteId").value = carte.id;
 
-  /* --- Affiche la modale --- */
+  /* ─── 7. Afficher la modale ───────────────────────────────────────────── */
   document.getElementById("modalAjoutCarte").classList.remove("hidden");
-  document.getElementById("annulerModifBtn").style.display = "inline-block";
 }
-/* function supprimerCarteDansCorbeille(id) {
-  if (!db) {
-    console.error("❌ La base de données n'est pas encore prête.");
-    return;
-  }
 
-  // Récupère la carte depuis IndexedDB
-  const transaction = db.transaction(["regles", "corbeille"], "readwrite");
-  const storeCartes = transaction.objectStore("regles");
-  const storeCorbeille = transaction.objectStore("corbeille");
 
-  const request = storeCartes.get(id);
-
-  request.onsuccess = function () {
-    const carte = request.result;
-    if (carte) {
-      // Supprimer de la store principale
-      storeCartes.delete(id);
-
-      // Ajouter à la corbeille avec une date de suppression
-      carte.dateSuppression = Date.now();
-      storeCorbeille.add(carte);
-
-      // Fermer la modale et rafraîchir l'affichage
-      document.getElementById("modalAjoutCarte").classList.add("hidden");
-      afficherCartes();
-    }
-  };
-} */
 function setCarteASupprimer(id) {
   idCarteASupprimer = id;
 }

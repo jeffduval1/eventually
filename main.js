@@ -37,13 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     reinitialiserFormulaireCategorie();
     ouvrirModale("modalCategorie");
   });
-  const boutonAjout = document.getElementById("ajoutCarteBtn");
-  if (boutonAjout) {
-    boutonAjout.addEventListener("click", (event) => {
-      event.preventDefault(); // 👈 évite toute propagation inattendue
-      ajouterCarte();         // 👈 appelle ta fonction personnalisée
-    });
-  }
+
 
 
   document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {

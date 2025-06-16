@@ -9,6 +9,7 @@ import { afficherVueParCategories, setIdCategorieActuelle } from './categories.j
 import { exporterCartes, importerCartes } from './db/indexedDB.js';
 import { ouvrirModalePalette } from './palette.js';
 import { reinitialiserFiltre } from './filters.js';
+import { mettreAJourResumeCategorie } from "./uiCategories.js";
 
 function setupUI() {
   // Importer
@@ -43,18 +44,9 @@ function setupUI() {
   });
 
   // Ajout de carte
-  document.getElementById("ajoutCarteBtn")?.addEventListener("click", () => {
-    const titre = document.getElementById("titre").value.trim();
-    const contenu = document.getElementById("contenu").value.trim();
-    const tags = document.getElementById("tags").value.split(',').map(t => t.trim()).filter(Boolean);
-    const categorie = document.getElementById("categorieChoisie").value;
-    const couleur = document.getElementById("categorieChoisie").dataset.couleur || "#ccc";
-
-    if (titre && contenu) {
-      ajouterCarte({ titre, contenu, tags, categorie, couleurCategorie: couleur });
-    } else {
-      alert("Veuillez remplir le titre et le contenu.");
-    }
+  document.getElementById("ajoutCarteBtn")?.addEventListener("click", (e) => {
+    e.preventDefault();          // évite le submit implicite
+    ajouterCarte();              // appelle la fonction de cartes.js
   });
 
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
@@ -207,6 +199,7 @@ function ouvrirModaleAjoutCarte() {
   }
 }
 function preparerModalePourNouvelleCarte() {
+  mettreAJourResumeCategorie({ nom: "", couleur: "" });
   document.getElementById("btnCategorieOptions").classList.remove("hidden");
   document.getElementById("categorieSelectionnee").classList.add("hidden");
   document.querySelector("#titreModaleCarte").textContent = "Créer une nouvelle carte";

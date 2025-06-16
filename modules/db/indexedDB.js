@@ -73,7 +73,7 @@ export function getCategories() {
   return lireStore("categories");
 }
 
-export function getCategorieByNom(nom) {
+export function getCategorieByNom(nom, couleur) {
   return lireParCle("categories", nom);
 }
 
