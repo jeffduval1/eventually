@@ -163,7 +163,8 @@ function ouvrirModaleAjoutCarte() {
   const form = document.getElementById("formAjoutCarte");
   const resume = document.getElementById("categorieSelectionnee");
   const titre = document.getElementById("titreModaleCarte");
-
+  const texteResume = document.getElementById("texteCategorieCarte");
+  if (texteResume) texteResume.textContent = "-- Choisir une catégorie --";
   modale.classList.remove("hidden");
   form.reset();
 

@@ -8,7 +8,7 @@ import {
   getCartes,
   ajouterCarte as dbAjouterCarte,
   modifierCarte as dbModifierCarte,
-  deplacerCarteDansCorbeille, db, 
+  deplacerCarteDansCorbeille, db, getCategorieByNom 
 } from './db/indexedDB.js';
 let idCarteASupprimer = null;
 // 📌 Affiche toutes les cartes
@@ -117,12 +117,14 @@ async function ajouterCarte() {
   if (erreur) {
     return;
   }
-
+  const texteCategorie = document.getElementById("texteCategorieCarte");
+  const nomCategorie = texteCategorie?.textContent?.trim() || categorie;
   const nouvelleCarte = {
     titre,
     contenu,
     tags,
-    categorie,
+    categorie,              // identifiant ou slug
+    nomCategorie,           // nom lisible pour affichage
     couleurCategorie,
     dateCreation: Date.now()
   };
@@ -145,67 +147,65 @@ async function ajouterCarte() {
   }
 }
 function ouvrirModaleModification(carte) {
+  console.log("📝 Données de la carte à modifier :", carte);
   setCarteASupprimer(carte.id);
-  // 🆕 Mise à jour du titre de la modale
-  document.querySelector("#titreModaleCarte").textContent = "Modifier la carte";
-  // 🛠 Forcer l'affichage du champ de sélection de catégorie
+
+  /* --- Titre de la modale --- */
+  document.getElementById("titreModaleCarte").textContent = "Modifier la carte";
+
+  /* --- Champ catégorie (select caché) --- */
   const champCategorie = document.getElementById("categorieChoisie");
-  champCategorie.classList.remove("hidden");       // Affiche le <select>
-  champCategorie.disabled = false;                 // Active le champ (au cas où)
-  champCategorie.style.display = "block";          // S’assure qu’il est visible
-  const boutonSuppression = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
-  document.getElementById("categorieSelectionnee").style.display = "flex";
-  const texteCategorie = document.getElementById("texteCategorieCarte");
-if (texteCategorie) {
-  texteCategorie.textContent = carte.categorie || "-- Choisir une catégorie --";
-}
-  if (boutonSuppression) {
-    boutonSuppression.classList.remove("hidden");
+  champCategorie.classList.remove("hidden");
+  champCategorie.disabled = false;
+  champCategorie.style.display = "block";
+  champCategorie.value = carte.categorie;
+  champCategorie.dataset.couleur = carte.couleurCategorie;
 
+  /* --- Résumé visuel de catégorie --- */
+  const resume = document.getElementById("categorieSelectionnee");
+  const texte  = document.getElementById("texteCategorieCarte");
+  resume.classList.remove("hidden");
+  resume.style.display = "flex";
 
-  }
-  const boutonAjout = document.getElementById("ajoutCarteBtn");
-  const boutonSupprimer = document.getElementById("ouvrirConfirmationSuppressionCarteBtn");
-  document.getElementById("carteId").value = carte.id;
-  if (boutonAjout) {
-    boutonAjout.textContent = "Enregistrer les modifications";
-  }
-  document.getElementById("modalAjoutCarte").classList.remove("hidden");
-  document.getElementById("titre").value = carte.titre;
-  document.getElementById("contenu").value = carte.contenu;
-  document.getElementById("tags").value = carte.tags.join(", ");
-  document.getElementById("carteId").value = carte.id;
-// 🛑 Cacher le bouton "Choisir une catégorie"
-document.getElementById("btnCategorieOptions").classList.add("hidden");
-  // Affiche la catégorie visuellement si existante
+  /* --- Si tu as déjà stocké le nom & couleur dans la carte --------------- */
+  texte.textContent        = carte.nomCategorie || carte.categorie || "-- Choisir une catégorie --";
+  resume.style.background  = carte.couleurCategorie || "#ccc";
+  resume.style.color       = getTextColor(carte.couleurCategorie || "#ccc");
+
+  /* --- OU, en plus propre : récupère la catégorie complète --------------- */
   if (carte.categorie) {
-    const champCategorie = document.getElementById("categorieChoisie");
-    champCategorie.value = carte.categorie;
-    champCategorie.dataset.couleur = carte.couleurCategorie;
-
-    document.getElementById("categorieSelectionnee").style.display = "flex";
-    document.getElementById("texteCategorieCarte").textContent = carte.nomCategorie || "Catégorie sélectionnée";
-  }
-
-  document.getElementById("annulerModifBtn").style.display = "inline-block";
-  if (carte.categorie) {
-    getCategorieByNom(carte.categorie).then(categorie => {
-      if (!categorie) return;
+    getCategorieByNom(carte.categorie).then(cat => {
+      if (!cat) return;
+      const resume = document.getElementById('categorieSelectionnee');
+      const texte  = document.getElementById('texteCategorieCarte');
+      if (!resume || !texte) return;
   
-      const resume = document.getElementById("categorieSelectionnee");
-      const texte = document.getElementById("texteCategorieCarte");
-  
-      if (resume && texte) {
-        resume.classList.remove("hidden");
-        resume.style.display = "flex";
-  
-        texte.textContent = categorie.nom;
-        resume.style.backgroundColor = categorie.couleur;
-        resume.style.color = getTextColor(categorie.couleur);
-      }
+      resume.classList.remove('hidden');
+      resume.style.display = 'flex';
+      texte.textContent        = cat.nom;
+      resume.style.background  = cat.couleur;
+      resume.style.color       = getTextColor(cat.couleur);
     });
   }
 
+  /* --- Cache le bouton “Choisir une catégorie” --- */
+  document.getElementById("btnCategorieOptions").classList.add("hidden");
+
+  /* --- Bouton de suppression --- */
+  document.getElementById("ouvrirConfirmationSuppressionCarteBtn").classList.remove("hidden");
+
+  /* --- Bouton d’action principal --- */
+  document.getElementById("ajoutCarteBtn").textContent = "Enregistrer les modifications";
+
+  /* --- Champs de formulaire --- */
+  document.getElementById("titre").value   = carte.titre;
+  document.getElementById("contenu").value = carte.contenu;
+  document.getElementById("tags").value    = carte.tags.join(", ");
+  document.getElementById("carteId").value = carte.id;
+
+  /* --- Affiche la modale --- */
+  document.getElementById("modalAjoutCarte").classList.remove("hidden");
+  document.getElementById("annulerModifBtn").style.display = "inline-block";
 }
 /* function supprimerCarteDansCorbeille(id) {
   if (!db) {
