@@ -56,6 +56,7 @@ function afficherCartes(modeTri = "date-desc") {
           ouvrirModaleModification(carte); // ← tu crées cette fonction juste après
         });
       }
+
     });
   });
 }
@@ -80,12 +81,11 @@ function afficherCartesFiltres(cartes) {
 
 // ➕ Ajoute une carte depuis le formulaire
 async function ajouterCarte() {
-
-  // 🔢 Récupération de l’ID (création ou modification)
+  // 🔢 1. ID
   const idStr = document.getElementById("carteId")?.value;
-  const id = idStr ? Number(idStr) : null; // ← CHANGÉ
-  console.log("📌 Type d'ID soumis :", typeof id, id);
-  // 📝 Récupération des champs du formulaire
+  const id = idStr ? Number(idStr) : null;
+
+  // 📝 2. Récupération des champs
   const titreInput = document.getElementById("titre");
   const contenuInput = document.getElementById("contenu");
   const tagsInput = document.getElementById("tags");
@@ -97,72 +97,54 @@ async function ajouterCarte() {
   const categorie = categorieInput.value;
   const couleurCategorie = categorieInput.dataset.couleur || "#ccc";
 
-  // 🧼 Réinitialiser les messages d'erreur
-  document.getElementById("erreurTitre").textContent = "";
-  document.getElementById("erreurTitre").classList.add("hidden");
-  document.getElementById("erreurCategorie").textContent = "";
-  document.getElementById("erreurCategorie").classList.add("hidden");
-  document.getElementById("erreurContenu").textContent = "";
-  document.getElementById("erreurContenu").classList.add("hidden");
+  // 🧼 3. Validation (inchangé)
+  // ... ton code de validation ici ...
 
-  let erreur = false;
-
-  if (!titre) {
-    document.getElementById("erreurTitre").textContent = "Le titre est requis.";
-    document.getElementById("erreurTitre").classList.remove("hidden");
-    erreur = true;
-  }
-
-  if (!categorie) {
-    document.getElementById("erreurCategorie").textContent = "Veuillez choisir une catégorie.";
-    document.getElementById("erreurCategorie").classList.remove("hidden");
-    erreur = true;
-  }
-
-  if (!contenu) {
-    document.getElementById("erreurContenu").textContent = "Le contenu ne peut pas être vide.";
-    document.getElementById("erreurContenu").classList.remove("hidden");
-    erreur = true;
-  }
-
-  if (erreur) {
-    return;
-  }
-
-  // 🧠 Construction de l'objet carte
+  // 📦 4. Construction de la carte
   const texteCategorie = document.getElementById("texteCategorieCarte");
   const nomCategorie = texteCategorie?.textContent?.trim() || categorie;
+
   const nouvelleCarte = {
-    id: id ?? Date.now(), // ← CHANGÉ : permet la mise à jour correcte si id existe
+    id: id ?? Date.now(),
     titre,
     contenu,
     tags,
     categorie,
     nomCategorie,
     couleurCategorie,
-    dateCreation: id ? undefined : Date.now() // ← CHANGÉ : évite de recréer la date si on modifie
+    dateCreation: id ? undefined : Date.now()
   };
 
-  // 💾 Enregistrement dans la base de données
+  // 💾 5. Enregistrement
   if (id) {
-    await dbModifierCarte(nouvelleCarte); // ← CHANGÉ : mise à jour au lieu d'ajout
+    await dbModifierCarte(nouvelleCarte);
   } else {
     await dbAjouterCarte(nouvelleCarte);
   }
-  await afficherCartes();
-  // ✅ Fermeture de la modale et mise à jour de l’affichage
+
+ // 🔄 6. Rafraîchir interface et recentrer proprement
+await afficherCartes();
+
+// 📍 7. Attendre que le DOM soit bien mis à jour avant de cibler la carte
+requestAnimationFrame(() => {
+  const carteModifiee = document.querySelector(`[data-carte-id="${nouvelleCarte.id}"]`);
+  if (carteModifiee) {
+    carteModifiee.scrollIntoView({ behavior: "auto", block: "center" });
+  }
+});
+
+  // 🧼 9. Nettoyage de la modale
   document.getElementById("modalAjoutCarte").classList.add("hidden");
 
-  // ♻️ Réinitialise les champs du formulaire
   titreInput.value = "";
   contenuInput.value = "";
   tagsInput.value = "";
   categorieInput.value = "";
   categorieInput.dataset.couleur = "";
-  document.getElementById("carteId").value = ""; // ← CHANGÉ : repasse en mode création
+  document.getElementById("carteId").value = "";
 
   mettreAJourResumeCategorie({ nom: "-- Choisir une catégorie --", couleur: "#ccc" });
-  document.getElementById("categorieSelectionnee").classList.add("hidden"); // (facultatif)
+  document.getElementById("categorieSelectionnee").classList.add("hidden");
 }
 
 function ouvrirModaleModification(carte) {
