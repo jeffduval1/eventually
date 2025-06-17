@@ -24,7 +24,6 @@ window.viderCorbeille = viderCorbeille;
 window.fermerCorbeille = fermerCorbeille;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // console.log('🟢 Initialisation Bee Organized');
   await ouvrirDB();
   await initialiserDonneesSiVides();
   appliquerPaletteGlobale(paletteActuelle);
@@ -41,17 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
   document.getElementById("btnGererCategoriesMenu")?.addEventListener("click", () => {
-    console.log("🟢 Clic détecté : ouverture de la modale de gestion de catégories");
-    afficherGestionCategories();
+   afficherGestionCategories();
     ouvrirModale("modalGestionCategories");
-    console.log("Classes avant suppression :", document.getElementById("modalGestionCategories").classList);
-    console.log("Classes après suppression :", document.getElementById("modalGestionCategories").classList);
-
     const modal = document.getElementById("modalGestionCategories");
-    console.log("📌 Affichage modal : ", {
-      classList: [...modal.classList],
-      display: getComputedStyle(modal).display
-    });
     document.getElementById("menuContent").classList.add("hidden");
   });
 
@@ -84,22 +75,18 @@ document.addEventListener('DOMContentLoaded', async () => {
    
     if (menu.classList.contains("hidden")) {
       menu.classList.remove("hidden");
-      console.log("✅ Menu affiché");
     } else {
       menu.classList.add("hidden");
-      console.log("✅ Menu caché");
     }
   });
   document.getElementById("btnNouvelleCategorieMenu")?.addEventListener("click", () => {
     fermerMenuHamburger();
     reinitialiserFormulaireCategorie();
     ouvrirModale("modalCategorie");
-    console.log("🟢 Modale catégorie affichée");
   });
 
   document.getElementById("formAjoutCarte")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    console.log("✅ Formulaire soumis, appel de ajouterCarte()");
     ajouterCarte();
   });
   document.getElementById("btnExporter")?.addEventListener("click", exporterCartes);
@@ -174,7 +161,7 @@ document.addEventListener("click", (event) => {
     !bouton.contains(event.target)
   ) {
     menu.classList.add("hidden");
-    console.log("🔒 Menu des catégories fermé (clic extérieur)");
+   
   }
 });
 
@@ -182,7 +169,7 @@ function fermerMenuHamburger() {
   const menu = document.getElementById("menuContent");
   if (menu) {
     menu.classList.add("hidden");
-    console.log("✔️ Menu hamburger fermé");
+
   }
 }
 document.getElementById("toggleFormBtn").addEventListener("click", () => {
@@ -278,12 +265,10 @@ const annulerSuppressionCarteBtn = document.getElementById('annulerSuppressionCa
 const confirmerSuppressionBtn = document.getElementById('confirmerSuppressionBtn');
 
 boutonOuvrirConfirmation ?.addEventListener('click', () => {
-  console.log("🟥 Bouton suppression dans modale de carte cliqué");
   modalConfirmationSuppression.classList.remove('hidden');
 });
 
 annulerSuppressionCarteBtn?.addEventListener('click', () => {
-  console.log("↩️ Annulation suppression");
   modalConfirmationSuppression.classList.add('hidden');
 });
 

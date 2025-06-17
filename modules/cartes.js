@@ -16,6 +16,7 @@ let idCarteASupprimer = null;
 
 // 📌 Affiche toutes les cartes
 function afficherCartes(modeTri = "date-desc") {
+  console.log("🌀 afficherCartes() appelée");
   const boutonRetour = document.getElementById("btnRetourCategories");
   document.getElementById("btnAjouterSousCategorie").classList.add("hidden");
   boutonRetour.classList.add("hidden");
@@ -78,6 +79,11 @@ function afficherCartesFiltres(cartes) {
 // ➕ Ajoute une carte depuis le formulaire
 async function ajouterCarte() {
 
+  // 🔢 Récupération de l’ID (création ou modification)
+  const idStr = document.getElementById("carteId")?.value;
+  const id = idStr ? Number(idStr) : null; // ← CHANGÉ
+  console.log("📌 Type d'ID soumis :", typeof id, id);
+  // 📝 Récupération des champs du formulaire
   const titreInput = document.getElementById("titre");
   const contenuInput = document.getElementById("contenu");
   const tagsInput = document.getElementById("tags");
@@ -120,32 +126,44 @@ async function ajouterCarte() {
   if (erreur) {
     return;
   }
+
+  // 🧠 Construction de l'objet carte
   const texteCategorie = document.getElementById("texteCategorieCarte");
   const nomCategorie = texteCategorie?.textContent?.trim() || categorie;
   const nouvelleCarte = {
+    id: id ?? Date.now(), // ← CHANGÉ : permet la mise à jour correcte si id existe
     titre,
     contenu,
     tags,
-    categorie,              // identifiant ou slug
-    nomCategorie,           // nom lisible pour affichage
+    categorie,
+    nomCategorie,
     couleurCategorie,
-    dateCreation: Date.now()
+    dateCreation: id ? undefined : Date.now() // ← CHANGÉ : évite de recréer la date si on modifie
   };
 
-  await dbAjouterCarte(nouvelleCarte);
+  // 💾 Enregistrement dans la base de données
+  if (id) {
+    await dbModifierCarte(nouvelleCarte); // ← CHANGÉ : mise à jour au lieu d'ajout
+  } else {
+    await dbAjouterCarte(nouvelleCarte);
+  }
+
+  // ✅ Fermeture de la modale et mise à jour de l’affichage
   document.getElementById("modalAjoutCarte").classList.add("hidden");
   afficherCartes();
 
-  // 🧼 Réinitialise les champs du formulaire
+  // ♻️ Réinitialise les champs du formulaire
   titreInput.value = "";
   contenuInput.value = "";
   tagsInput.value = "";
   categorieInput.value = "";
   categorieInput.dataset.couleur = "";
+  document.getElementById("carteId").value = ""; // ← CHANGÉ : repasse en mode création
 
   mettreAJourResumeCategorie({ nom: "-- Choisir une catégorie --", couleur: "#ccc" });
   document.getElementById("categorieSelectionnee").classList.add("hidden"); // (facultatif)
 }
+
 function ouvrirModaleModification(carte) {
   console.log("📝 Données de la carte à modifier :", carte);
   setCarteASupprimer(carte.id);

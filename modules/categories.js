@@ -1,4 +1,3 @@
-console.log("🧩 categories.js chargé");
 import {
   getCategories,
   getCategorieByNom,
@@ -279,17 +278,10 @@ export function creerNouvelleCategorie(depuisCarte = false) {
             nom: nouvelleCategorie.nom,
             couleur: nouvelleCategorie.couleur
           });
-      
 
-          // Et ajoute ce traceur
-          console.trace("🔍 Qui a touché à resume ?");
+
           setTimeout(() => {
             const resumeEl = document.getElementById("categorieSelectionnee");
-            console.log("🕵️ Vérification après 100ms :", {
-              visible: resumeEl && resumeEl.offsetParent !== null,
-              classList: resumeEl?.classList.value,
-              display: getComputedStyle(resumeEl).display
-            });
           }, 100);
           resume.style.backgroundColor = nouvelleCategorie.couleur;
           resume.style.color = getTextColor(nouvelleCategorie.couleur);
@@ -302,7 +294,6 @@ export function creerNouvelleCategorie(depuisCarte = false) {
 
 // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
 export function chargerMenuCategories() {
-  console.log("⚡ chargerMenuCategories() appelée !");
   const menu = document.getElementById("listeCategories");
   const inputCategorie = document.getElementById("categorieChoisie");
 
@@ -337,13 +328,9 @@ export function chargerMenuCategories() {
           const resume = document.getElementById("categorieSelectionnee");
           const texte = document.querySelector("#categorieSelectionnee #texteCategorieCarte");
           const btn = document.getElementById("btnCategorieOptions");
-          console.log("🕵️ Visible ?", texte, texte?.offsetParent !== null);
-          console.log("✅ Catégorie sélectionnée :", cat.nom);
-          console.log("🎨 Couleur :", cat.couleur);
-          console.log("📌 Résumé :", resume, texte, btn);
+
 
           if (resume && texte && btn) {
-            console.log("👉 Résumé affiché via nouvelle catégorie créée");
             mettreAJourResumeCategorie({ nom: cat.nom, couleur: cat.couleur });
             menu.classList.add("hidden");
           }
@@ -373,7 +360,6 @@ export function chargerMenuCategories() {
 
         if (parent) {
           resume.style.setProperty("display", "flex", "important");
-          console.log("✅ Style appliqué :", resume.style.cssText);
           nomResume.textContent = parent.nom;
           nomResume.style.backgroundColor = parent.couleur;
           nomResume.style.color = getTextColor(parent.couleur);
@@ -432,7 +418,6 @@ function supprimerCategorie(nom) {
   const confirmation = confirm(`Voulez-vous vraiment supprimer la catégorie « ${nom} » ?`);
   if (confirmation) {
     supprimerCategorieFromDB(nom).then(() => {
-      console.log("🗑️ Catégorie supprimée :", nom);
       afficherGestionCategories();
       chargerMenuCategories();
 
@@ -456,7 +441,6 @@ function supprimerCategorie(nom) {
         }
         if (vueCategories) vueCategories.style.display = "flex";
 
-        console.log("🟢 Rafraîchissement complet après suppression de la catégorie affichée");
       }
     });
   }
@@ -468,7 +452,6 @@ document.getElementById("closeEditModal").addEventListener("click", () => {
 });
 
 document.getElementById("btnEnregistrerModification").addEventListener("click", () => {
-  console.log("✅ BOUTON MODIFICATION ENCLENCHÉ");
   const nouveauNom = document.getElementById("editCategorieNom").value.trim();
 
   if (!nouveauNom) {
@@ -497,10 +480,6 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
       .then(() => ajouterCategorie(nouvelleCategorie))
 
       .then(() => {
-        console.log("✅ Modification enregistrée dans IndexedDB");
-        console.log("idCategorieActuelle :", idCategorieActuelle);
-        console.log("ancienne :", categorieEnCoursDeModification.nom);
-        console.log("nouveauNom :", nouveauNom);
 
         fermerModale("modalEditCategorie");
         afficherGestionCategories();
@@ -522,7 +501,7 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
                 titreCategorie.classList.remove("hidden");
               }
               afficherCartesParCategorie(nouveauNom);
-              console.log("🟢 Rafraîchissement complet de la catégorie :", nouveauNom);
+              
             }
           });
         }

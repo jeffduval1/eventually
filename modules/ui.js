@@ -2,7 +2,7 @@
  * 🖼️ ui.js
  * Gestion de l’interface utilisateur (UI)
  */
-// console.log("🧩 ui.js chargé");
+
 
 import { afficherCartes, ajouterCarte} from './cartes.js';
 import { afficherVueParCategories, setIdCategorieActuelle } from './categories.js';

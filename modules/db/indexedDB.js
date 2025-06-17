@@ -32,7 +32,6 @@ export async function ouvrirDB() {
 
     request.onsuccess = function (event) {
       db = event.target.result;
-      // console.log("✅ IndexedDB ouverte avec succès");
       resolve(db);
     };
 
@@ -101,6 +100,7 @@ export function modifierCategorie(categorie) {
 }
 
 export function modifierCarte(carte) {
+  console.log("🛠 Mise à jour de la carte ID :", carte.id);
   return ecrireDansStore("regles", carte, "put");
 }
 
