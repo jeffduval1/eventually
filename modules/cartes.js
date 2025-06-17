@@ -11,6 +11,7 @@ import {
   deplacerCarteDansCorbeille, db, getCategorieByNom } 
   from './db/indexedDB.js';
 import { mettreAJourResumeCategorie } from "./uiCategories.js";
+import { changerModeAffichage } from './ui.js';
 
 let idCarteASupprimer = null;
 
@@ -21,6 +22,7 @@ function afficherCartes(modeTri = "date-desc") {
   document.getElementById("btnAjouterSousCategorie").classList.add("hidden");
   boutonRetour.classList.add("hidden");
   const cartesContainer = document.getElementById("cartes-container");
+  cartesContainer.innerHTML = "";
   const vueCategories = document.getElementById("vue-par-categories");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
 
@@ -147,10 +149,9 @@ async function ajouterCarte() {
   } else {
     await dbAjouterCarte(nouvelleCarte);
   }
-
+  await afficherCartes();
   // ✅ Fermeture de la modale et mise à jour de l’affichage
   document.getElementById("modalAjoutCarte").classList.add("hidden");
-  afficherCartes();
 
   // ♻️ Réinitialise les champs du formulaire
   titreInput.value = "";

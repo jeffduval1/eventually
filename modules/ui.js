@@ -45,8 +45,9 @@ function setupUI() {
 
   // Ajout de carte
   document.getElementById("ajoutCarteBtn")?.addEventListener("click", (e) => {
-    e.preventDefault();          // évite le submit implicite
-    ajouterCarte();              // appelle la fonction de cartes.js
+    e.preventDefault();
+    changerModeAffichage("cartes"); // ← Bascule ici
+    ajouterCarte();
   });
 
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
