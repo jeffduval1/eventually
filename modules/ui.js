@@ -11,7 +11,11 @@ import { ouvrirModalePalette } from './palette.js';
 import { reinitialiserFiltre } from './filters.js';
 import { mettreAJourResumeCategorie } from "./uiCategories.js";
 
+
+
 function setupUI() {
+  if (window.__beeSetupDone) return;
+window.__beeSetupDone = true;
   // Importer
   document.getElementById("btnImporter")?.addEventListener("click", () => {
     const input = document.getElementById("importFile");
@@ -35,6 +39,7 @@ function setupUI() {
 
   // Vue : par cartes
   document.getElementById("btnModeCartes")?.addEventListener("click", () => {
+    console.log("👂 Ajout listener btnModeCartes");
     changerModeAffichage("cartes");
   });
 
@@ -56,8 +61,10 @@ function setupUI() {
 
   changerModeAffichage("categories", true);
 }
-
+let currentMode = null;
 function changerModeAffichage(mode, initial = false) {
+
+  console.log("🔁 changerModeAffichage appelé avec mode :", mode);
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
   const btnCartes = document.getElementById("btnModeCartes");

@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
 
   document.getElementById("btnModeCategories")?.addEventListener("click", afficherVueParCategories);
-  document.getElementById("btnModeCartes")?.addEventListener("click", afficherCartes);
+  // document.getElementById("btnModeCartes")?.addEventListener("click", afficherCartes);
   document.getElementById("resetFilterBtn")?.addEventListener("click", reinitialiserFiltre);
   document.getElementById("btnAfficherCorbeille")?.addEventListener("click", afficherCorbeille);
   document.getElementById("btnFermerCorbeille")?.addEventListener("click", fermerCorbeille);
