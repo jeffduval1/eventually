@@ -39,7 +39,6 @@ window.__beeSetupDone = true;
 
   // Vue : par cartes
   document.getElementById("btnModeCartes")?.addEventListener("click", () => {
-    console.log("👂 Ajout listener btnModeCartes");
     changerModeAffichage("cartes");
   });
 
@@ -63,8 +62,7 @@ window.__beeSetupDone = true;
 }
 let currentMode = null;
 function changerModeAffichage(mode, initial = false) {
-
-  console.log("🔁 changerModeAffichage appelé avec mode :", mode);
+  console.log("🔁 changerModeAffichage appelé AVEC :", mode, "initial ?", initial);
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
   const btnCartes = document.getElementById("btnModeCartes");

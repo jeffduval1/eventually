@@ -39,7 +39,7 @@ export function appliquerPaletteGlobale(anciennePaletteId) {
       }
     });
     chargerMenuCategories();
-    afficherVueParCategories();
+
   };
 
   // 🔄 Mise à jour des cartes
@@ -54,7 +54,7 @@ export function appliquerPaletteGlobale(anciennePaletteId) {
         storeCartes.put(carte);
       }
     });
-    afficherCartes();
+
   };
 
   // 🎨 Mise à jour visuelle immédiate

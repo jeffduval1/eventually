@@ -17,6 +17,7 @@ let idCarteASupprimer = null;
 
 // 📌 Affiche toutes les cartes
 function afficherCartes(modeTri = "date-desc") {
+  console.trace("🌀 afficherCartes() appelée");
   console.log("🌀 afficherCartes() appelée");
   const boutonRetour = document.getElementById("btnRetourCategories");
   document.getElementById("btnAjouterSousCategorie").classList.add("hidden");
@@ -148,7 +149,7 @@ requestAnimationFrame(() => {
 }
 
 function ouvrirModaleModification(carte) {
-  console.log("📝 Données de la carte à modifier :", carte);
+ 
   setCarteASupprimer(carte.id);
 
   /* ─── 1. Titre de la modale ───────────────────────────────────────────── */

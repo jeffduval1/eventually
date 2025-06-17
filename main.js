@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await ouvrirDB();
   await initialiserDonneesSiVides();
   appliquerPaletteGlobale(paletteActuelle);
-  afficherVueParCategories();
+  setupUI();
   initialiserMenuHamburger();
   setupUI();
 
