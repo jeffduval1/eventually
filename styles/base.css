@@ -10,68 +10,93 @@
    - Styles spécifiques à des composants
    - Disposition ou mise en page
 --------------------------------------------- */
+
+/* --------------------------------------------------
+   ⬛ BOX-SIZING ET NORMALISATION
+-------------------------------------------------- */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
+
+/* --------------------------------------------------
+   🌍 POLICES ET BASE DU BODY
+-------------------------------------------------- */
 body {
-    font-family: 'Inter', sans-serif; /* Texte courant */
-      margin: 1rem;
-      padding: 0;
-      
-  }
-  button, select, input, textarea {
-    font-family: 'Inter', sans-serif;
-  }
+  font-family: 'Inter', sans-serif;
+  margin: 1rem;
+  padding: 0;
+}
+
+button, select, input, textarea {
+  font-family: 'Inter', sans-serif;
+}
+
+/* --------------------------------------------------
+   🔢 STYLES DES TITRES
+-------------------------------------------------- */
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #263238;
+  /* font-family: Cambria, serif; */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+@media (min-width: 768px) {
   h1 {
-    /* font-family: Cambria, serif; */
-    font-size: 24px; /* Mobile par défaut */
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #263238; /* Gris anthracite pour rester dans ta palette */
+    font-size: 32px;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Merriweather', serif; /* Titres */
-  }
-  /* Tablette et bureau */
-  @media (min-width: 768px) {
-    h1 {
-      font-size: 32px;
-    }
-  }
-  
+}
+
+/* --------------------------------------------------
+   📃 SÉLECTEURS PAR DÉFAUT
+-------------------------------------------------- */
+select {
+  display: block;
+  padding: 10px;
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+}
+
+@media(min-width:600px){
   select {
-      display: block;
-      padding: 10px;
-      margin: 1rem 0 1rem 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: white;
-      cursor: pointer;
-  }
-  @media(min-width:600px){
-      select{
-          width: 50%;
-             padding: 10px;
-      }
-  }
-  
-  input, textarea, select {
-    width: calc(100% - 20px);
+    width: 50%;
     padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
   }
-  textarea {
-    height: 100px;
-    resize: none;
-  }
-  label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-  }
+}
+
+input, textarea, select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* --------------------------------------------------
+   🖋 TEXTAREA
+-------------------------------------------------- */
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+/* --------------------------------------------------
+   📄 LABELS
+-------------------------------------------------- */
+label {
+  font-weight: bold;
+  margin-top: 10px;
+  display: block;
+}

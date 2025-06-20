@@ -9,39 +9,56 @@
    - Cartes
    - Modales de création
 --------------------------------------------- */
+
+/* --------------------------------------------------
+   📦 CONTENEUR ET SÉLECTION DE CATÉGORIE
+-------------------------------------------------- */
 .menu-categorie {
     position: relative;
     width: 250px;
-  }
-  
-  .categorie-selection {
+}
+
+.categorie-selection {
     padding: 10px;
     border: 1px solid #ccc;
     cursor: pointer;
     border-radius: 4px;
-  }
-  
-  #menuCategorie .liste-categories {
+}
+
+#menuCategorie .liste-categories {
     border-radius: 8px;
     overflow-y: auto;
-  }
-  
-  .liste-categories div {
-    padding: 10px;
+}
+
+/* --------------------------------------------------
+   🗂 LISTE DES CATÉGORIES (dans les menus ou modales)
+-------------------------------------------------- */
+.liste-categories div {
+    padding: 6px 10px;
+    border-radius: 4px;
     cursor: pointer;
-  }
-  
-  .liste-categories div:hover {
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.liste-categories div:hover {
+    transform: scale(1.05);
+    background-color: rgba(0, 0, 0, 0.05);
     opacity: 0.9;
-  }
-  #vue-par-categories {
+}
+
+/* --------------------------------------------------
+   📂 AFFICHAGE DES CATÉGORIES EN VUE PRINCIPALE
+-------------------------------------------------- */
+#vue-par-categories {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 20px;
-  }
-  
-  .carte-categorie {
+}
+
+.carte-categorie {
     padding: 0.5rem;
     border-radius: 8px;
     color: white;
@@ -50,21 +67,16 @@
     text-align: center;
     font-weight: bold;
     transition: transform 0.2s;
-  }
-  .carte-categorie:hover {
-    transform: scale(1.05);
-  }
-  .categorie-item:hover {
-    background-color: rgba(0, 0, 0, 0.05);
 }
-#categorieSelectionnee {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-  }
-  .ligne-categorie {
+
+.carte-categorie:hover {
+    transform: scale(1.05);
+}
+
+/* --------------------------------------------------
+   🧩 LIGNES ET BLOCS D'ÉDITION DE CATÉGORIE
+-------------------------------------------------- */
+.ligne-categorie {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -73,64 +85,65 @@
     border-radius: 8px;
     background: #f7f7f7;
     border: 1px solid #ddd;
-  }
-  .nom-et-edition {
+}
+
+.nom-et-edition {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .nom-categorie {
+}
+
+.nom-categorie {
     font-weight: bold;
     font-size: 16px;
-  }
-  
-  .nom-categorie[contenteditable="true"] {
+}
+
+.nom-categorie[contenteditable="true"] {
     background-color: #fff6cc;
     border-bottom: 1px dashed #aaa;
-  }
-  
-  .select-couleur {
+}
+
+.select-couleur {
     margin-top: 6px;
-  }
-  
-  .actions-categorie {
+}
+
+.actions-categorie {
     display: flex;
     gap: 10px;
     margin-top: 6px;
     justify-content: flex-end;
-  }
-  .zoneRetourSimple{
+}
+
+.actions-categorie button {
+    flex: 1;
+    padding: 6px;
+    font-size: 16px;
+}
+
+/* --------------------------------------------------
+   🔁 RETOUR / NAVIGATION
+-------------------------------------------------- */
+.zoneRetourSimple {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: flex-start;
-  }
-  /* -----------------------------------------------------
+}
+
+/* --------------------------------------------------
    🟡 AFFICHAGE DU RÉSUMÉ DE CATÉGORIE SÉLECTIONNÉE
------------------------------------------------------ */
+-------------------------------------------------- */
 #categorieSelectionnee {
-    padding: 8px;
-    border-radius: 6px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
     text-align: center;
     font-weight: 500;
-    cursor: pointer;
     user-select: none;
-  }
+}
 
-  .liste-categories div {
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: transform 0.2s, background-color 0.2s;
-  }
-  
-  .liste-categories div:hover {
-    transform: scale(1.05);
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  .categorie-resume {
+.categorie-resume {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -139,22 +152,9 @@
     border-radius: 8px;
     font-weight: bold;
     color: white;
-  }
-  .ligne-categorie-liste {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    gap: 8px;
-  }
-  #modalEditCategorie input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-  }
-  .resume-parent {
+}
+
+.resume-parent {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -164,4 +164,23 @@
     border-left: 5px solid #ccc;
     border-radius: 8px;
     font-weight: bold;
-  }
+}
+
+/* --------------------------------------------------
+   📋 ÉDITION DE CATÉGORIE DANS LA MODALE
+-------------------------------------------------- */
+#modalEditCategorie input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+}
+
+.ligne-categorie-liste {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    gap: 8px;
+}

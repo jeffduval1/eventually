@@ -1,5 +1,5 @@
 /* --------------------------------------------
-   📐 disposition.css
+   📀 disposition.css
    Contient : structure et disposition générale.
    - Grilles principales
    - Conteneurs (`#cartes-container`, `#vue-par-categories`)
@@ -9,7 +9,11 @@
    - Style de contenu (ex. boutons, couleurs, typographie)
    - Comportement interactif spécifique
 --------------------------------------------- */
+
+/* --------------------------------------------------
+   🏢 ZONE DE BOUTONS POUR CHANGEMENT DE MODE
+-------------------------------------------------- */
 .mode-toggle {
     display: flex;
     margin-bottom: 1rem;
-  }
+}

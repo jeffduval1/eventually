@@ -9,12 +9,20 @@
    Ne doit pas contenir :
    - Style du contenu interne (carte, catégorie, etc.)
 --------------------------------------------- */
+
+/* --------------------------------------------------
+   📱 RÉPONSIVE : AJUSTEMENT POUR PETITS ÉCRANS
+-------------------------------------------------- */
 @media (max-width: 480px) {
     #ajoutCarteContainer {
       width: 95%;
     }
 }
-#ajoutCarteContainer {  
+
+/* --------------------------------------------------
+   📦 CONTENEUR GÉNÉRAL DE FORMULAIRE DANS LA MODALE
+-------------------------------------------------- */
+#ajoutCarteContainer {
     border: 1px solid #ddd;
     padding: 20px;
     border-radius: 12px;
@@ -23,15 +31,17 @@
     max-width: 450px;
     margin: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  }
-  .modal-container{
+}
+
+.modal-container {
     display: flex;
     justify-content: center;
-  }
+}
 
-  /* Fond semi-transparent plein écran */
+/* --------------------------------------------------
+   🌫 FOND FLOU DE LA MODALE (OVERLAY)
+-------------------------------------------------- */
 .modal {
- 
     position: fixed;
     z-index: 3000;
     left: 0;
@@ -39,55 +49,63 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Fond noir transparent */
+    background-color: rgba(0, 0, 0, 0.5);
     opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  /* Contenu centré dans la modale */
-  .modal-content {
+    transform: scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+/* --------------------------------------------------
+   🎯 CONTENU CENTRAL DE LA MODALE
+-------------------------------------------------- */
+.modal-content {
     background-color: #fff;
-    margin: 10% auto; /* Centré verticalement */
+    margin: 10% auto;
     padding: 20px;
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     animation: fadeIn 0.3s ease-out;
-  }
-  @media (min-width: 320px) and (max-width: 400px) {
-    .modal-content {
-      width: 85%;         
-      padding: 5%;     
-      margin: 5% auto;   
-      max-height: 90vh;   
-      overflow-y: auto;   
-    }
-  }
-  .modal.fade-out {
-    opacity: 0;
-    transform: scale(0.95);
-    pointer-events: none;
-  }
-  /* -----------------------------------------------------
-   🧩 MODALE DE CRÉATION DE CARTE – STRUCTURE GÉNÉRALE
------------------------------------------------------ */
+}
 
+@media (min-width: 320px) and (max-width: 400px) {
+    .modal-content {
+        width: 85%;
+        padding: 5%;
+        margin: 5% auto;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* --------------------------------------------------
+   🧩 STRUCTURE DE MODALE DE CRÉATION DE CARTE
+-------------------------------------------------- */
 .modal-container.colonne {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 20px;
-  }
-  .liste-categories-modale {
+}
+
+/* --------------------------------------------------
+   🧾 LISTE DES CATÉGORIES DANS LA MODALE
+-------------------------------------------------- */
+.liste-categories-modale {
     display: block;
     max-height: 300px;
     overflow-y: auto;
     padding: 0;
-  }
-  
-  .liste-categories-modale div {
+}
+
+.liste-categories-modale div {
     display: block;
     width: 100%;
     padding: 10px 12px;
@@ -95,8 +113,8 @@
     background-color: white;
     cursor: pointer;
     transition: background-color 0.2s;
-  }
-  
-  .liste-categories-modale div:hover {
+}
+
+.liste-categories-modale div:hover {
     background-color: #f5f5f5;
-  }
+}

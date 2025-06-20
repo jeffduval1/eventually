@@ -8,24 +8,36 @@
    - Cartes ou modales
    - Boutons autres que ceux liés au filtre
 --------------------------------------------- */
+
+/* --------------------------------------------------
+   🔽 LISTES DÉROULANTES POUR TRI & FILTRE
+-------------------------------------------------- */
+.triSelect,
 .tagFilter {
-    width:240px;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-  }
-  #zoneFiltres input[type="text"] {
-    margin-top: 0;  /* Espace au-dessus du champ de recherche */
-  }
-  .triSelect {
     width: 240px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
-  }
-  .tags {
+}
+
+/* --------------------------------------------------
+   🔎 CHAMP DE RECHERCHE TEXTE
+-------------------------------------------------- */
+#zoneFiltres input[type="text"] {
+    margin-top: 0; /* Espace au-dessus du champ de recherche */
+}
+
+/* --------------------------------------------------
+   🏷 AFFICHAGE DES TAGS EN TEXTE
+-------------------------------------------------- */
+.tags {
     font-style: italic;
     color: #555;
-  }
-  .etiquette {
+}
+
+/* --------------------------------------------------
+   🏷 ÉTIQUETTES DE TAG CLIQUABLES
+-------------------------------------------------- */
+.etiquette {
     display: inline-flex;
     align-items: center;
     background-color: #007bff;
@@ -34,4 +46,4 @@
     margin: 5px;
     border-radius: 15px;
     font-size: 14px;
-  }
+}

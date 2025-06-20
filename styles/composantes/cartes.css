@@ -9,7 +9,10 @@
    - Comportement de modale
    - Style des filtres ou catégories
 --------------------------------------------- */
-/* CARTES */
+
+/* --------------------------------------------------
+   🧱 STRUCTURE DE BASE DES CARTES
+-------------------------------------------------- */
 .carte {
     width: 280px;
     background-color: white;
@@ -19,9 +22,21 @@
     margin: 12px;
     position: relative;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  
-  .carte .modifier-carte {
+}
+
+/* Variante redondante à fusionner plus tard */
+.carte {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 1rem 0 1rem 0; 
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* --------------------------------------------------
+   ✏️ BOUTON DE MODIFICATION SUR LA CARTE
+-------------------------------------------------- */
+.carte .modifier-carte {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -30,45 +45,49 @@
     font-size: 18px;
     cursor: pointer;
     color: #555;
-  }
-  
-  .carte .titre-carte {
+}
+
+/* --------------------------------------------------
+   🏷 AFFICHAGE DU TITRE, TAGS ET CONTENU
+-------------------------------------------------- */
+.carte .titre-carte {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 8px;
-  }
-  
-  .carte .tags-carte {
+}
+
+.carte .tags-carte {
     font-size: 13px;
     color: #888;
     margin-bottom: 8px;
-  }
-  
-  .carte .contenu-carte {
+}
+
+.carte .contenu-carte {
     font-size: 14px;
     color: #333;
-  }
-  #cartes-container {
+}
+
+/* --------------------------------------------------
+   🧩 CONTENEUR DES CARTES (layout général)
+-------------------------------------------------- */
+#cartes-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;
     padding: 10px;
-  }
-  
-  #cartes-container .carte {
-    width: 280px;  
-  }
-.carte {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 1rem 0 1rem 0; 
-    background-color: #f9f9f9;
-    border-radius: 5px;
 }
-@media(min-width:600px){
 
-.cartes-container{
+#cartes-container .carte {
+    width: 280px;  
+}
+
+/* --------------------------------------------------
+   📱 RESPONSIVE : CENTRER LES CARTES EN GRAND ÉCRAN
+-------------------------------------------------- */
+@media(min-width:600px){
+  .cartes-container{
     display: flex;
     justify-content: center;
-}}
+  }
+}

@@ -8,7 +8,10 @@
    Ne doit pas contenir :
    - Layout principal ni filtres
 --------------------------------------------- */
-/* Corbeille en plein écran */
+
+/* --------------------------------------------------
+   🧺 CORBEILLE EN PLEIN ÉCRAN
+-------------------------------------------------- */
 .corbeille-fullscreen {
     position: fixed;
     top: 0;
@@ -24,19 +27,23 @@
     align-items: center;
     justify-content: flex-start;
 }
+
+/* --------------------------------------------------
+   📄 AFFICHAGE DES CARTES DANS LA CORBEILLE
+-------------------------------------------------- */
 #cartes-corbeille {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
     padding: 1rem;
-  }
-  
-  #cartes-corbeille .carte {
+}
+
+#cartes-corbeille .carte {
     width: 300px; /* ou ajuste à la largeur de tes cartes par défaut */
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1rem;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+}
