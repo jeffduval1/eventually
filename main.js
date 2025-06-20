@@ -5,7 +5,7 @@ import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie, deplacerCarteDansCorbeille } from './modules/db/indexedDB.js';
 import { afficherCartes, ajouterCarte, getCarteASupprimer } from './modules/cartes.js';
 // console.log("📦 ajouterCarte est bien importée :", typeof ajouterCarte);
-import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories } from './modules/categories.js';
+import { afficherVueParCategories, creerNouvelleCategorie, chargerMenuCategories, afficherGestionCategories, reinitialiserFormulaireNouvelleCategorie } from './modules/categories.js';
 import { filtrerParTag, reinitialiserFiltre } from './modules/filters.js';
 import {
 
@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById("closeModal")?.addEventListener("click", () => {
     document.getElementById("modalCategorie").classList.add("hidden");
+    reinitialiserFormulaireNouvelleCategorie();
   });
   document.getElementById("btnRetourCategories")?.addEventListener("click", afficherVueParCategories);
   document.getElementById("btnCreerCategorie")?.addEventListener("click", () => {

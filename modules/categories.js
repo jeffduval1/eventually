@@ -201,7 +201,9 @@ export function afficherCartesParCategorie(nomCategorie) {
   const cartesContainer = document.getElementById("cartes-container");
   const vueCategories = document.getElementById("vue-par-categories");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
-
+  const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
+  const texteCouleur  = document.getElementById("texteResumeCouleur");
+  
   // Montrer les bons éléments
   document.getElementById("btnRetourCategories").classList.remove("hidden");
   titreCategorie.classList.remove("hidden");
@@ -236,7 +238,15 @@ export function creerNouvelleCategorie(depuisCarte = false) {
   const nom = document.getElementById("nouvelleCategorieNom").value.trim();
   const couleur = document.getElementById("nouvelleCouleur").value;
   const parent = document.getElementById("parentCategorie").value || null;
-
+  const couleurSelect = document.getElementById("nouvelleCouleur");
+  const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
+  const texteCouleur  = document.getElementById("texteResumeCouleur");
+  if (resumeCouleur) {
+    resumeCouleur.classList.add("hidden");
+    resumeCouleur.style.backgroundColor = "";
+    resumeCouleur.style.color           = "";
+  }
+  if (texteCouleur) texteCouleur.textContent = "";
   if (!nom || !couleur) {
     alert("Veuillez renseigner le nom et la couleur.");
     return;
@@ -260,7 +270,17 @@ export function creerNouvelleCategorie(depuisCarte = false) {
       // Réinitialisation du formulaire
       document.getElementById("nouvelleCategorieNom").value = "";
       document.getElementById("nouvelleCouleur").selectedIndex = 0;
+      if (resumeCouleur && texteCouleur) {
+        resumeCouleur.classList.add("hidden");
+        resumeCouleur.style.backgroundColor = "";
+        resumeCouleur.style.color = "";
+        texteCouleur.textContent = "";
+      }
       document.getElementById("parentCategorie").selectedIndex = 0;
+      if (couleurSelect) {
+        couleurSelect.style.backgroundColor = "";
+        couleurSelect.style.color = "";
+      }
       document.getElementById("modalCategorie").classList.add("hidden");
 
       // Si c'est dans le contexte de création de carte :
@@ -294,27 +314,72 @@ export function creerNouvelleCategorie(depuisCarte = false) {
 
 // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
 export function chargerMenuCategories() {
-  const menu = document.getElementById("listeCategories");
+  const menu           = document.getElementById("listeCategories");
   const inputCategorie = document.getElementById("categorieChoisie");
+  const parentSelect   = document.getElementById("parentCategorie");
+  const couleurSelect  = document.getElementById("nouvelleCouleur");
 
   if (!menu || !inputCategorie) {
     console.warn("🔶 Impossible de charger les catégories : éléments non trouvés dans le DOM.");
     return;
   }
 
-  // Réinitialisation visuelle
+  // 🔄 Réinitialisation
   menu.innerHTML = "";
-  const parentSelect = document.getElementById("parentCategorie");
-  const couleurSelect = document.getElementById("nouvelleCouleur");
-  if (parentSelect) parentSelect.innerHTML = '<option value="">Aucune</option>';
-  if (couleurSelect) couleurSelect.innerHTML = '';
+  if (parentSelect)   parentSelect.innerHTML = '<option value="">Aucune</option>';
+  if (couleurSelect)  couleurSelect.innerHTML = "";
 
-  // Chargement des catégories
+  // 🎨 Préparation aperçu couleur
+  const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
+  const texteCouleur  = document.getElementById("texteResumeCouleur");
+
+  const mettreÀJourAperçu = () => {
+    if (!couleurSelect || !resumeCouleur || !texteCouleur) return;
+
+    const hex = couleurSelect.value;
+    if (!hex) {
+      resumeCouleur.classList.add("hidden");
+      return;
+    }
+
+    const nom = (nomsCouleursParPalette[paletteActuelle] || {})[hex] || hex;
+    resumeCouleur.style.backgroundColor = hex;
+    resumeCouleur.style.color = getTextColor(hex);
+    texteCouleur.textContent = nom;
+    resumeCouleur.classList.remove("hidden");
+  };
+
+  if (couleurSelect) {
+    couleurSelect.innerHTML = "";
+  
+    // 🟡 Option par défaut vide et non sélectionnable
+    const optionVide = document.createElement("option");
+    optionVide.value = "";
+    optionVide.textContent = "-- Choisir une couleur --";
+    optionVide.disabled = true;
+    optionVide.selected = true;
+    couleurSelect.appendChild(optionVide);
+  
+    // 🎨 Ajout des vraies couleurs
+    const palette = nomsCouleursParPalette[paletteActuelle] || {};
+    Object.entries(palette).forEach(([hex, nom]) => {
+      const option = document.createElement("option");
+      option.value = hex;
+      option.textContent = nom;
+      option.style.backgroundColor = hex;
+      option.style.color = getTextColor(hex);
+      couleurSelect.appendChild(option);
+    });
+  
+    // 🔁 Affichage aperçu SEULEMENT si l’utilisateur choisit une couleur
+    couleurSelect.addEventListener("change", mettreÀJourAperçu);
+  }
+
   getCategories().then(categories => {
     categories.sort((a, b) => a.nom.localeCompare(b.nom));
 
-    // 🔁 Menu des catégories pour formulaire carte
     categories.forEach(cat => {
+      // 🧾 Menu pour sélection de catégorie
       const div = document.createElement("div");
       div.textContent = cat.nom;
       div.style.backgroundColor = cat.couleur;
@@ -329,19 +394,16 @@ export function chargerMenuCategories() {
           const texte = document.querySelector("#categorieSelectionnee #texteCategorieCarte");
           const btn = document.getElementById("btnCategorieOptions");
 
-
           if (resume && texte && btn) {
             mettreAJourResumeCategorie({ nom: cat.nom, couleur: cat.couleur });
             menu.classList.add("hidden");
           }
-
-          menu.classList.add("hidden");
         }, 50);
       });
 
       menu.appendChild(div);
 
-      // 🧩 Select de catégories parent (formulaire de création de catégorie)
+      // 🧩 Select de parent
       if (parentSelect) {
         const option = document.createElement("option");
         option.value = cat.nom;
@@ -350,62 +412,50 @@ export function chargerMenuCategories() {
       }
     });
 
-    // 🎯 Réagir au changement de parent sélectionné
+    // 🧭 Choix parent
     if (parentSelect) {
       parentSelect.addEventListener("change", () => {
-        const selectedNom = parentSelect.value;
-        const parent = categories.find(c => c.nom === selectedNom);
-        const resume = document.getElementById("resumeParentCategorie");
+        const parent = categories.find(c => c.nom === parentSelect.value);
+        const resumeParent = document.getElementById("resumeParentCategorie");
         const nomResume = document.getElementById("nomParentResume");
 
         if (parent) {
-          resume.style.setProperty("display", "flex", "important");
+          resumeParent.style.display = "flex";
           nomResume.textContent = parent.nom;
           nomResume.style.backgroundColor = parent.couleur;
           nomResume.style.color = getTextColor(parent.couleur);
-          nomResume.style.padding = "4px 8px";
-          nomResume.style.borderRadius = "6px";
 
-          couleurSelect.disabled = true;
-          couleurSelect.title = "La couleur est héritée du parent.";
+          if (couleurSelect) {
+            couleurSelect.disabled = true;
+            couleurSelect.title = "La couleur est héritée du parent.";
+          }
         } else {
-          resume.classList.add("hidden");
+          resumeParent.classList.add("hidden");
 
-          couleurSelect.disabled = false;
-          couleurSelect.title = "";
+          if (couleurSelect) {
+            couleurSelect.disabled = false;
+            couleurSelect.title = "";
+          }
         }
       });
     }
 
-    // ❌ Réinitialiser le choix du parent via bouton "X"
+    // ❌ Retrait du parent
     const retirerBtn = document.getElementById("retirerParentBtn");
-    if (retirerBtn) {
-      retirerBtn.addEventListener("click", () => {
-        parentSelect.value = "";
-        const resume = document.getElementById("resumeParentCategorie");
-        if (resume) resume.classList.add("hidden");
+    retirerBtn?.addEventListener("click", () => {
+      if (parentSelect) parentSelect.value = "";
+      document.getElementById("resumeParentCategorie")?.classList.add("hidden");
 
-        if (couleurSelect) {
-          couleurSelect.disabled = false;
-          couleurSelect.title = "";
-        }
-      });
-    }
-  });
-
-  // 🎨 Charger les couleurs disponibles
-  if (couleurSelect) {
-    const palette = nomsCouleursParPalette[paletteActuelle] || {};
-    Object.entries(palette).forEach(([hex, nom]) => {
-      const option = document.createElement("option");
-      option.value = hex;
-      option.textContent = nom;
-      option.style.backgroundColor = hex;
-      option.style.color = getTextColor(hex);
-      couleurSelect.appendChild(option);
+      if (couleurSelect) {
+        couleurSelect.disabled = false;
+        couleurSelect.title = "";
+        mettreÀJourAperçu();
+      }
     });
-  }
+  });
 }
+
+
 function lancerEditionCategorie(cat) {
   categorieEnCoursDeModification = cat;
   document.getElementById("editCategorieNom").value = cat.nom;
@@ -449,6 +499,7 @@ let categorieEnCoursDeModification = null;
 
 document.getElementById("closeEditModal").addEventListener("click", () => {
   fermerModale("modalEditCategorie");
+  reinitialiserFormulaireNouvelleCategorie();
 });
 
 document.getElementById("btnEnregistrerModification").addEventListener("click", () => {
@@ -501,7 +552,7 @@ document.getElementById("btnEnregistrerModification").addEventListener("click", 
                 titreCategorie.classList.remove("hidden");
               }
               afficherCartesParCategorie(nouveauNom);
-              
+
             }
           });
         }
@@ -584,4 +635,31 @@ function lancerModificationCouleur(cat) {
   });
 
   ouvrirModale("modalChangerCouleur");
+}
+export function reinitialiserFormulaireNouvelleCategorie() {
+  const nomInput       = document.getElementById("nouvelleCategorieNom");
+  const couleurSelect  = document.getElementById("nouvelleCouleur");
+  const parentSelect   = document.getElementById("parentCategorie");
+  const resumeCouleur  = document.getElementById("resumeNouvelleCouleur");
+  const texteCouleur   = document.getElementById("texteResumeCouleur");
+
+  if (nomInput) nomInput.value = "";
+  if (couleurSelect) {
+    couleurSelect.selectedIndex = 0;
+    couleurSelect.disabled = false;
+    couleurSelect.title = "";
+    couleurSelect.style.backgroundColor = "";
+    couleurSelect.style.color = "";
+  }
+  if (parentSelect) parentSelect.selectedIndex = 0;
+
+  if (resumeCouleur) {
+    resumeCouleur.classList.add("hidden");
+    resumeCouleur.style.backgroundColor = "";
+    resumeCouleur.style.color = "";
+  }
+  if (texteCouleur) texteCouleur.textContent = "";
+
+  const resumeParent = document.getElementById("resumeParentCategorie");
+  if (resumeParent) resumeParent.classList.add("hidden");
 }
