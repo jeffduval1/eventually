@@ -1,0 +1,114 @@
+/* --------------------------------------------
+   🍔 hamburger.css
+   Contient : menu hamburger mobile.
+   - Position fixe, animation
+   - Bouton "☰", menu déroulant
+
+   Ne doit pas contenir :
+   - Filtres ou modales
+   - Styles du contenu interne (boutons du menu)
+--------------------------------------------- */
+/* Menu hamburger */
+.hamburger-container {
+    position: fixed;
+    top: 20px;   /* Distance depuis le bas */
+    right: 50px;    /* Distance depuis la droite */
+    z-index: 1000;
+  }
+  
+  #btnHamburger {
+    position: fixed;
+    font-size: 18px;
+    background-color: #FFD54F; /* Jaune miel */
+    color: #333;               /* Icône foncée */
+    border: none;
+    border-radius: 50%;        /* Cercle */
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Légère ombre */
+  }
+  
+  .menu-content {
+  
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 10px;
+    z-index: 2000;
+    min-width: 200px;
+  }
+  
+  .menu-content .menu-section {
+    margin-bottom: 12px;
+  }
+  
+  .menu-content .menu-section h4 {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+  }
+  
+  .menu-content button {
+    width: 100%;
+    text-align: left;
+    background-color: #f9f9f9;
+    color: #333;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+  
+  .menu-content button:hover {
+    background-color: #eee;
+  }
+  
+  /* Style du bouton flottant (par défaut : mobile) */
+  #toggleFormBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #FFD54F; /* Jaune miel */
+    color: #263238; /* Gris anthracite */
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 1000;
+  }
+  
+  @media (min-width: 768px) {
+    #toggleFormBtn .texte.hidden {
+      display: inline !important; /* annule le display: none de .hidden */
+    }
+  }
+  #toggleFormBtn:hover {
+    background-color: #FFC107; /* Jaune un peu plus vif */
+    transform: scale(1.05);
+  }
+  
+  /* Tablette et bureau */
+  @media (min-width: 768px) {
+    #toggleFormBtn {
+      border-radius: 30px;
+      width: auto;
+      height: auto;
+      padding: 12px 20px;
+      font-size: 16px;
+      gap: 8px;
+    }
+  }

@@ -1,0 +1,10 @@
+/* --------------------------------------------
+   📱 responsive.css
+   Contient : media queries et styles adaptatifs.
+   - Ajustements pour mobile, tablette, desktop
+   - Réorganisation des blocs
+   - Changement de taille de texte, padding, etc.
+
+   Ne doit pas contenir :
+   - Logique CSS principale (mettre ça dans composants)
+--------------------------------------------- */

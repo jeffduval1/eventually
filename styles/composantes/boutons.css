@@ -1,0 +1,326 @@
+/* --------------------------------------------
+   🔘 boutons.css
+   Contient : tous les styles liés aux boutons.
+   - Boutons principaux, secondaires, danger, etc.
+   - Bouton flottant, bouton "ajouter", "annuler", "supprimer"
+   - Styles d’hover, d’état, d’icônes
+
+   Ne doit pas contenir :
+   - Layout de modales ou de cartes
+   - Comportements JS (ce fichier est purement visuel)
+--------------------------------------------- */
+
+
+#btnRetourCategories {
+    background-color: #333333; 
+    color: #f9f9f9; 
+    border: none;
+    border-radius: 30px;
+    padding: 0.7rem 1rem;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 10px 0;
+  }
+  
+  #btnRetourCategories:hover {
+    background-color: #FFC107; /* Jaune un peu plus vif */
+    transform: translateY(-2px); /* Petit effet de soulèvement */
+  }
+  
+  #btnRetourCategories::before {
+    content: "←";
+    font-size: 16px;
+  }
+
+  .palette-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: border 0.3s, transform 0.2s;
+    font-weight: bold;
+  }
+  
+  .palette-btn.active {
+    border: 2px solid #FFD54F;
+    box-shadow: 0 0 0 3px rgba(255, 213, 79, 0.3);
+  }
+  
+  .palette-btn:hover {
+    transform: scale(1.02);
+  }
+  .toggle-btn {
+    white-space: nowrap;
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .toggle-btn:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  
+  .toggle-btn:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  
+  /* Bouton actif */
+  .toggle-btn.active {
+    background-color: #333;
+    color: #f9f9f9;
+  }
+  
+  /* Bouton inactif */
+  .toggle-btn:not(.active) {
+    background-color: #f0f0f0;
+    color: rgba(0, 0, 0, 0.8); /* Texte à 80% d’opacité */
+  }
+  
+  button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #218838;
+  }
+
+  .etiquette button {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+/*MENUS DÉROULANTS ET CHAMPS SELECT*/
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 200px;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+.dropdown-content label {
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.dropdown-content label:hover {
+    background-color: #f1f1f1;
+}
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close-btn {
+      position: absolute;
+      top: 10px; /* Ajuste la position */
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 28px; /* Augmenter la taille */
+      font-weight: bold;
+      cursor: pointer;
+      color: black;
+      z-index: 1001; /* Assure qu'il est toujours au-dessus */
+  }
+  .close-btn:hover {
+      color: red;
+  }
+  .close:hover {
+    color: #000;
+    cursor: pointer;
+  }
+
+  button#annulerModifBtn {
+    background-color: #ccc;
+  }
+  .actions-categorie button {
+    flex: 1;
+    padding: 6px;
+    font-size: 16px;
+  }
+  /* -----------------------------------------------------
+   🟢 BOUTON DE CATÉGORIE (ouvrir le menu personnalisé)
+----------------------------------------------------- */
+#btnCategorieOptions {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+  }
+  
+  #btnCategorieOptions:hover {
+    background-color: #45a049;
+  }
+  
+  /* -----------------------------------------------------
+     🟣 BOUTON AJOUTER UNE CARTE
+  ----------------------------------------------------- */
+  #ajoutCarteBtn {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+  }
+  
+  #ajoutCarteBtn:hover {
+    background-color: #1976D2;
+  }
+  
+  /* -----------------------------------------------------
+     🔲 BOUTON ANNULER (visible en modification seulement)
+  ----------------------------------------------------- */
+  #annulerModifBtn {
+    background-color: transparent;
+    color: #555;
+    padding: 8px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-style: italic;
+    border-radius: 4px;
+  }
+  
+  #annulerModifBtn:hover {
+    background-color: #eee;
+  }
+  /* -----------------------------------------------------
+   📋 MENU DÉROULANT DES CATÉGORIES PERSONNALISÉES
+----------------------------------------------------- */
+.liste-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+  }
+  #btnSupprimerCategorie {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #btnSupprimerCategorie:hover {
+    color: red;
+  }
+  .resume-parent button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #c0392b;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .resume-parent button:hover {
+    color: #e74c3c;
+  }
+  .btn-supprimer {
+    background-color: #f44336; /* rouge */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .btn-supprimer:hover {
+    background-color: #d32f2f;
+  }
+  .btn-supprimer-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+  .btn-secondary {
+    background-color: #cccccc;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .btn-secondary:hover {
+    background-color: #b3b3b3;
+  }
+  
+  .btn-danger {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .btn-danger:hover {
+    background-color: #d32f2f;
+  }

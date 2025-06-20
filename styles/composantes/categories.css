@@ -1,0 +1,167 @@
+/* --------------------------------------------
+   🧭 categories.css
+   Contient : style des blocs de catégories.
+   - Liste hiérarchique de catégories
+   - Cartes-catégories (nom, couleur)
+   - Styles des catégories sélectionnées
+
+   Ne doit pas contenir :
+   - Cartes
+   - Modales de création
+--------------------------------------------- */
+.menu-categorie {
+    position: relative;
+    width: 250px;
+  }
+  
+  .categorie-selection {
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  #menuCategorie .liste-categories {
+    border-radius: 8px;
+    overflow-y: auto;
+  }
+  
+  .liste-categories div {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .liste-categories div:hover {
+    opacity: 0.9;
+  }
+  #vue-par-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  
+  .carte-categorie {
+    padding: 0.5rem;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+  .carte-categorie:hover {
+    transform: scale(1.05);
+  }
+  .categorie-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+#categorieSelectionnee {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+  }
+  .ligne-categorie {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 8px;
+    border-radius: 8px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+  }
+  .nom-et-edition {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nom-categorie {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .nom-categorie[contenteditable="true"] {
+    background-color: #fff6cc;
+    border-bottom: 1px dashed #aaa;
+  }
+  
+  .select-couleur {
+    margin-top: 6px;
+  }
+  
+  .actions-categorie {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+    justify-content: flex-end;
+  }
+  .zoneRetourSimple{
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start;
+  }
+  /* -----------------------------------------------------
+   🟡 AFFICHAGE DU RÉSUMÉ DE CATÉGORIE SÉLECTIONNÉE
+----------------------------------------------------- */
+#categorieSelectionnee {
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .liste-categories div {
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  
+  .liste-categories div:hover {
+    transform: scale(1.05);
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .categorie-resume {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+  }
+  .ligne-categorie-liste {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    gap: 8px;
+  }
+  #modalEditCategorie input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+  }
+  .resume-parent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+    padding: 8px;
+    background-color: #f9f9f9;
+    border-left: 5px solid #ccc;
+    border-radius: 8px;
+    font-weight: bold;
+  }

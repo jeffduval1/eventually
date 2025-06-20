@@ -1,0 +1,15 @@
+/* --------------------------------------------
+   📐 disposition.css
+   Contient : structure et disposition générale.
+   - Grilles principales
+   - Conteneurs (`#cartes-container`, `#vue-par-categories`)
+   - Positionnement global (colonnes, zones, zones de retour, etc.)
+
+   Ne doit pas contenir :
+   - Style de contenu (ex. boutons, couleurs, typographie)
+   - Comportement interactif spécifique
+--------------------------------------------- */
+.mode-toggle {
+    display: flex;
+    margin-bottom: 1rem;
+  }

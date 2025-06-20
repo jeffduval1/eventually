@@ -1,0 +1,27 @@
+/* --------------------------------------------
+   🎨 palette.css
+   Contient : couleurs et styles thématiques.
+   - Aperçu des couleurs
+   - Boutons de sélection de palette
+   - Résumé visuel de couleur ou catégorie
+
+   Ne doit pas contenir :
+   - Disposition ou styles d’éléments
+   - Règles CSS de base
+--------------------------------------------- */
+#listePalettes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .palette-aperçu {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .couleur {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }

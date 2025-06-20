@@ -5,6 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bee Organized</title>
+   <!-- Styles principaux -->
+   <link rel="stylesheet" href="styles/base.css">
+   <link rel="stylesheet" href="styles/disposition.css">
+ 
+   <!-- Composants -->
+   <link rel="stylesheet" href="styles/composantes/boutons.css">
+   <link rel="stylesheet" href="styles/composantes/modales.css">
+   <link rel="stylesheet" href="styles/composantes/cartes.css">
+   <link rel="stylesheet" href="styles/composantes/categories.css">
+   <link rel="stylesheet" href="styles/composantes/filtres.css">
+   <link rel="stylesheet" href="styles/composantes/hamburger.css">
+   <link rel="stylesheet" href="styles/composantes/corbeille.css">
+ 
+   <!-- Thème -->
+   <link rel="stylesheet" href="styles/themes/palette.css">
+ 
+   <!-- Utilitaires & responsive -->
+   <link rel="stylesheet" href="styles/utilitaires.css">
+   <link rel="stylesheet" href="styles/responsive.css">
+ 
   <link rel="stylesheet" href="styles.css">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap"
@@ -15,7 +35,7 @@
 
 <body>
   <h1>MindStance</h1>
-<h2>Organize your things</h2>
+  <h2>Organize your things</h2>
   <!-- Boutons principaux -->
   <div class="mode-toggle">
     <button id="btnModeCategories" class="toggle-btn">Par catégories</button>
@@ -40,9 +60,12 @@
   <button id="btnAjouterSousCategorie" class="btn-action hidden">+ Ajouter une sous-catégorie</button>
 
   <!-- Conteneur des vues -->
-  <div id="vue-par-categories" class="hidden"></div>
-  <div id="cartes-container" class="hidden"></div>
-
+  <div class="categorie-cartes">
+    <div id="vue-par-categories" class="hidden vueCategorie"></div>
+    <div id="contenuCategorieSelectionnee">
+      <p id="toggletxt">Cliquez sur une catégorie pour en afficher les cartes</p></div>
+    <div id="cartes-container" class="hidden"></div>
+  </div>
   <!-- 🔍 Zone de tri et filtres -->
   <div id="zoneFiltres">
     <label for="triSelect">Trier par :</label>
@@ -84,7 +107,7 @@
           </div>
 
           <!-- Menu déroulant des catégories -->
-          <div id="listeCategories" class="liste-categories liste-categories-modale hidden" ></div>
+          <div id="listeCategories" class="liste-categories liste-categories-modale hidden"></div>
           <div id="erreurCategorie" class="message-erreur"></div>
           <!-- Champ Contenu -->
           <textarea id="contenu" placeholder="Contenu"></textarea>
@@ -93,7 +116,8 @@
           <input type="hidden" id="carteId" value="">
           <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
           <div class="btn-supprimer-wrapper">
-            <button id="ouvrirConfirmationSuppressionCarteBtn" type="button" class="btn-supprimer hidden" title="Supprimer cette carte">
+            <button id="ouvrirConfirmationSuppressionCarteBtn" type="button" class="btn-supprimer hidden"
+              title="Supprimer cette carte">
               🗑 Supprimer
             </button>
           </div>
@@ -102,7 +126,7 @@
           <input type="submit" class="hidden">
         </div>
         <!-- Bouton supprimer (visible uniquement en modification) -->
-<button id="btnConfirmerSuppressionCarte" class="btn-danger hidden">Supprimer cette carte</button>
+        <button id="btnConfirmerSuppressionCarte" class="btn-danger hidden">Supprimer cette carte</button>
 
       </form>
     </div>
@@ -172,7 +196,7 @@
   </div>
 
   <!-- 🧺 Corbeille en plein écran -->
-  <div id="corbeille-page" class="corbeille-fullscreen hidden" >
+  <div id="corbeille-page" class="corbeille-fullscreen hidden">
     <button class="close-btn" id="btnFermerCorbeille">✖</button>
     <h2>Éléments supprimés</h2>
     <button id="btnViderCorbeille">Vider la corbeille</button>
@@ -239,29 +263,28 @@
     </div>
   </div>
   <!-- 🔴 Modale de confirmation de suppression -->
-<div id="confirmSuppressionModal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Confirmer la suppression</h2>
-    <p>Voulez-vous vraiment supprimer cette carte&nbsp;? Cette action déplacera la carte dans la corbeille.</p>
-    
-    <div class="actions">
-      <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
-      <button id="confirmerSuppressionCarteBtn" type="button" class="btn-danger">Supprimer</button>
+  <div id="confirmSuppressionModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Confirmer la suppression</h2>
+      <p>Voulez-vous vraiment supprimer cette carte&nbsp;? Cette action déplacera la carte dans la corbeille.</p>
+
+      <div class="actions">
+        <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
+        <button id="confirmerSuppressionCarteBtn" type="button" class="btn-danger">Supprimer</button>
+      </div>
     </div>
   </div>
-</div>
-<div id="modalConfirmationSuppression" class="modal hidden">
-  <div class="modal-content">
-    <h3>Supprimer cette carte ?</h3>
-    <p>Cette action est irréversible. Voulez-vous vraiment supprimer cette carte ?</p>
-    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
-      <button id="annulerSuppressionCarteBtn" class="btn-secondary">Annuler</button>
-      <button id="confirmerSuppressionBtn" type="button" class="btn-danger">Supprimer</button>
+  <div id="modalConfirmationSuppression" class="modal hidden">
+    <div class="modal-content">
+      <h3>Supprimer cette carte ?</h3>
+      <p>Cette action est irréversible. Voulez-vous vraiment supprimer cette carte ?</p>
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+        <button id="annulerSuppressionCarteBtn" class="btn-secondary">Annuler</button>
+        <button id="confirmerSuppressionBtn" type="button" class="btn-danger">Supprimer</button>
+      </div>
     </div>
   </div>
-</div>
 
 </body>
 
 </html>
-
