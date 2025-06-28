@@ -51,12 +51,7 @@
 /* --------------------------------------------------
    📂 AFFICHAGE DES CATÉGORIES EN VUE PRINCIPALE
 -------------------------------------------------- */
-#vue-par-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 20px;
-}
+
 
 .carte-categorie {
     padding: 0.5rem;
