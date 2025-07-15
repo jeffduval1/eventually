@@ -3,13 +3,13 @@ import {
   getCategorieByNom,
   ajouterCategorie,
   modifierCategorie,
-  getCartes
+  getCartes,
+  supprimerCategorie as supprimerCategorieFromDB
 } from './db/indexedDB.js';
 
 import { getTextColor } from './utils/helpers.js';
 import { paletteActuelle, nomsCouleursParPalette } from './config.js';
 import { afficherCartes, afficherCartesFiltres } from './cartes.js';
-import { supprimerCategorie as supprimerCategorieFromDB } from './db/indexedDB.js';
 import { mettreAJourResumeCategorie } from './uiCategories.js';
 import { ouvrirModale, fermerModale } from './ui.js';
 
@@ -17,7 +17,7 @@ export let idCategorieActuelle = null;
 export function getIdCategorieActuelle() {
   return idCategorieActuelle;
 }
-
+const divMessageCliquerCarte = document.getElementById("contenuCategorieSelectionnee");
 export function setIdCategorieActuelle(id) {
   idCategorieActuelle = id;
 }
@@ -35,6 +35,8 @@ export function afficherVueParCategories() {
   cartesContainer.classList.add("hidden");
   titreCategorie.classList.add("hidden");
   boutonRetour.classList.add("hidden");
+  divMessageCliquerCarte.classList.remove("hidden");
+ 
 
 
   // Récupérer les catégories depuis IndexedDB
@@ -202,8 +204,9 @@ export function afficherCartesParCategorie(nomCategorie) {
   const vueCategories = document.getElementById("vue-par-categories");
   const titreCategorie = document.getElementById("titreCategorieSelectionnee");
   const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
-  const texteCouleur  = document.getElementById("texteResumeCouleur");
-  
+  const texteCouleur = document.getElementById("texteResumeCouleur");
+
+
   // Montrer les bons éléments
   document.getElementById("btnRetourCategories").classList.remove("hidden");
   titreCategorie.classList.remove("hidden");
@@ -212,7 +215,8 @@ export function afficherCartesParCategorie(nomCategorie) {
   // Mise à jour du contenu
   cartesContainer.innerHTML = "";
   cartesContainer.classList.remove("hidden");
-  vueCategories.classList.add("hidden");
+  divMessageCliquerCarte.classList.add("hidden")
+  // vueCategories.classList.add("hidden");
 
   // Afficher le nom de la catégorie dans le titre
   titreCategorie.textContent = nomCategorie;
@@ -240,11 +244,11 @@ export function creerNouvelleCategorie(depuisCarte = false) {
   const parent = document.getElementById("parentCategorie").value || null;
   const couleurSelect = document.getElementById("nouvelleCouleur");
   const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
-  const texteCouleur  = document.getElementById("texteResumeCouleur");
+  const texteCouleur = document.getElementById("texteResumeCouleur");
   if (resumeCouleur) {
     resumeCouleur.classList.add("hidden");
     resumeCouleur.style.backgroundColor = "";
-    resumeCouleur.style.color           = "";
+    resumeCouleur.style.color = "";
   }
   if (texteCouleur) texteCouleur.textContent = "";
   if (!nom || !couleur) {
@@ -314,10 +318,10 @@ export function creerNouvelleCategorie(depuisCarte = false) {
 
 // 📜 Chargement des catégories dans le menu de sélection (formulaire carte)
 export function chargerMenuCategories() {
-  const menu           = document.getElementById("listeCategories");
+  const menu = document.getElementById("listeCategories");
   const inputCategorie = document.getElementById("categorieChoisie");
-  const parentSelect   = document.getElementById("parentCategorie");
-  const couleurSelect  = document.getElementById("nouvelleCouleur");
+  const parentSelect = document.getElementById("parentCategorie");
+  const couleurSelect = document.getElementById("nouvelleCouleur");
 
   if (!menu || !inputCategorie) {
     console.warn("🔶 Impossible de charger les catégories : éléments non trouvés dans le DOM.");
@@ -326,12 +330,12 @@ export function chargerMenuCategories() {
 
   // 🔄 Réinitialisation
   menu.innerHTML = "";
-  if (parentSelect)   parentSelect.innerHTML = '<option value="">Aucune</option>';
-  if (couleurSelect)  couleurSelect.innerHTML = "";
+  if (parentSelect) parentSelect.innerHTML = '<option value="">Aucune</option>';
+  if (couleurSelect) couleurSelect.innerHTML = "";
 
   // 🎨 Préparation aperçu couleur
   const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
-  const texteCouleur  = document.getElementById("texteResumeCouleur");
+  const texteCouleur = document.getElementById("texteResumeCouleur");
 
   const mettreÀJourAperçu = () => {
     if (!couleurSelect || !resumeCouleur || !texteCouleur) return;
@@ -351,7 +355,7 @@ export function chargerMenuCategories() {
 
   if (couleurSelect) {
     couleurSelect.innerHTML = "";
-  
+
     // 🟡 Option par défaut vide et non sélectionnable
     const optionVide = document.createElement("option");
     optionVide.value = "";
@@ -359,7 +363,7 @@ export function chargerMenuCategories() {
     optionVide.disabled = true;
     optionVide.selected = true;
     couleurSelect.appendChild(optionVide);
-  
+
     // 🎨 Ajout des vraies couleurs
     const palette = nomsCouleursParPalette[paletteActuelle] || {};
     Object.entries(palette).forEach(([hex, nom]) => {
@@ -370,7 +374,7 @@ export function chargerMenuCategories() {
       option.style.color = getTextColor(hex);
       couleurSelect.appendChild(option);
     });
-  
+
     // 🔁 Affichage aperçu SEULEMENT si l’utilisateur choisit une couleur
     couleurSelect.addEventListener("change", mettreÀJourAperçu);
   }
@@ -637,11 +641,11 @@ function lancerModificationCouleur(cat) {
   ouvrirModale("modalChangerCouleur");
 }
 export function reinitialiserFormulaireNouvelleCategorie() {
-  const nomInput       = document.getElementById("nouvelleCategorieNom");
-  const couleurSelect  = document.getElementById("nouvelleCouleur");
-  const parentSelect   = document.getElementById("parentCategorie");
-  const resumeCouleur  = document.getElementById("resumeNouvelleCouleur");
-  const texteCouleur   = document.getElementById("texteResumeCouleur");
+  const nomInput = document.getElementById("nouvelleCategorieNom");
+  const couleurSelect = document.getElementById("nouvelleCouleur");
+  const parentSelect = document.getElementById("parentCategorie");
+  const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
+  const texteCouleur = document.getElementById("texteResumeCouleur");
 
   if (nomInput) nomInput.value = "";
   if (couleurSelect) {

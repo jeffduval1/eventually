@@ -179,3 +179,47 @@
     cursor: pointer;
     gap: 8px;
 }
+/* -----------------------------------------------------
+   📦 BLOC D’UNE CATÉGORIE (ligne-categorie)
+   Conteneur vertical stylisé pour une ligne de catégorie,
+   incluant nom, actions et éventuelle couleur.
+
+   ✅ Appliqué globalement :
+   - Largeur max = 290px (mobile, tablette, bureau)
+----------------------------------------------------- */
+.ligne-categorie-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 0.3rem;
+    padding: 8px;
+    border-radius: 5px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+  
+    max-width: 350px;     /* Largeur maximale globale */
+    width: 100%;          /* Prend tout l’espace disponible, jusqu’à 290px */
+  }
+  
+  /* -----------------------------------------------------
+     📱 MOBILE (moins de 601px)
+     - Règle déjà couverte avec max-width globale
+  ----------------------------------------------------- */
+  @media (max-width: 600px) {
+    .ligne-categorie-liste {
+      margin-left: auto;
+      margin-right: auto;  /* Centrage sur petits écrans */
+    }
+  }
+  
+  /* -----------------------------------------------------
+     💻 TABLETTE ET BUREAU (≥ 601px)
+     - Affichage en colonne ou grille à gérer ailleurs
+  ----------------------------------------------------- */
+  @media (min-width: 601px) {
+    .ligne-categorie-liste {
+      /* Si besoin, ajouter styles plus précis ici (grille, espacement, etc.) */
+      max-width: 350px;     /* Largeur maximale globale */
+    width: 100%;       
+    }
+  }
