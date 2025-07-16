@@ -51,10 +51,9 @@ export function afficherVueParCategories() {
       cat.enfants = [];
       parNom[cat.nom] = cat;
     });
-    console.log(categories)
+
     // Regrouper les enfants sous leur parent
     categories.forEach(cat => {
-      console.log("Nom :", cat.nom, "Parent :", cat.parent);
       if (cat.parent) {
         const parentNom = cat.parent.trim(); // supprime les espaces invisibles
         const parent = parNom[parentNom];
@@ -151,8 +150,6 @@ export function afficherGestionCategories() {
 
 // 📁 Création récursive des blocs de catégories
 function creerBlocCategorie(categorie, niveau = 0) {
-  console.log("Création catégorie :", categorie.nom, "enfants :", categorie.enfants.length);
-
   const wrapper = document.createElement("div");
   wrapper.classList.add("bloc-categorie");
   wrapper.style.marginLeft = `${niveau * 20}px`;
@@ -202,9 +199,9 @@ function creerBlocCategorie(categorie, niveau = 0) {
   if (aDesEnfants) {
     zoneFlèche.addEventListener("click", (e) => {
       e.stopPropagation();
-      sousContainer.classList.toggle("hidden");
+      const estCache = sousContainer.classList.toggle("hidden");
       fleche.textContent = sousContainer.classList.contains("hidden") ? "➤" : "⬇";
-      fleche.textContent = ouvert ? "➤" : "⬇";
+      fleche.textContent = estCache ? "➤" : "⬇";
     });
   }
 
