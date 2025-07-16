@@ -19,6 +19,7 @@ export function getIdCategorieActuelle() {
 }
 const divMessageCliquerCarte = document.getElementById("contenuCategorieSelectionnee");
 const messageCliquerCarte = document.getElementById("toggletxt");
+
 export function setIdCategorieActuelle(id) {
   idCategorieActuelle = id;
 }
@@ -50,11 +51,19 @@ export function afficherVueParCategories() {
       cat.enfants = [];
       parNom[cat.nom] = cat;
     });
-
+    console.log(categories)
     // Regrouper les enfants sous leur parent
     categories.forEach(cat => {
-      if (cat.parent && parNom[cat.parent]) {
-        parNom[cat.parent].enfants.push(cat);
+      console.log("Nom :", cat.nom, "Parent :", cat.parent);
+      if (cat.parent) {
+        const parentNom = cat.parent.trim(); // supprime les espaces invisibles
+        const parent = parNom[parentNom];
+        if (parent) {
+          parent.enfants.push(cat);
+        } else {
+          console.warn("Parent introuvable pour :", cat.nom, "→ parent:", cat.parent);
+          racines.push(cat); // fallback : affiché à la racine si parent introuvable
+        }
       } else {
         racines.push(cat);
       }
@@ -142,6 +151,8 @@ export function afficherGestionCategories() {
 
 // 📁 Création récursive des blocs de catégories
 function creerBlocCategorie(categorie, niveau = 0) {
+  console.log("Création catégorie :", categorie.nom, "enfants :", categorie.enfants.length);
+
   const wrapper = document.createElement("div");
   wrapper.classList.add("bloc-categorie");
   wrapper.style.marginLeft = `${niveau * 20}px`;
@@ -161,16 +172,22 @@ function creerBlocCategorie(categorie, niveau = 0) {
   const titre = document.createElement("span");
   titre.textContent = categorie.nom;
   titre.style.flexGrow = "1";
+  titre.classList.add("zone-texte-categorie"); // pour comportement séparé
 
+  const aDesEnfants = categorie.enfants && categorie.enfants.length > 0;
   const fleche = document.createElement("span");
-  fleche.textContent = categorie.enfants.length > 0 ? "➤" : "";
+  fleche.textContent = aDesEnfants ? "➤" : "";
   fleche.style.fontSize = "1rem"; // ou ajustable
   fleche.style.transition = "transform 0.2s";
 
 
 
+  const zoneFlèche = document.createElement("div");
+  zoneFlèche.classList.add("zone-fleche");
+  zoneFlèche.appendChild(fleche);
+  
   ligne.appendChild(titre);
-  ligne.appendChild(fleche); // ✅ La flèche vient maintenant après le titre
+  ligne.appendChild(zoneFlèche);
   wrapper.appendChild(ligne);
 
   const sousContainer = document.createElement("div");
@@ -178,15 +195,18 @@ function creerBlocCategorie(categorie, niveau = 0) {
 
   wrapper.appendChild(sousContainer);
 
-  ligne.addEventListener("click", () => {
-    if (categorie.enfants.length > 0) {
-      const ouvert = sousContainer.style.display === "block";
-      sousContainer.style.display = ouvert ? "none" : "block";
-      fleche.textContent = ouvert ? "➤" : "⬇";
-    } else {
-      afficherCartesParCategorie(categorie.nom);
-    }
+  titre.addEventListener("click", () => {
+    afficherCartesParCategorie(categorie.nom);
   });
+  
+  if (aDesEnfants) {
+    zoneFlèche.addEventListener("click", (e) => {
+      e.stopPropagation();
+      sousContainer.classList.toggle("hidden");
+      fleche.textContent = sousContainer.classList.contains("hidden") ? "➤" : "⬇";
+      fleche.textContent = ouvert ? "➤" : "⬇";
+    });
+  }
 
   categorie.enfants.forEach(enfant => {
     const enfantDiv = creerBlocCategorie(enfant, niveau + 1);
@@ -244,6 +264,7 @@ export function creerNouvelleCategorie(depuisCarte = false) {
   const couleur = document.getElementById("nouvelleCouleur").value;
   const parent = document.getElementById("parentCategorie").value || null;
   const couleurSelect = document.getElementById("nouvelleCouleur");
+  const utiliseCouleurParente = parent && couleurSelect.disabled;
   const resumeCouleur = document.getElementById("resumeNouvelleCouleur");
   const texteCouleur = document.getElementById("texteResumeCouleur");
   if (resumeCouleur) {
@@ -252,7 +273,7 @@ export function creerNouvelleCategorie(depuisCarte = false) {
     resumeCouleur.style.color = "";
   }
   if (texteCouleur) texteCouleur.textContent = "";
-  if (!nom || !couleur) {
+  if (!nom || (!utiliseCouleurParente && !couleur)) {
     alert("Veuillez renseigner le nom et la couleur.");
     return;
   }
