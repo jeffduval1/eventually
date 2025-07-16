@@ -14,7 +14,7 @@ import { mettreAJourResumeCategorie } from "./uiCategories.js";
 import { changerModeAffichage } from './ui.js';
 
 let idCarteASupprimer = null;
-
+const messageCliquerCarte = document.getElementById("toggletxt");
 // 📌 Affiche toutes les cartes
 function afficherCartes(modeTri = "date-desc") {
   console.trace("🌀 afficherCartes() appelée");
@@ -30,6 +30,7 @@ function afficherCartes(modeTri = "date-desc") {
   cartesContainer.classList.remove("hidden");
   vueCategories.classList.add("hidden");
   titreCategorie.classList.add("hidden");
+  if (messageCliquerCarte) messageCliquerCarte.classList.add("hidden");
   getCartes().then(cartes => {
 
     cartes.sort((a, b) => {

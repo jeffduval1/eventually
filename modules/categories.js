@@ -18,6 +18,7 @@ export function getIdCategorieActuelle() {
   return idCategorieActuelle;
 }
 const divMessageCliquerCarte = document.getElementById("contenuCategorieSelectionnee");
+const messageCliquerCarte = document.getElementById("toggletxt");
 export function setIdCategorieActuelle(id) {
   idCategorieActuelle = id;
 }
@@ -36,7 +37,7 @@ export function afficherVueParCategories() {
   titreCategorie.classList.add("hidden");
   boutonRetour.classList.add("hidden");
   divMessageCliquerCarte.classList.remove("hidden");
- 
+  if (messageCliquerCarte) messageCliquerCarte.classList.remove("hidden");
 
 
   // Récupérer les catégories depuis IndexedDB

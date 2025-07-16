@@ -219,7 +219,7 @@
   @media (min-width: 601px) {
     .ligne-categorie-liste {
       /* Si besoin, ajouter styles plus précis ici (grille, espacement, etc.) */
-      max-width: 350px;     /* Largeur maximale globale */
+      max-width: 350px;    
     width: 100%;       
     }
   }
