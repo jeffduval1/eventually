@@ -45,7 +45,7 @@ min-width: 40%;
 }
 @media(min-width:601px){
    .ctnCategorieSelect{
-
+margin: 0 auto;
    }
 }
 

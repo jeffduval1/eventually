@@ -8,3 +8,10 @@
    Ne doit pas contenir :
    - Logique CSS principale (mettre ça dans composants)
 --------------------------------------------- */
+@media(min-width: 601px){
+   .ctnToggle{
+      /* Display:flex; */
+      justify-content: center;
+  margin: 0 6rem;
+   }
+}

@@ -344,4 +344,6 @@
   .resume-parent button:hover {
     color: #e74c3c;
   }
-  
+  .btnCarte{
+    min-width:139px;
+  }
