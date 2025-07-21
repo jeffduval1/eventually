@@ -37,23 +37,30 @@ button, select, input, textarea {
    🔢 STYLES DES TITRES
 -------------------------------------------------- */
 h1 {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   margin-top: 0;
   margin-bottom: 20px;
   color: #263238;
   /* font-family: Cambria, serif; */
 }
-
+@media(min-width:601px){
+  h1{
+    font-size: 42px;
+  }
+}
+h2 {
+font-size: 20px;
+}
+@media(min-width:601px){
+  h2{
+    font-size: 24px;
+  }
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
 }
 
-@media (min-width: 768px) {
-  h1 {
-    font-size: 32px;
-  }
-}
 
 /* --------------------------------------------------
    📃 SÉLECTEURS PAR DÉFAUT
@@ -79,7 +86,7 @@ input, textarea, select {
   width: calc(100% - 20px);
   padding: 10px;
   margin: 10px 0;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 14px;
 }

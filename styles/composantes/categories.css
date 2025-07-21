@@ -22,11 +22,11 @@
     padding: 10px;
     border: 1px solid #ccc;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 12px;
 }
 
 #menuCategorie .liste-categories {
-    border-radius: 8px;
+    border-radius: 12px;
     overflow-y: auto;
 }
 
@@ -35,7 +35,7 @@
 -------------------------------------------------- */
 .liste-categories div {
     padding: 6px 10px;
-    border-radius: 4px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
@@ -55,7 +55,7 @@
 
 .carte-categorie {
     padding: 0.5rem;
-    border-radius: 8px;
+    border-radius: 12px;
     color: white;
     cursor: pointer;
     min-width: 120px;
@@ -77,7 +77,7 @@
     gap: 4px;
     margin-bottom: 16px;
     padding: 8px;
-    border-radius: 8px;
+    border-radius: 12px;
     background: #f7f7f7;
     border: 1px solid #ddd;
 }
@@ -129,7 +129,7 @@
 -------------------------------------------------- */
 #categorieSelectionnee {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 10px;
     cursor: pointer;
     border: 1px solid #ccc;
@@ -144,7 +144,7 @@
     gap: 10px;
     margin-top: 10px;
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 12px;
     font-weight: bold;
     color: white;
 }
@@ -157,7 +157,7 @@
     padding: 8px;
     background-color: #f9f9f9;
     border-left: 5px solid #ccc;
-    border-radius: 8px;
+    border-radius: 12px;
     font-weight: bold;
 }
 
@@ -175,7 +175,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    border-radius: 6px;
+    border-radius: 12px;
     cursor: pointer;
     gap: 8px;
 }
@@ -191,6 +191,7 @@
 @media(min-width: 601px) {
     .bloc-categorie {
         display: flex;
+        flex-direction: column;
         justify-content: center ;
     }
 }
@@ -200,7 +201,7 @@
     gap: 4px;
     margin-bottom: 0.3rem;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 12px;
     background: #f7f7f7;
     border: 1px solid #ddd;
     max-width: 350px;
@@ -224,6 +225,8 @@
 
 .cardPlaceHolder {
     margin-bottom: -0.8rem;
+    color: #555;
+    line-height: 1.5;
 }
 
 @media(min-width:601px) {
@@ -233,4 +236,14 @@
 }
 .illustration-vide{
     margin-bottom: -3rem;
+}
+.bienvenue{
+    font-size: 0.75rem;
+    margin-bottom:0.15rem;
+}
+@media(min-width:601px){
+    .bienvenue{
+        font-size: 1.25rem;
+        margin-bottom:0.25rem; 
+    }
 }

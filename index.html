@@ -5,26 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eventually</title>
-   <!-- Styles principaux -->
-   <link rel="stylesheet" href="styles/base.css">
-   <link rel="stylesheet" href="styles/disposition.css">
- 
-   <!-- Composants -->
-   <link rel="stylesheet" href="styles/composantes/boutons.css">
-   <link rel="stylesheet" href="styles/composantes/modales.css">
-   <link rel="stylesheet" href="styles/composantes/cartes.css">
-   <link rel="stylesheet" href="styles/composantes/categories.css">
-   <link rel="stylesheet" href="styles/composantes/filtres.css">
-   <link rel="stylesheet" href="styles/composantes/hamburger.css">
-   <link rel="stylesheet" href="styles/composantes/corbeille.css">
- 
-   <!-- Thème -->
-   <link rel="stylesheet" href="styles/themes/palette.css">
- 
-   <!-- Utilitaires & responsive -->
-   <link rel="stylesheet" href="styles/utilitaires.css">
-   <link rel="stylesheet" href="styles/responsive.css">
- 
+  <!-- Styles principaux -->
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/disposition.css">
+
+  <!-- Composants -->
+  <link rel="stylesheet" href="styles/composantes/boutons.css">
+  <link rel="stylesheet" href="styles/composantes/modales.css">
+  <link rel="stylesheet" href="styles/composantes/cartes.css">
+  <link rel="stylesheet" href="styles/composantes/categories.css">
+  <link rel="stylesheet" href="styles/composantes/filtres.css">
+  <link rel="stylesheet" href="styles/composantes/hamburger.css">
+  <link rel="stylesheet" href="styles/composantes/corbeille.css">
+
+  <!-- Thème -->
+  <link rel="stylesheet" href="styles/themes/palette.css">
+
+  <!-- Utilitaires & responsive -->
+  <link rel="stylesheet" href="styles/utilitaires.css">
+  <link rel="stylesheet" href="styles/responsive.css">
+
   <link rel="stylesheet" href="styles.css">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap"
@@ -35,276 +35,279 @@
 
 <body>
   <div class="ctnGlobal">
-   
-  <h1>Eventually</h1>
-  <h2>Where it needs to be</h2>
-  <div class="ctnToggle">
-  <!-- Boutons principaux -->
-  <div class="mode-toggle">
-    <button id="btnModeCategories" class="toggle-btn">Par catégories</button>
-    <button id="btnModeCartes" class="toggle-btn btnCarte">Par cartes</button>
-  </div>
-</div>
-  <!-- 🟢 Bouton global d’ajout de carte -->
-  <button id="toggleFormBtn">
-    <span class="icone">➕</span>
-    <span class="texte hidden">Ajouter une carte</span>
-  </button>
-
-  <!-- Étiquettes & réinitialisation -->
-  <div id="etiquettes-container"></div>
-  <button id="resetFilterBtn" class="hidden">Réinitialiser le filtre</button>
-
-  <!-- Zone de retour et titre de catégorie -->
-  <div id="zoneRetourSimple">
-    <button id="btnRetourCategories" class="hidden">Retour aux catégories</button>
-  </div>
-  <h2 id="titreCategorieSelectionnee" class="hidden"></h2>
-  <button id="btnAjouterSousCategorie" class="btn-action hidden">+ Ajouter une sous-catégorie</button>
-
-  <!-- Conteneur des vues -->
-  <div class="categorie-cartes">
-    <div id="vue-par-categories" class="hidden vueCategorie"></div>
-    <div id="contenuCategorieSelectionnee" class="ctnCategorieSelect">
-      <div class="zone-vide">
-        <h3>Bienvenue 👋</h3>
-        <p class="cardPlaceHolder">Sélectionnez une catégorie à gauche pour afficher vos cartes,<br> ou créez-en une nouvelle pour commencer.</p>
-        <!-- Illustration SVG stylisée : cartes & structure -->
-        <svg class="illustration-vide" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect x="20" y="30" width="160" height="100" rx="8" fill="#ECECEC" stroke="#1C2D49" stroke-width="2"/>
-          <line x1="40" y1="50" x2="160" y2="50" stroke="#FFC300" stroke-width="3"/>
-          <rect x="40" y="65" width="120" height="10" fill="#DCDCDC"/>
-          <rect x="40" y="80" width="100" height="10" fill="#DCDCDC"/>
-          <rect x="40" y="95" width="80" height="10" fill="#DCDCDC"/>
-          <circle cx="160" cy="30" r="8" fill="#FFC300"/>
-        </svg>       
-      
-      </div>
-      
-      <!-- <p id="toggletxt">Cliquez sur une catégorie pour en afficher les cartes</p> -->
+    <div class="titres">
+      <h1>Eventually</h1>
+      <h2>Where it needs to be</h2>
     </div>
-    <div id="cartes-container" class="hidden"></div>
-  </div>
-  <!-- 🔍 Zone de tri et filtres -->
-  <div id="zoneFiltres">
-    <label for="triSelect">Trier par :</label>
-    <select id="triSelect" class="triSelect">
-      <option value="date-desc">Du plus récent au plus ancien</option>
-      <option value="date-asc">Du plus ancien au plus récent</option>
-      <option value="titre-asc">Titre (A → Z)</option>
-      <option value="titre-desc">Titre (Z → A)</option>
-    </select>
+    <div class="ctnToggle">
+      <!-- Boutons principaux -->
+      <div class="mode-toggle">
+        <button id="btnModeCategories" class="toggle-btn">Par catégories</button>
+        <button id="btnModeCartes" class="toggle-btn btnCarte">Par cartes</button>
+      </div>
+    </div>
+    <!-- 🟢 Bouton global d’ajout de carte -->
+    <button id="toggleFormBtn">
+      <span class="icone">➕</span>
+      <span class="texte hidden">Ajouter une carte</span>
+    </button>
 
-    <select id="tagFilter" class="tagFilter">
-      <option value="">Sélectionner un tag</option>
-    </select>
+    <!-- Étiquettes & réinitialisation -->
+    <div id="etiquettes-container"></div>
+    <button id="resetFilterBtn" class="hidden">Réinitialiser le filtre</button>
 
-    <input type="text" id="search" placeholder="Rechercher par tag...">
-  </div>
+    <!-- Zone de retour et titre de catégorie -->
+    <div id="zoneRetourSimple">
+      <button id="btnRetourCategories" class="hidden">Retour aux catégories</button>
+    </div>
+    <h2 id="titreCategorieSelectionnee" class="hidden"></h2>
+    <button id="btnAjouterSousCategorie" class="btn-action hidden">+ Ajouter une sous-catégorie</button>
 
-  <!-- 📂 Modale de création de carte -->
-  <div id="modalAjoutCarte" class="modal hidden">
-    <input type="hidden" id="categorieChoisie">
-    <div class="modal-content">
-      <span class="close" id="closeAjoutCarteModal">×</span>
-      <h3 id="titreModaleCarte">Créer une nouvelle carte</h3>
+    <!-- Conteneur des vues -->
+    <div class="categorie-cartes">
+      <div id="vue-par-categories" class="hidden vueCategorie"></div>
+      <div id="contenuCategorieSelectionnee" class="ctnCategorieSelect">
+        <div class="zone-vide">
+          <h3 class="bienvenue">Bienvenue 👋</h3>
+          <p class="hey">Vos idées finiront par trouver leur place</p>
+          <p class="cardPlaceHolder">Sélectionnez une catégorie à gauche pour afficher vos cartes, ou créez-en une
+            nouvelle pour commencer.</p>
+          <!-- Illustration SVG stylisée : cartes & structure -->
+          <svg class="illustration-vide" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="20" y="30" width="160" height="100" rx="8" fill="#ECECEC" stroke="#1C2D49" stroke-width="2" />
+            <line x1="40" y1="50" x2="160" y2="50" stroke="#FFC300" stroke-width="3" />
+            <rect x="40" y="65" width="120" height="10" fill="#DCDCDC" />
+            <rect x="40" y="80" width="100" height="10" fill="#DCDCDC" />
+            <rect x="40" y="95" width="80" height="10" fill="#DCDCDC" />
+            <circle cx="160" cy="30" r="8" fill="#FFC300" />
+          </svg>
 
-      <form id="formAjoutCarte">
-        <div class="modal-container colonne">
-          <!-- Champ Titre -->
-          <input type="text" id="titre" placeholder="Titre">
-
-          <div id="erreurTitre" class="message-erreur"></div>
-          <!-- Champ Tags -->
-          <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
-
-          <!-- Bouton de sélection de catégorie -->
-          <button id="btnCategorieOptions" class="btn-categorie" type="button">Choisir une catégorie</button>
-
-          <div id="categorieSelectionnee" class="categorie-resume hidden">
-            <span id="texteCategorieCarte">-- Choisir une catégorie --</span>
-          </div>
-
-          <!-- Menu déroulant des catégories -->
-          <div id="listeCategories" class="liste-categories liste-categories-modale hidden"></div>
-          <div id="erreurCategorie" class="message-erreur"></div>
-          <!-- Champ Contenu -->
-          <textarea id="contenu" placeholder="Contenu"></textarea>
-          <div id="erreurContenu" class="message-erreur"></div>
-          <!-- Bouton Ajouter -->
-          <input type="hidden" id="carteId" value="">
-          <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
-          <div class="btn-supprimer-wrapper">
-            <button id="ouvrirConfirmationSuppressionCarteBtn" type="button" class="btn-supprimer hidden"
-              title="Supprimer cette carte">
-              🗑 Supprimer
-            </button>
-          </div>
-          <!-- Bouton Annuler (modification de carte existante uniquement) -->
-          <button id="annulerModifBtn" class="hidden" type="button">Annuler</button>
-          <input type="submit" class="hidden">
         </div>
-        <!-- Bouton supprimer (visible uniquement en modification) -->
-        <button id="btnConfirmerSuppressionCarte" class="btn-danger hidden">Supprimer cette carte</button>
 
-      </form>
+        <!-- <p id="toggletxt">Cliquez sur une catégorie pour en afficher les cartes</p> -->
+      </div>
+      <div id="cartes-container" class="hidden"></div>
     </div>
-  </div>
-  <!-- 📌 Nouvelle modale : Choix du type de catégorie -->
-  <div id="modalChoixTypeCategorie" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="fermerChoixTypeCategorie">×</span>
-      <h3>Catégorie</h3>
-      <p>Que voulez-vous faire ?</p>
-      <button id="choisirCategorieExistante">Choisir une catégorie existante</button>
-      <button id="creerNouvelleCategorieCarte">Créer une nouvelle catégorie</button>
-      <button id="choisirCategorieParent">Choisir une catégorie parent</button>
-      <div id="zoneChoixParentCategorie" class="hidden">
-        <label for="selectParentTemporaire">Choisir un parent :</label>
-        <select id="selectParentTemporaire">
+    <!-- 🔍 Zone de tri et filtres -->
+    <div id="zoneFiltres">
+      <label for="triSelect">Trier par :</label>
+      <select id="triSelect" class="triSelect">
+        <option value="date-desc">Du plus récent au plus ancien</option>
+        <option value="date-asc">Du plus ancien au plus récent</option>
+        <option value="titre-asc">Titre (A → Z)</option>
+        <option value="titre-desc">Titre (Z → A)</option>
+      </select>
+
+      <select id="tagFilter" class="tagFilter">
+        <option value="">Sélectionner un tag</option>
+      </select>
+
+      <input type="text" id="search" placeholder="Rechercher par tag...">
+    </div>
+
+    <!-- 📂 Modale de création de carte -->
+    <div id="modalAjoutCarte" class="modal hidden">
+      <input type="hidden" id="categorieChoisie">
+      <div class="modal-content">
+        <span class="close" id="closeAjoutCarteModal">×</span>
+        <h3 id="titreModaleCarte">Créer une nouvelle carte</h3>
+
+        <form id="formAjoutCarte">
+          <div class="modal-container colonne">
+            <!-- Champ Titre -->
+            <input type="text" id="titre" placeholder="Titre">
+
+            <div id="erreurTitre" class="message-erreur"></div>
+            <!-- Champ Tags -->
+            <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+
+            <!-- Bouton de sélection de catégorie -->
+            <button id="btnCategorieOptions" class="btn-categorie" type="button">Choisir une catégorie</button>
+
+            <div id="categorieSelectionnee" class="categorie-resume hidden">
+              <span id="texteCategorieCarte">-- Choisir une catégorie --</span>
+            </div>
+
+            <!-- Menu déroulant des catégories -->
+            <div id="listeCategories" class="liste-categories liste-categories-modale hidden"></div>
+            <div id="erreurCategorie" class="message-erreur"></div>
+            <!-- Champ Contenu -->
+            <textarea id="contenu" placeholder="Contenu"></textarea>
+            <div id="erreurContenu" class="message-erreur"></div>
+            <!-- Bouton Ajouter -->
+            <input type="hidden" id="carteId" value="">
+            <button id="ajoutCarteBtn" class="btn-ajouter" type="button">Ajouter</button>
+            <div class="btn-supprimer-wrapper">
+              <button id="ouvrirConfirmationSuppressionCarteBtn" type="button" class="btn-supprimer hidden"
+                title="Supprimer cette carte">
+                🗑 Supprimer
+              </button>
+            </div>
+            <!-- Bouton Annuler (modification de carte existante uniquement) -->
+            <button id="annulerModifBtn" class="hidden" type="button">Annuler</button>
+            <input type="submit" class="hidden">
+          </div>
+          <!-- Bouton supprimer (visible uniquement en modification) -->
+          <button id="btnConfirmerSuppressionCarte" class="btn-danger hidden">Supprimer cette carte</button>
+
+        </form>
+      </div>
+    </div>
+    <!-- 📌 Nouvelle modale : Choix du type de catégorie -->
+    <div id="modalChoixTypeCategorie" class="modal hidden">
+      <div class="modal-content">
+        <span class="close" id="fermerChoixTypeCategorie">×</span>
+        <h3>Catégorie</h3>
+        <p>Que voulez-vous faire ?</p>
+        <button id="choisirCategorieExistante">Choisir une catégorie existante</button>
+        <button id="creerNouvelleCategorieCarte">Créer une nouvelle catégorie</button>
+        <button id="choisirCategorieParent">Choisir une catégorie parent</button>
+        <div id="zoneChoixParentCategorie" class="hidden">
+          <label for="selectParentTemporaire">Choisir un parent :</label>
+          <select id="selectParentTemporaire">
+            <option value="">Aucune</option>
+            <!-- Ajouter dynamiquement des options ici -->
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- 📁 Modale pour gestion complète des catégories -->
+    <div id="modalGestionCategories" class="modal hidden">
+      <div class="modal-content">
+        <span class="close" id="closeGestionModal">&times;</span>
+        <h3>Gérer les catégories</h3>
+        <div id="listeGestionCategories"></div>
+      </div>
+    </div>
+
+    <!-- 📂 Modale de création de catégorie -->
+    <div id="modalCategorie" class="modal hidden">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h3>Créer une nouvelle catégorie</h3>
+        <label for="nouvelleCategorieNom">Nom :</label>
+        <input type="text" id="nouvelleCategorieNom">
+        <label for="parentCategorie">Catégorie parent :</label>
+        <select id="parentCategorie">
           <option value="">Aucune</option>
-          <!-- Ajouter dynamiquement des options ici -->
         </select>
+        <!-- Résumé visuel du parent choisi -->
+        <div id="resumeParentCategorie" class="hidden" class="resume-parent">
+          <span id="nomParentResume"></span>
+          <button id="retirerParentBtn" title="Retirer la catégorie parent sélectionnée">×</button>
+        </div>
+        <label for="nouvelleCouleur">Couleur :</label>
+        <select id="nouvelleCouleur"></select>
+        <div id="resumeNouvelleCouleur" class="hidden resume-couleur" style="margin-top: 10px;">
+          <span id="texteResumeCouleur">–</span>
+        </div>
+        <div id="resumeNouvelleCouleurDepuisCarte" class="hidden resume-couleur" style="margin-top: 10px;">
+          <span id="texteResumeCouleurDepuisCarte">–</span>
+        </div>
+        <button id="btnCreerCategorie">Ajouter la catégorie</button>
       </div>
     </div>
-  </div>
-  <!-- 📁 Modale pour gestion complète des catégories -->
-  <div id="modalGestionCategories" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="closeGestionModal">&times;</span>
-      <h3>Gérer les catégories</h3>
-      <div id="listeGestionCategories"></div>
-    </div>
-  </div>
 
-  <!-- 📂 Modale de création de catégorie -->
-  <div id="modalCategorie" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h3>Créer une nouvelle catégorie</h3>
-      <label for="nouvelleCategorieNom">Nom :</label>
-      <input type="text" id="nouvelleCategorieNom">
-      <label for="parentCategorie">Catégorie parent :</label>
-      <select id="parentCategorie">
-        <option value="">Aucune</option>
-      </select>
-      <!-- Résumé visuel du parent choisi -->
-      <div id="resumeParentCategorie" class="hidden" class="resume-parent">
-        <span id="nomParentResume"></span>
-        <button id="retirerParentBtn" title="Retirer la catégorie parent sélectionnée">×</button>
-      </div>
-      <label for="nouvelleCouleur">Couleur :</label>
-      <select id="nouvelleCouleur"></select>
-      <div id="resumeNouvelleCouleur" class="hidden resume-couleur" style="margin-top: 10px;">
-        <span id="texteResumeCouleur">–</span>
-      </div>
-      <div id="resumeNouvelleCouleurDepuisCarte" class="hidden resume-couleur" style="margin-top: 10px;">
-        <span id="texteResumeCouleurDepuisCarte">–</span>
-      </div>
-      <button id="btnCreerCategorie">Ajouter la catégorie</button>
-    </div>
-  </div>
-
-  <!-- 🎨 Modale pour changer la palette -->
-  <div id="modalPalette" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="fermerPaletteBtn">×</span>
-      <h3>Choisir une palette de couleurs</h3>
-      <div id="listePalettes"></div>
-    </div>
-  </div>
-
-  <!-- 🧺 Corbeille en plein écran -->
-  <div id="corbeille-page" class="corbeille-fullscreen hidden">
-    <button class="close-btn" id="btnFermerCorbeille">✖</button>
-    <h2>Éléments supprimés</h2>
-    <button id="btnViderCorbeille">Vider la corbeille</button>
-    <div id="cartes-corbeille"></div>
-  </div>
-
-  <!-- 🍔 Menu hamburger -->
-  <div id="menuHamburger" class="hamburger-container">
-    <button id="btnHamburger">☰</button>
-    <div id="menuContent" class="menu-content hidden">
-      <div class="menu-section">
-        <h4>Catégories</h4>
-        <button id="btnNouvelleCategorieMenu">➕ Créer une nouvelle catégorie</button>
-        <button id="btnGererCategoriesMenu">🛠 Gérer les catégories</button>
-      </div>
-      <div class="menu-section">
-        <h4>Outils</h4>
-        <button id="btnExporter">Exporter les cartes</button>
-        <button id="btnImporter">Importer des cartes</button>
-        <button id="btnAfficherCorbeille">Voir la corbeille</button>
-      </div>
-      <div class="menu-section">
-        <h4>Personnalisation</h4>
-        <button id="btnChangerPalette">Changer la palette</button>
-      </div>
-      <div class="menu-section">
-        <h4>À propos</h4>
-        <button id="btnAPropos">Tout savoir sur Bee Organized</button>
+    <!-- 🎨 Modale pour changer la palette -->
+    <div id="modalPalette" class="modal hidden">
+      <div class="modal-content">
+        <span class="close" id="fermerPaletteBtn">×</span>
+        <h3>Choisir une palette de couleurs</h3>
+        <div id="listePalettes"></div>
       </div>
     </div>
-  </div>
 
-  <!-- 📁 Fichier d'import JSON -->
-  <input type="file" id="importFile" class="hidden" accept=".json">
-  <!-- ✏️ Modale de modification de catégorie -->
-  <div id="modalEditCategorie" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="closeEditModal">&times;</span>
-      <h3 id="titreModaleModification">Modifier la catégorie</h3>
-
-      <label for="editCategorieNom">Nouveau nom :</label>
-      <input type="text" id="editCategorieNom">
-
-      <button id="btnEnregistrerModification">Enregistrer</button>
+    <!-- 🧺 Corbeille en plein écran -->
+    <div id="corbeille-page" class="corbeille-fullscreen hidden">
+      <button class="close-btn" id="btnFermerCorbeille">✖</button>
+      <h2>Éléments supprimés</h2>
+      <button id="btnViderCorbeille">Vider la corbeille</button>
+      <div id="cartes-corbeille"></div>
     </div>
-  </div>
-  <!-- 🎨 Modale de changement de couleur -->
-  <div id="modalChangerCouleur" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="closeCouleurModal">&times;</span>
-      <h3>Changer la couleur</h3>
-      <select id="selectNouvelleCouleur"></select>
-      <button id="btnValiderCouleur">Valider</button>
-    </div>
-  </div>
-  <!-- Modale de modification d'une carte -->
-  <div id="modalChoisirParent" class="modal hidden">
-    <div class="modal-content">
-      <h3>Choisir une catégorie parent</h3>
-      <select id="selectCategorieParent">
-        <!-- Rempli dynamiquement -->
-      </select>
-      <button id="confirmerParent">Utiliser cette catégorie</button>
-    </div>
-  </div>
-  <!-- 🔴 Modale de confirmation de suppression -->
-  <div id="confirmSuppressionModal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Confirmer la suppression</h2>
-      <p>Voulez-vous vraiment supprimer cette carte&nbsp;? Cette action déplacera la carte dans la corbeille.</p>
 
-      <div class="actions">
-        <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
-        <button id="confirmerSuppressionCarteBtn" type="button" class="btn-danger">Supprimer</button>
+    <!-- 🍔 Menu hamburger -->
+    <div id="menuHamburger" class="hamburger-container">
+      <button id="btnHamburger">☰</button>
+      <div id="menuContent" class="menu-content hidden">
+        <div class="menu-section">
+          <h4>Catégories</h4>
+          <button id="btnNouvelleCategorieMenu">➕ Créer une nouvelle catégorie</button>
+          <button id="btnGererCategoriesMenu">🛠 Gérer les catégories</button>
+        </div>
+        <div class="menu-section">
+          <h4>Outils</h4>
+          <button id="btnExporter">Exporter les cartes</button>
+          <button id="btnImporter">Importer des cartes</button>
+          <button id="btnAfficherCorbeille">Voir la corbeille</button>
+        </div>
+        <div class="menu-section">
+          <h4>Personnalisation</h4>
+          <button id="btnChangerPalette">Changer la palette</button>
+        </div>
+        <div class="menu-section">
+          <h4>À propos</h4>
+          <button id="btnAPropos">Tout savoir sur Bee Organized</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div id="modalConfirmationSuppression" class="modal hidden">
-    <div class="modal-content">
-      <h3>Supprimer cette carte ?</h3>
-      <p>Cette action est irréversible. Voulez-vous vraiment supprimer cette carte ?</p>
-      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
-        <button id="annulerSuppressionCarteBtn" class="btn-secondary">Annuler</button>
-        <button id="confirmerSuppressionBtn" type="button" class="btn-danger">Supprimer</button>
+
+    <!-- 📁 Fichier d'import JSON -->
+    <input type="file" id="importFile" class="hidden" accept=".json">
+    <!-- ✏️ Modale de modification de catégorie -->
+    <div id="modalEditCategorie" class="modal hidden">
+      <div class="modal-content">
+        <span class="close" id="closeEditModal">&times;</span>
+        <h3 id="titreModaleModification">Modifier la catégorie</h3>
+
+        <label for="editCategorieNom">Nouveau nom :</label>
+        <input type="text" id="editCategorieNom">
+
+        <button id="btnEnregistrerModification">Enregistrer</button>
       </div>
     </div>
-  </div>
+    <!-- 🎨 Modale de changement de couleur -->
+    <div id="modalChangerCouleur" class="modal hidden">
+      <div class="modal-content">
+        <span class="close" id="closeCouleurModal">&times;</span>
+        <h3>Changer la couleur</h3>
+        <select id="selectNouvelleCouleur"></select>
+        <button id="btnValiderCouleur">Valider</button>
+      </div>
+    </div>
+    <!-- Modale de modification d'une carte -->
+    <div id="modalChoisirParent" class="modal hidden">
+      <div class="modal-content">
+        <h3>Choisir une catégorie parent</h3>
+        <select id="selectCategorieParent">
+          <!-- Rempli dynamiquement -->
+        </select>
+        <button id="confirmerParent">Utiliser cette catégorie</button>
+      </div>
+    </div>
+    <!-- 🔴 Modale de confirmation de suppression -->
+    <div id="confirmSuppressionModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Confirmer la suppression</h2>
+        <p>Voulez-vous vraiment supprimer cette carte&nbsp;? Cette action déplacera la carte dans la corbeille.</p>
 
-</div>
+        <div class="actions">
+          <button id="annulerSuppressionBtn" class="btn-secondary">Annuler</button>
+          <button id="confirmerSuppressionCarteBtn" type="button" class="btn-danger">Supprimer</button>
+        </div>
+      </div>
+    </div>
+    <div id="modalConfirmationSuppression" class="modal hidden">
+      <div class="modal-content">
+        <h3>Supprimer cette carte ?</h3>
+        <p>Cette action est irréversible. Voulez-vous vraiment supprimer cette carte ?</p>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button id="annulerSuppressionCarteBtn" class="btn-secondary">Annuler</button>
+          <button id="confirmerSuppressionBtn" type="button" class="btn-danger">Supprimer</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </body>
 
 </html>

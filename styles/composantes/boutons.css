@@ -60,7 +60,7 @@
     justify-content: flex-start;
     gap: 10px;
     padding: 10px 14px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 2px solid transparent;
     background-color: #f9f9f9;
     cursor: pointer;
@@ -146,7 +146,7 @@
     padding: 10px;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 12px;
   }
   .dropdown-content {
     position: absolute;
@@ -156,7 +156,7 @@
     max-height: 200px;
     overflow-y: auto;
     width: 200px;
-    border-radius: 5px;
+    border-radius: 12px;
     z-index: 10;
   }
   .dropdown-content label {
@@ -207,7 +207,7 @@
     border: 1px solid #ccc;
     cursor: pointer;
     font-style: italic;
-    border-radius: 4px;
+    border-radius: 12px;
   }
   #annulerModifBtn:hover {
     background-color: #eee;
@@ -232,7 +232,7 @@
     border: none;
     cursor: pointer;
     font-weight: 500;
-    border-radius: 6px;
+    border-radius: 12px;
     transition: background-color 0.3s;
   }
   #btnCategorieOptions:hover {
@@ -249,7 +249,7 @@
     border: none;
     cursor: pointer;
     font-weight: 500;
-    border-radius: 6px;
+    border-radius: 12px;
     transition: background-color 0.3s;
   }
   #ajoutCarteBtn:hover {
@@ -268,7 +268,7 @@
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 12px;
     background-color: #f9f9f9;
   }
   
@@ -283,7 +283,7 @@
     position: absolute;
     bottom: 1rem;
     right: 1rem;
-    border-radius: 6px;
+    border-radius: 12px;
     cursor: pointer;
     font-weight: bold;
   }
@@ -299,7 +299,7 @@
     background-color: #cccccc;
     color: #333;
     border: none;
-    border-radius: 6px;
+    border-radius: 12px;
     padding: 10px 20px;
     cursor: pointer;
     font-size: 14px;
@@ -311,7 +311,7 @@
     background-color: #f44336;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 12px;
     padding: 10px 20px;
     cursor: pointer;
     font-size: 14px;

@@ -4,9 +4,6 @@
    - Zone de tri, sélection, champ de recherche
    - Étiquettes de filtre (tags)
 
-   Ne doit pas contenir :
-   - Cartes ou modales
-   - Boutons autres que ceux liés au filtre
 --------------------------------------------- */
 
 /* --------------------------------------------------
@@ -44,6 +41,6 @@
     color: white;
     padding: 5px 10px;
     margin: 5px;
-    border-radius: 15px;
+    border-radius: 12px;
     font-size: 14px;
 }
