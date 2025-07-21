@@ -6,12 +6,10 @@
    - Styles pour fermer (bouton ✖, fade in/out)
    - Transition d’apparition
 
-   Ne doit pas contenir :
-   - Style du contenu interne (carte, catégorie, etc.)
 --------------------------------------------- */
 
 /* --------------------------------------------------
-   📱 RÉPONSIVE : AJUSTEMENT POUR PETITS ÉCRANS
+   📱 RESPONSIVE : AJUSTEMENT POUR PETITS ÉCRANS
 -------------------------------------------------- */
 @media (max-width: 480px) {
     #ajoutCarteContainer {

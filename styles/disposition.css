@@ -13,11 +13,26 @@
 /* --------------------------------------------------
    🏢 ZONE DE BOUTONS POUR CHANGEMENT DE MODE
 -------------------------------------------------- */
+@media(min-width:601px) {
+   .ctnGlobal {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 1200px;
+      margin:0 auto;
+   }
+}
+
 .mode-toggle {
    display: flex;
    margin-bottom: 1rem;
 }
 
+@media(min-width:601px) {
+   .mode-toggle {
+      margin: 4% 25%;
+   }
+}
 
 .categorie-cartes {
    display: flex;
@@ -25,28 +40,31 @@
 }
 
 @media(min-width:601px) {
-   .categorie-cartes{
-   flex-direction: row;
+   .categorie-cartes {
+      flex-direction: row;
 
    }
 }
-
 
 .vueCategorie {
-flex-direction: column;
+   flex-direction: column;
 }
-@media(min-width:601px){
-   .vueCategorie{
-min-width: 40%;
+
+@media(min-width:601px) {
+   .vueCategorie {
+      min-width: 40%;
 
    }
 }
-.ctnCategorieSelect{
 
-}
-@media(min-width:601px){
-   .ctnCategorieSelect{
-margin: 0 auto;
+.ctnCategorieSelect {}
+
+@media(min-width:601px) {
+   .ctnCategorieSelect {
+      margin: 0 auto;
    }
 }
 
+.zone-vide {
+   margin: 4%;
+}

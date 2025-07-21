@@ -5,9 +5,6 @@
    - Boutons de sélection de palette
    - Résumé visuel de couleur ou catégorie
 
-   Ne doit pas contenir :
-   - Disposition ou styles d’éléments
-   - Règles CSS de base
 --------------------------------------------- */
 #listePalettes {
     display: flex;

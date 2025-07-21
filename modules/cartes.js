@@ -8,7 +8,8 @@ import {
   getCartes,
   ajouterCarte as dbAjouterCarte,
   modifierCarte as dbModifierCarte,
-  deplacerCarteDansCorbeille, db, getCategorieByNom } 
+  deplacerCarteDansCorbeille, db, getCategorieByNom
+}
   from './db/indexedDB.js';
 import { mettreAJourResumeCategorie } from "./uiCategories.js";
 import { changerModeAffichage } from './ui.js';
@@ -55,7 +56,7 @@ function afficherCartes(modeTri = "date-desc") {
       const boutonModifier = div.querySelector('.modifier-carte');
       if (boutonModifier) {
         boutonModifier.addEventListener('click', () => {
-          ouvrirModaleModification(carte); // ← tu crées cette fonction juste après
+          ouvrirModaleModification(carte);
         });
       }
 
@@ -99,10 +100,7 @@ async function ajouterCarte() {
   const categorie = categorieInput.value;
   const couleurCategorie = categorieInput.dataset.couleur || "#ccc";
 
-  // 🧼 3. Validation (inchangé)
-  // ... ton code de validation ici ...
-
-  // 📦 4. Construction de la carte
+  // 📦 3. Construction de la carte
   const texteCategorie = document.getElementById("texteCategorieCarte");
   const nomCategorie = texteCategorie?.textContent?.trim() || categorie;
 
@@ -117,25 +115,25 @@ async function ajouterCarte() {
     dateCreation: id ? undefined : Date.now()
   };
 
-  // 💾 5. Enregistrement
+  // 💾 4. Enregistrement
   if (id) {
     await dbModifierCarte(nouvelleCarte);
   } else {
     await dbAjouterCarte(nouvelleCarte);
   }
 
- // 🔄 6. Rafraîchir interface et recentrer proprement
-await afficherCartes();
+  // 🔄 5. Rafraîchir interface et recentrer proprement
+  await afficherCartes();
 
-// 📍 7. Attendre que le DOM soit bien mis à jour avant de cibler la carte
-requestAnimationFrame(() => {
-  const carteModifiee = document.querySelector(`[data-carte-id="${nouvelleCarte.id}"]`);
-  if (carteModifiee) {
-    carteModifiee.scrollIntoView({ behavior: "auto", block: "center" });
-  }
-});
+  // 📍 6. Attendre que le DOM soit bien mis à jour avant de cibler la carte
+  requestAnimationFrame(() => {
+    const carteModifiee = document.querySelector(`[data-carte-id="${nouvelleCarte.id}"]`);
+    if (carteModifiee) {
+      carteModifiee.scrollIntoView({ behavior: "auto", block: "center" });
+    }
+  });
 
-  // 🧼 9. Nettoyage de la modale
+  // 🧼 7. Nettoyage de la modale
   document.getElementById("modalAjoutCarte").classList.add("hidden");
 
   titreInput.value = "";
@@ -150,7 +148,7 @@ requestAnimationFrame(() => {
 }
 
 function ouvrirModaleModification(carte) {
- 
+
   setCarteASupprimer(carte.id);
 
   /* ─── 1. Titre de la modale ───────────────────────────────────────────── */
@@ -164,13 +162,13 @@ function ouvrirModaleModification(carte) {
 
   /* ─── 3. Résumé visuel : première mise à jour rapide depuis la carte ──── */
   mettreAJourResumeCategorie({
-    nom    : carte.nomCategorie || carte.categorie || "-- Aucune catégorie --",
+    nom: carte.nomCategorie || carte.categorie || "-- Aucune catégorie --",
     couleur: carte.couleurCategorie || "#ccc"
   });
   document.getElementById("ouvrirConfirmationSuppressionCarteBtn").classList.remove("hidden");
-document.getElementById("ouvrirConfirmationSuppressionCarteBtn").style.display = "inline-block";
+  document.getElementById("ouvrirConfirmationSuppressionCarteBtn").style.display = "inline-block";
   console.log("🧩 Mise à jour visuelle avec :", {
-    nom    : carte.nomCategorie || carte.categorie,
+    nom: carte.nomCategorie || carte.categorie,
     couleur: carte.couleurCategorie
   });
   /* ─── 4. Optionnel : re-valider avec la base si la catégorie existe ───── */
@@ -178,28 +176,28 @@ document.getElementById("ouvrirConfirmationSuppressionCarteBtn").style.display =
     getCategorieByNom(carte.categorie).then(cat => {
       if (cat) {
         mettreAJourResumeCategorie({ nom: cat.nom, couleur: cat.couleur });
-       
+
       }
     });
   }
 
- /* ─── 5. Gérer le bouton "Changer de catégorie" ─────────────────────────── */
-const btnCategorie = document.getElementById("btnCategorieOptions");
-btnCategorie.textContent = "Changer de catégorie";
-btnCategorie.classList.remove("hidden");
-  
+  /* ─── 5. Gérer le bouton "Changer de catégorie" ─────────────────────────── */
+  const btnCategorie = document.getElementById("btnCategorieOptions");
+  btnCategorie.textContent = "Changer de catégorie";
+  btnCategorie.classList.remove("hidden");
+
 
   /* ─── 6. Pré-remplir les champs texte/tags ────────────────────────────── */
-  document.getElementById("titre").value   = carte.titre;
+  document.getElementById("titre").value = carte.titre;
   document.getElementById("contenu").value = carte.contenu;
-  document.getElementById("tags").value    = (carte.tags || []).join(", ");
+  document.getElementById("tags").value = (carte.tags || []).join(", ");
   document.getElementById("carteId").value = carte.id;
 
   /* ─── 7. Afficher la modale ───────────────────────────────────────────── */
   const boutonAjout = document.getElementById("ajoutCarteBtn");
-if (boutonAjout) {
-  boutonAjout.textContent = "Enregistrer les modifications";
-}
+  if (boutonAjout) {
+    boutonAjout.textContent = "Enregistrer les modifications";
+  }
   document.getElementById("modalAjoutCarte").classList.remove("hidden");
 }
 
