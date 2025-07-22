@@ -1,5 +1,5 @@
 // main.js
-
+//test
 import { paletteActuelle } from './modules/config.js';
 import { appliquerPaletteGlobale } from './modules/palette.js';
 import { ouvrirDB, getCategories, ajouterCategorie, deplacerCarteDansCorbeille } from './modules/db/indexedDB.js';
