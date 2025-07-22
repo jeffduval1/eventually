@@ -15,7 +15,12 @@
   right: 50px;
   z-index: 1000;
 }
-
+@media(min-width:601px){
+  .hamburger-container {
+    top: 45px;
+    right: 90px;
+  }
+}
 /* --------------------------------------------------
  ☰ BOUTON HAMBURGER
 -------------------------------------------------- */
@@ -30,7 +35,12 @@
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
-
+@media (min-width: 601px) {
+  #btnHamburger {
+    font-size: 28px;         /* ou 36px si tu veux plus gros */
+    padding: 9px 16px;      /* on ajuste pour ne pas couper le contenu */
+  }
+}
 /* --------------------------------------------------
  📋 MENU DÉROULANT HAMBURGER
 -------------------------------------------------- */
@@ -106,6 +116,8 @@
 -------------------------------------------------- */
 @media (min-width: 768px) {
   #toggleFormBtn {
+    bottom: 45px;
+    right: 45px;
       border-radius: 30px;
       width: auto;
       height: auto;
