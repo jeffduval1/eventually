@@ -34,7 +34,7 @@ body{
 
 @media(min-width:601px) {
    .mode-toggle {
-      margin: 4% 25%;
+      margin: 5% 15%;
    }
 }
 
@@ -57,11 +57,16 @@ body{
 
 @media(min-width:601px) {
    .vueCategorie {
+      min-width: 300px;
+
+   }
+}
+@media(min-width:1000px) {
+   .vueCategorie {
       min-width: 500px;
 
    }
 }
-
 
 
 @media(min-width:601px) {

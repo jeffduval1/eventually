@@ -95,12 +95,25 @@
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
   }
+  @media(min-width:601px){
+    .toggle-btn:first-child {
+margin-right: 1rem;
+width: 250px;
+    }
+  }
+  @media(min-width:601px){
+    .toggle-btn:last-child {
+margin-left: 1rem;
+width: 250px;
+    }
+  }
   .toggle-btn.active {
-    background-color: #333;
-    color: #f9f9f9;
+    background-color: white;
+    color: rgb(19, 18, 18);
+    border: solid, darkgray, 3px;
   }
   .toggle-btn:not(.active) {
-    background-color: #f0f0f0;
+    background-color: #f8f5f5;
     color: rgba(0, 0, 0, 0.8);
   }
   
@@ -108,7 +121,7 @@
      🔧 RÈGLES GÉNÉRIQUES <button>
   ----------------------------------------------------- */
   button {
-    background-color: #28a745;
+    background-color: #e3ece5;
     color: white;
     border: none;
     border-radius: 8px;
