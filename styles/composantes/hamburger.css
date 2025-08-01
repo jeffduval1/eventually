@@ -17,8 +17,10 @@
 }
 @media(min-width:601px){
   .hamburger-container {
-    top: 45px;
-    right: 90px;
+/*     top: 45px;
+    right: 90px; */
+    top: 12%;
+    right: 15%;
   }
 }
 /* --------------------------------------------------
